@@ -46,10 +46,16 @@ Route::middleware(['auth:web'])->group(function () {
     Route::get('/assets', [DashboardController::class, 'assets'])->name('assets');
     Route::get('/order', [DashboardController::class, 'order'])->name('order');
     Route::get('/my-account', [DashboardController::class, 'myaccount'])->name('my-account');
+    Route::get('/language', [DashboardController::class, 'language'])->name('language');
 
     // Deposit
     Route::get('/deposit', [DepositController::class, 'index'])->name('deposit');
+    Route::get('/buy-crypto', [DepositController::class, 'buyCrypto'])->name('buy-crypto');
+    Route::get('transfer', [DepositController::class, 'transfer'])->name('transfer');
+    Route::post('funds-transfer', [DepositController::class, 'fundsTransfer'])->name('funds-transfer');
+    Route::get('view-deposit/{id}', [DepositController::class, 'viewDeposit'])->name('view-deposit');
     Route::post('/deposit', [DepositController::class, 'store'])->name('deposit.store');
+
 
     // Withdrawal
     Route::get('/payment-method', [WithdrawalController::class, 'index'])->name('payment-method');

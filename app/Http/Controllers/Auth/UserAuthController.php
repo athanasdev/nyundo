@@ -38,15 +38,19 @@ class UserAuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        $number = rand(0, 9999);
+        Log::info("the info id", $number);
         Auth::login($user);
 
         return redirect()->route('login');
-
     }
 
 
     public function showLoginForm()
     {
+        $number = '8' . str_pad(mt_rand(0, 999999999), 9, '0', STR_PAD_LEFT);
+        Log::info("Generated number", ['number' => $number]);
+
         return view('auth.login');
     }
 
@@ -68,8 +72,6 @@ class UserAuthController extends Controller
         return back()->withErrors([
             'username' => 'The provided credentials do not match our records.',
         ])->onlyInput('username');
-
-
     }
 
 
@@ -81,9 +83,5 @@ class UserAuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/login')->with('success', 'You have been logged out.');
-
     }
-
-
-
 }

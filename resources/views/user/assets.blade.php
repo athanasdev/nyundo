@@ -40,6 +40,7 @@
     <link rel="apple-touch-icon-precomposed" href="https://inexfx.com/favic.png" />
 
     <!-- Stylesheets -->
+    <link rel="stylesheet" type="text/css" href="{{ asset('client/css/styles.css') }}" />
     <link rel="stylesheet" href="https://inexfx.com/fonts/fonts.css">
     <link rel="stylesheet" href="https://inexfx.com/fonts/font-icons.css">
     <link rel="stylesheet" href="https://inexfx.com/css/bootstrap.min.css">
@@ -120,25 +121,25 @@
                                 <span style="margin-top:6px;color:#fff">Assets balance <span>0.000 USDT</span></span>
                             </div>
                             <div class="d-row justify-evenly w-100" style="margin-top: 20px">
-                                <a href="https://inexfx.com/deposit" class="d-col align-center">
+                                <a href="{{route('deposit')}}" class="d-col align-center">
                                     <div class="icon-box">
                                         <i class="iconsax" icon-name="download-2"></i>
                                     </div>
                                     <span style="color: #fff">Deposit</span>
                                 </a>
-                                <a href="https://inexfx.com/withdraw" class="d-col align-center">
+                                <a href="{{ route('withdraw')}}" class="d-col align-center">
                                     <div class="icon-box">
                                         <i class="iconsax" icon-name="upload-2"></i>
                                     </div>
                                     <span style="color: #fff">Withdraw</span>
                                 </a>
-                                <a href="https://inexfx.com/buy-crypto" class="d-col align-center">
+                                <a href="{{ route('buy-crypto') }}" class="d-col align-center">
                                     <div class="icon-box">
                                         <i class="iconsax" icon-name="wallet-money"></i>
                                     </div>
                                     <span style="color: #fff">Buy</span>
                                 </a>
-                                <a href="https://inexfx.com/transfer" class="d-col align-center">
+                                <a href="{{route('transfer')}}" class="d-col align-center">
                                     <div class="icon-box">
                                         <i class="iconsax" icon-name="shuffle-2"></i>
                                     </div>
@@ -147,7 +148,7 @@
                             </div>
                         </div>
                         <div class="" style="border-top: 2px solid #7e808830;margin-top: 20px"></div>
-                        <a href="https://inexfx.com/view-deposit/389">
+                        <a href="/view-deposit/{id}">
                             <div class="d-row w-100"
                                 style="column-gap: 10px;padding:10px;border-bottom: 1px solid #7e808830">
                                 <div class="">
@@ -183,7 +184,7 @@
                                         USDT</span></span>
                             </div>
                             <div class="d-row w-100" style="margin-top: 20px">
-                                <a href="https://inexfx.com/transfer" class="d-col align-center">
+                                <a href="{{route('transfer')}}" class="d-col align-center">
                                     <div class="icon-box">
                                         <i class="iconsax" icon-name="shuffle-2"></i>
                                     </div>
@@ -201,15 +202,8 @@
 
     @include('user.components.footer')
 
-    <script type="text/javascript" src="https://inexfx.com/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="https://inexfx.com/js/jquery.min.js"></script>
-    <script type="text/javascript" src="https://inexfx.com/js/swiper-bundle.min.js"></script>
-    <script type="text/javascript" src="https://inexfx.com/js/carousel.js"></script>
-    <script type="text/javascript" src="https://inexfx.com/js/apexcharts.js"></script>
-    <script type="text/javascript" src="https://inexfx.com/js/chart.bundle.min.js"></script>
-    <script type="text/javascript" src="https://inexfx.com/js/line-chart.js"></script>
-    <script type="text/javascript" src="https://inexfx.com/js/main.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.19.1/dist/sweetalert2.all.min.js"></script>
+    @include('user.common.script')
+
     <script>
         $('.system-mode-toggle').on('click', function() {
             var mode = "1";

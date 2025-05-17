@@ -38,10 +38,11 @@
     <link rel="apple-touch-icon-precomposed" href="https://inexfx.com/favic.png" />
 
     <!-- Stylesheets -->
+    <link rel="stylesheet" type="text/css" href="{{ asset('client/css/styles.css') }}" />
     <link rel="stylesheet" href="https://inexfx.com/fonts/fonts.css">
     <link rel="stylesheet" href="https://inexfx.com/fonts/font-icons.css">
     <link rel="stylesheet" href="https://inexfx.com/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="https://inexfx.com/css/styles.css" />
+    <
     <link href="https://iconsax.gitlab.io/i/icons.css" rel="stylesheet">
 </head>
 
@@ -198,7 +199,7 @@
 
                 <p class="mt-20 text-center text-small" style="font-size:14px">
                     I don’t have an account?
-                    <a href="{{ route('user.register') }}"
+                    <a href="{{ route('home') }}"
                         style="font-weight:600;color:#f2b90f;font-size:14px!important">Sign Up</a>
                 </p>
             </form>
@@ -227,10 +228,9 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="https://inexfx.com/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="https://inexfx.com/js/jquery.min.js"></script>
-    <script type="text/javascript" src="https://inexfx.com/js/main.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.19.1/dist/sweetalert2.all.min.js"></script>
+
+    @include('user.common.script')
+
     <script src="//code.jivosite.com/widget/7CRJb72HNd" async></script>
     <script>
         const handleSwalButtons = () => {

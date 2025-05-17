@@ -23,7 +23,11 @@ class DashboardController extends Controller
         return view('user.assets');
       }
 
-
+      public function language()
+      {
+         return view('user.language');
+      }
+      
 
 
 }

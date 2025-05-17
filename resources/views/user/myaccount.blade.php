@@ -37,7 +37,7 @@
     <!-- Favicon and Icons -->
     <link rel="shortcut icon" href="https://inexfx.com/favic.png" />
     <link rel="apple-touch-icon-precomposed" href="https://inexfx.com/favic.png" />
-
+    <link rel="stylesheet" type="text/css" href="{{ asset('client/css/styles.css') }}" />
     <!-- Stylesheets -->
     <link rel="stylesheet" href="https://inexfx.com/fonts/fonts.css">
     <link rel="stylesheet" href="https://inexfx.com/fonts/font-icons.css">
@@ -152,15 +152,14 @@
                             <span class="unverified-tag">Unverified</span>
                         </div>
                     </div>
-                    <a href="https://inexfx.com/logout"
+                    <a href="{{route('user.logout')}}"
                         onclick="event.preventDefault(); document.getElementById('frm-logout').submit();"
                         class="btn profile-btn d-row align-center">
                         <span>Logout</span>
                         <i class="iconsax" icon-name="chevron-right"></i>
                     </a>
-                    <form id="frm-logout" action="https://inexfx.com/logout" method="POST" style="display: none;">
-                        <input type="hidden" name="_token" value="snu3i7kAp0A6jmfSwTpQw4efdpVjY5xaN7FJsuI8"
-                            autocomplete="off">
+                    <form id="frm-logout" action="logout" method="POST" style="display: none;">
+                         @csrf
                     </form>
                 </div>
             </div>
@@ -168,25 +167,20 @@
     </div>
     <div class="hr"></div>
     <div class="d-row justify-evenly w-100 mb-3" style="margin-top: 20px">
-        <a href="https://inexfx.com/ai-trading" class="d-col align-center">
+        <a href="{{route('ai-trading')}}" class="d-col align-center">
             <div class="icon-box">
                 <i class="iconsax" icon-name="cpu"></i>
             </div>
             <span style="color: #fff">AI Bot</span>
         </a>
-        <a href="https://inexfx.com/vip" class="d-col align-center">
-            <div class="icon-box">
-                <i class="iconsax" icon-name="crown-1"></i>
-            </div>
-            <span style="color: #fff">VIP</span>
-        </a>
-        <a href="https://inexfx.com/my-team" class="d-col align-center">
+
+        <a href="{{ route('team') }}" class="d-col align-center">
             <div class="icon-box">
                 <i class="iconsax" icon-name="users"></i>
             </div>
             <span style="color: #fff">Team</span>
         </a>
-        <a href="https://inexfx.com/bonuses" class="d-col align-center">
+        <a href="{{ route('bonuses') }}" class="d-col align-center">
             <div class="icon-box">
                 <i class="iconsax" icon-name="gift"></i>
             </div>
@@ -246,7 +240,7 @@
                     <i class="iconsax" icon-name="chevron-right"></i>
                 </div>
             </a>
-            <a href="https://inexfx.com/language" class="d-row setting-item align-center w-100">
+            <a href="{{route('language')}}" class="d-row setting-item align-center w-100">
                 <i class="iconsax leading-icon" icon-name="translate"></i>
                 <div class="d-row justify-space w-100 align-center">
                     <div class="d-col">

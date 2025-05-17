@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -25,7 +26,7 @@
     <meta property="og:title" content="INEX Trading | Smarter Investment Tools">
     <meta property="og:description" content="Access intelligent tools and real-time insights with INEX Trading.">
     <meta property="og:image" content="https://inexfx.com/favic.png">
-    <meta property="og:url" content="https://inexfx.com/orders">
+    <meta property="og:url" content="https://inexfx.com/language">
     <meta property="og:type" content="website">
 
     <!-- Twitter Cards -->
@@ -34,7 +35,7 @@
     <meta name="twitter:description"
         content="Simplify your trading experience with secure, user-friendly tools at INEX Trading.">
     <meta name="twitter:image" content="https://inexfx.com/favic.png">
-    <link rel="stylesheet" type="text/css" href="{{ asset('client/css/styles.css') }}" />
+
     <!-- Favicon and Icons -->
     <link rel="shortcut icon" href="https://inexfx.com/favic.png" />
     <link rel="apple-touch-icon-precomposed" href="https://inexfx.com/favic.png" />
@@ -48,17 +49,17 @@
     <link href="https://iconsax.gitlab.io/i/icons.css" rel="stylesheet">
     <link rel="stylesheet" href="https://inexfx.com/css/countrySelect.css">
     <style>
-        .account-mode {
-            background: #29313c;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: 700;
+         .account-mode{
+            background:#29313c;
+            padding:2px 6px;
+            border-radius:4px;
+            font-weight:700;
         }
     </style>
 </head>
 
 <body style="overflow-x: hidden">
-    <!-- preloade -->
+        <!-- preloade -->
     <div class="preloader preload-container">
         <div class="preload-logo " style="display: flex; flex-direction: column; align-items: center;">
             <div class="lds-ring" style="margin-bottom: 10px">
@@ -71,75 +72,137 @@
         </div>
     </div>
     <!-- /preload -->
-    <div class="header fixed-top d-flex justify-content-center align-items-center" style="background: #1e2730;">
+        <style>
+        .search-field {
+            background: #29313c;
+            padding: 10px;
+            border-radius: 6px;
+        }
+
+        .search-field i {
+            font-size: 20px;
+        }
+
+        .search-field input {
+            background: transparent;
+            padding: 0;
+            border: none;
+        }
+
+        .languages-list {
+            padding: 10px;
+        }
+
+        .language-class {
+            margin: 15px 0;
+        }
+
+        .language-class span {
+            font-size: 16px;
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .language-class i {
+            font-size: 20px;
+            color: #fff;
+        }
+    </style>
+        <div class="header fixed-top d-flex justify-content-center align-items-center" style="background: #1e2730;">
         <a href="#" class="left back-btn"><i class="iconsax back-icon-ct" icon-name="arrow-left"></i></a>
-        <h3 style="font-size:16px!important;font-weight:600">My Trading Orders</h3>
-        <div style="position:absolute;right:20px">
-            <a href="#" class="system-mode-toggle">
-                <div class="d-row align-center account-mode" style="column-gap:4px">
-                    <i class="iconsax" icon-name="setting-1"></i>
-                    <span style="font-size:14px">Real</span>
-                </div>
-            </a>
-        </div>
+        <h3 style="font-size:16px!important;font-weight:600">Language</h3>
     </div>
     <div class="pt-45 pb-16">
-        <div class="tf-container" style="padding-left:0px;padding-right:0px">
-            <div class="pb-12 mt-2">
-                <div class="wrap-filter-swiper">
-                    <div class="swiper-wrapper1 menu-tab-v3 mt-12" role="tablist"
-                        style="column-gap: 20px;padding-bottom:0px;border-color:#7e808820">
-                        <div class="swiper-slide1 nav-link active" data-bs-toggle="tab" data-bs-target="#active-orders"
-                            style="width:fit-content;margin-left:10px" role="tab" aria-controls="active-orders"
-                            aria-selected="true">
-                            Completed Orders </div>
-                        <div class="swiper-slide1 nav-link" data-bs-toggle="tab" data-bs-target="#all-orders"
-                            role="tab" style="width:fit-content;margin-left:10px" aria-controls="all-orders"
-                            aria-selected="false">
-                            Active Orders </div>
-                    </div>
-                </div>
-                <div class="tab-content">
-                    <div class="tab-pane fade show active" id="active-orders" role="tabpanel"
-                        style="padding-top: 10px">
-                        <div class="tf-tab">
-                            <div>
-                                <div
-                                    style="height:80vh;display:flex;flex-direction:column;justify-content:center;align-items:center;width:100%">
-                                    <img src="https://inexfx.com/images/empty.png" style="height: 100px;width:100px"
-                                        alt="">
-                                    <span>No Order Yet!</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="all-orders" role="tabpanel" style="padding-top: 10px">
-                        <div class="ongoing-order-area">
-
-
-                        </div>
-                    </div>
-                </div>
+        <div class="tf-container" style="padding:20px 20px 50px 20px">
+            <div class="search-field d-row align-center" style="column-gap: 6px">
+                <i class="iconsax" icon-name="search-normal-2"></i>
+                <input type="text" placeholder="Search">
+            </div>
+            <div class="languages-list d-col">
+                <a href="https://inexfx.com/set-language/ar"
+                    class="language-class d-row justify-space align-center">
+                    <span>Arabic (العربية)</span>
+                                    </a>
+                <a href="https://inexfx.com/set-language/id"
+                    class="language-class d-row justify-space align-center">
+                    <span>Bahasa Indonesia (Bahasa Indonesia)</span>
+                                    </a>
+                <a href="https://inexfx.com/set-language/zh"
+                    class="language-class d-row justify-space align-center">
+                    <span>Chinese (中文)</span>
+                                    </a>
+                <a href="https://inexfx.com/set-language/en"
+                    class="language-class d-row justify-space align-center">
+                    <span>English (United Kingdom)</span>
+                                            <i class="iconsax" icon-name="tick-circle"></i>
+                                    </a>
+                <a href="https://inexfx.com/set-language/es"
+                    class="language-class d-row justify-space align-center">
+                    <span>Spanish (Español)</span>
+                                    </a>
+                <a href="https://inexfx.com/set-language/fil"
+                    class="language-class d-row justify-space align-center">
+                    <span>Filipino (Pilipino)</span>
+                                    </a>
+                <a href="https://inexfx.com/set-language/fr"
+                    class="language-class d-row justify-space align-center">
+                    <span>French (Français)</span>
+                                    </a>
+                <a href="https://inexfx.com/set-language/it"
+                    class="language-class d-row justify-space align-center">
+                    <span>Italian (Italiano)</span>
+                                    </a>
+                <a href="https://inexfx.com/set-language/ko"
+                    class="language-class d-row justify-space align-center">
+                    <span>Korean (한국어)</span>
+                                    </a>
+                <a href="https://inexfx.com/set-language/pt"
+                    class="language-class d-row justify-space align-center">
+                    <span>Portuguese (Português)</span>
+                                    </a>
+                <a href="https://inexfx.com/set-language/ro"
+                    class="language-class d-row justify-space align-center">
+                    <span>Romanian (Română)</span>
+                                    </a>
+                <a href="https://inexfx.com/set-language/ru"
+                    class="language-class d-row justify-space align-center">
+                    <span>Russian (Русский)</span>
+                                    </a>
+                <a href="https://inexfx.com/set-language/sk"
+                    class="language-class d-row justify-space align-center">
+                    <span>Slovak (Slovenčina)</span>
+                                    </a>
+                <a href="https://inexfx.com/set-language/tr"
+                    class="language-class d-row justify-space align-center">
+                    <span>Turkish (Türkçe)</span>
+                                    </a>
+                <a href="https://inexfx.com/set-language/uz"
+                    class="language-class d-row justify-space align-center">
+                    <span>Uzbek (Oʻzbekcha)</span>
+                                    </a>
+                <a href="https://inexfx.com/set-language/vi"
+                    class="language-class d-row justify-space align-center">
+                    <span>Vietnamese (Tiếng Việt)</span>
+                                    </a>
             </div>
         </div>
     </div>
 
-
     @include('user.components.footer')
 
     @include('user.common.script')
-    
-    <script>
-        $('.system-mode-toggle').on('click', function() {
+
+     <script>
+        $('.system-mode-toggle').on('click',function(){
             var mode = "1";
-            if (mode == '1') {
+            if(mode == '1'){
                 Swal.fire({
                     title: "Switch to Demo account",
                     text: "You are about to switch to demo account are you sure?",
                     icon: 'info',
                     showCancelButton: true,
                     showConfirmButton: true,
-                }).then(function(result) {
+                }).then(function(result){
                     if (result.isConfirmed) {
                         window.location.href = "https://inexfx.com/switch-to-demo";
                     } else if (result.isDismissed) {
@@ -150,15 +213,15 @@
                         });
                     }
                 });
-            } else if (mode == 0) {
+            }else if(mode == 0){
                 Swal.fire({
-                    title: "Switch to Real account",
+                   title: "Switch to Real account",
                     text: "You are about to switch to real account are you sure?",
                     icon: 'info',
                     showCancelButton: true,
                     showConfirmButton: true,
-                }).then(function(result) {
-                    if (result.isConfirmed) {
+                }).then(function(result){
+                   if (result.isConfirmed) {
                         window.location.href = "https://inexfx.com/switch-to-real";
                     } else if (result.isDismissed) {
                         Swal.fire({
@@ -171,65 +234,7 @@
             }
         });
     </script>
-    <script>
-        function getOngoingOrders() {
-            $.ajax({
-                url: "https://inexfx.com/ongoing-orders",
-                data: {
-                    'exchange_id': 'all'
-                },
-                method: "GET",
-                success: function(response) {
-                    if (response.status == 'success') {
-                        $('.ongoing-order-area').html(response.data);
-                        document.querySelectorAll('.progress-circle').forEach(circle => {
-                            const percent = circle.getAttribute('data-percentage');
-                            const angle = percent * 3.6;
-                            circle.style.setProperty('--percent', percent);
-                            circle.style.setProperty('--angle', `${angle}deg`);
-                            circle.querySelector('.percentage').textContent = `${percent}%`;
-                        });
-                        orderProgress();
-                    }
-                },
-                error: function(xhr) {
-                    console.error(xhr);
-                }
-            });
-        }
-
-        getOngoingOrders();
-
-        function orderProgress() {
-            //select all order-card which data-remaining-time is greater than 0
-            var orderCards = document.querySelectorAll('.order-card');
-            orderCards.forEach(function(card) {
-                var remainingTime = card.getAttribute('data-remaining-time');
-                var totalOrderTime = card.getAttribute('data-total-time');
-
-                var progressCircle = card.querySelector('.progress-circle');
-                var percentage = card.querySelector('.percentage');
-                var progressBar = card.querySelector('.progress-bar');
-
-                if (remainingTime > 0) {
-                    var interval = setInterval(function() {
-                        remainingTime--;
-                        var percent = Math.floor(100 - (remainingTime / totalOrderTime) * 100);
-                        progressCircle.style.setProperty('--percent', percent);
-                        progressCircle.style.setProperty('--angle', `${percent * 3.6}deg`);
-                        percentage.textContent = `${percent}%`;
-                        progressBar.style.width = `${percent}%`;
-
-                        if (remainingTime <= 0) {
-                            clearInterval(interval);
-                            card.remove();
-                        }
-                    }, 1000);
-                }
-            });
-        }
-    </script>
-    <script>
+        <script>
         const handleSwalButtons = () => {
             const actions = document.querySelector('.swal2-actions');
             if (!actions) return;

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-@include('user.stylesheet.head')
+@include('user.common.head')
 
 <body style="overflow-x: hidden">
     <!-- preloade -->
@@ -737,15 +737,8 @@
 
     @include('user.components.footer')
 
-    <script type="text/javascript" src="https://inexfx.com/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="https://inexfx.com/js/jquery.min.js"></script>
-    <script type="text/javascript" src="https://inexfx.com/js/swiper-bundle.min.js"></script>
-    <script type="text/javascript" src="https://inexfx.com/js/carousel.js"></script>
-    <script type="text/javascript" src="https://inexfx.com/js/apexcharts.js"></script>
-    <script type="text/javascript" src="https://inexfx.com/js/chart.bundle.min.js"></script>
-    <script type="text/javascript" src="https://inexfx.com/js/line-chart.js"></script>
-    <script type="text/javascript" src="https://inexfx.com/js/main.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.19.1/dist/sweetalert2.all.min.js"></script>
+    @include('user.common.script')
+    
     <script>
         $('.system-mode-toggle').on('click', function() {
             var mode = "1";
