@@ -18,6 +18,7 @@ return [
         'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
     ],
 
+
     /*
     |--------------------------------------------------------------------------
     | Authentication Guards
@@ -41,6 +42,7 @@ return [
             'provider' => 'users',
         ],
 
+
         'admin' => [
             'driver' => 'session',
             'provider' => 'admins',
@@ -48,6 +50,7 @@ return [
 
 
     ],
+
 
     /*
     |--------------------------------------------------------------------------
@@ -85,6 +88,7 @@ return [
 
 
 
+
     ],
 
 
@@ -114,6 +118,10 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
+
+
+        
+
     ],
 
     /*

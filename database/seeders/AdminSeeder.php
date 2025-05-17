@@ -21,9 +21,10 @@ class AdminSeeder extends Seeder
             'email' => 'admin2025@binance.com',
             'password' => Hash::make('Binance123'),
         ]);
+
     }
 
-    
+
 
 }
 
