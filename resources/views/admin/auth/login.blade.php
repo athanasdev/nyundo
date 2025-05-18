@@ -39,13 +39,13 @@
                             @csrf
 
                             <div class="input-group custom">
-                                <input type="text" class="form-control  form-control-lg" name="email" placeholder="Username" required>
+                                <input type="text" class="form-control  form-control-md" name="email" placeholder="Username" required>
                                 <div class="input-group-append custom">
                                     <span class="input-group-text"><i class="icon-copy dw dw-user1"></i></span>
                                 </div>
                             </div>
                             <div class="input-group custom">
-                                <input type="password" class="form-control form-control-lg" name="password" placeholder="**********" required>
+                                <input type="password" class="form-control form-control-md" name="password" placeholder="**********" required>
                                 <div class="input-group-append custom">
                                     <span class="input-group-text"><i class="dw dw-padlock1"></i></span>
                                 </div>
@@ -55,7 +55,7 @@
                                 <div class="col-sm-12">
                                     <div class="input-group mb-0">
 
-                                        <input class="btn btn-primary btn-lg btn-block" type="submit" value="Sign In">
+                                        <input class="btn btn-secondary btn-md btn-block" type="submit" value="Sign In">
 
                                     </div>
 

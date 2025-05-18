@@ -8,7 +8,7 @@ use App\Http\Controllers\User\WithdrawalController;
 use App\Http\Controllers\User\TeamController;
 use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\Admin\AdminDashboardController;
-
+use App\Http\Controllers\Admin\AdminUserController;
 
 // ==========================
 // User Authentication
@@ -82,6 +82,8 @@ Route::middleware(['auth:web'])->group(function () {
 
 Route::prefix('admin')->middleware('auth:admin')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/reset-password', [AdminUserController::class, 'passwordResetList'])->name('admin.password');
+    Route::get('/traders', [AdminUserController::class, 'traderList'])->name('admin.trader');
 });
 
 

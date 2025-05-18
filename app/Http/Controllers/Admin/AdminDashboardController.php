@@ -14,12 +14,17 @@ class AdminDashboardController extends Controller
 {
 
 
+
     public function index()
     {
-         return view('admin.dashbord.pages.layout');
+
+        $admin = Auth::guard('admin')->user();
+         return view('admin.dashbord.pages.home', compact('admin'));
+
     }
 
-    
+
+
 
 }
 
