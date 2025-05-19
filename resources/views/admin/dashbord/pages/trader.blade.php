@@ -95,14 +95,14 @@
                                         678900 $
                                     </td>
                                     <td>
-                                        <a href="#">
+                                        <a <a href="{{ route('admin.trader-details', ['id']) }}">
                                             <span class="micon dw dw-edit-2"></span>
                                         </a>
                                         <a href="#">
                                             <span class="micon dw dw-chat3"></span>
                                         </a>
                                         <a href="#">
-                                            <span class="micon dw dw-transh"></span>
+                                            <span class="micon dw dw-edit-1"></span>
                                         </a>
                                     </td>
                                 </tr>

@@ -18,6 +18,33 @@ class AdminUserController extends Controller
          return view('admin.dashbord.pages.trader');
      }
 
-     
+
+
+     public function systemLogs()
+     {
+         return view('admin.dashbord.pages.logs');
+     }
+
+     public  function depost()
+     {
+         return view('admin.dashbord.pages.depost');
+     }
+
+     public function withdraw()
+     {
+        return view('admin.dashbord.pages.withdraw');
+     }
+
+     public function team()
+     {
+         return view('admin.dashbord.pages.team');
+     }
+
+      public function traderDetails()
+      {
+          return view('admin.dashbord.pages.traderdetails');
+      }
+
+
 
 }

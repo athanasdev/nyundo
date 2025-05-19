@@ -108,13 +108,13 @@
 
                     </li>
                     <li class="dropdown">
-                        <a href="javascript:;" class="dropdown-toggle no-arrow">
+                        <a href="{{route('admin.depost')}}" class="dropdown-toggle no-arrow">
                             <span class="micon dw dw-money text-success"></span><span class="mtext">Deposit</span>
                         </a>
 
                     </li>
                     <li>
-                        <a href="#" class="dropdown-toggle no-arrow">
+                        <a href="{{route('admin.withdraw')}}" class="dropdown-toggle no-arrow">
                             <span class="micon dw dw-money text-danger"></span><span class="mtext">Withdraw</span>
                         </a>
                     </li>
@@ -124,16 +124,9 @@
                         </a>
                     </li>
                     <li class="dropdown">
-                        <a href="javascript:;" class="dropdown-toggle">
-                            <span class="micon dw dw-paint-brush"></span><span class="mtext">Icons</span>
+                        <a href="{{ route('admin.logs') }}" class="dropdown-toggle no-arrow">
+                            <span class="micon dw dw-paint-brush"></span><span class="mtext"> Logs </span>
                         </a>
-                        <ul class="submenu">
-                            <li><a href="font-awesome.html">FontAwesome Icons</a></li>
-                            <li><a href="foundation.html">Foundation Icons</a></li>
-                            <li><a href="ionicons.html">Ionicons Icons</a></li>
-                            <li><a href="themify.html">Themify Icons</a></li>
-                            <li><a href="custom-icon.html">Custom Icons</a></li>
-                        </ul>
                     </li>
                     <li class="dropdown">
                         <a href="javascript:;" class="dropdown-toggle">
