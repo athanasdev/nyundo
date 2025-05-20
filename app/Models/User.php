@@ -21,6 +21,10 @@ class User extends Authenticatable
         'username',
         'email',
         'password',
+        'currency',
+        'unique_id',
+        'referral_code',
+        'referrer_id',
     ];
 
     /**
@@ -46,13 +50,6 @@ class User extends Authenticatable
         ];
     }
 
-
-    // public function getAuthIdentifierName()
-    // {
-    //     return 'username';
-    // }
-
-
     //  model relationships
     public function deposits()
     {
@@ -67,5 +64,11 @@ class User extends Authenticatable
     public function teams()
     {
         return $this->hasMany(Team::class);
+    }
+
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
     }
 }

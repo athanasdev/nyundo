@@ -16,7 +16,7 @@
                                         <div id="chart"></div>
                                     </div>
                                     <div class="widget-data">
-                                        <div class="h4 mb-0">14000</div>
+                                        <div class="h4 mb-0">{{ $totalUsers }}</div>
                                         <div class="weight-600 font-14">All Traders</div>
                                     </div>
                                 </div>
@@ -29,7 +29,7 @@
                                         <div id="chart2"></div>
                                     </div>
                                     <div class="widget-data">
-                                        <div class="h4 mb-0"> 5600 </div>
+                                        <div class="h4 mb-0"> {{ $blockedUsers }} </div>
                                         <div class="weight-600 font-14">Blocked</div>
                                     </div>
                                 </div>
@@ -42,8 +42,8 @@
                                         <div id="chart3"></div>
                                     </div>
                                     <div class="widget-data">
-                                        <div class="h4 mb-0">350</div>
-                                        <div class="weight-600 font-14">Traders</div>
+                                        <div class="h4 mb-0">{{ $activeTraders }}</div>
+                                        <div class="weight-600 font-14">Active Traders</div>
                                     </div>
                                 </div>
                             </div>
@@ -55,7 +55,7 @@
                                         <div id="chart4"></div>
                                     </div>
                                     <div class="widget-data">
-                                        <div class="h4 mb-0"> 100</div>
+                                        <div class="h4 mb-0">{{ $withdrawRequests }}</div>
                                         <div class="weight-600 font-14">Request Withdraw</div>
                                     </div>
                                 </div>
@@ -64,6 +64,8 @@
                     </div>
 
                 </div>
+
+                
                 <!-- Export Datatable start -->
                 <div class="card-box mb-10">
                     <div class="pd-20">
@@ -73,41 +75,41 @@
                         <table class="table hover multiple-select-row table-stripled data-table-export nowrap">
                             <thead>
                                 <tr>
-                                    <th>#</th>
                                     <th class="table-plus datatable-nosort">Id</th>
                                     <th>Username</th>
-                                    <th>Balance</th>
-                                    <th>status</th>
+                                    <th>Balance</th> {{-- Placeholder --}}
+                                    <th>Status</th> {{-- Placeholder --}}
                                     <th>Join Date</th>
                                     <th>Withdraw</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td class="table-plus">Gloria F. Mead</td>
-                                    <td>25</td>
-                                    <td>456899 $</td>
-                                    <td>2829 Trainer Avenue Peoria, IL 61602 </td>
-                                    <td>29-03-2018</td>
-                                    <td>
-                                        678900 $
-                                    </td>
-                                    <td>
-                                        <a <a href="{{ route('admin.trader-details', ['id']) }}">
-                                            <span class="micon dw dw-edit-2"></span>
-                                        </a>
-                                        <a href="#">
-                                            <span class="micon dw dw-chat3"></span>
-                                        </a>
-                                        <a href="#">
-                                            <span class="micon dw dw-edit-1"></span>
-                                        </a>
-                                    </td>
-                                </tr>
+                                @foreach ($traders as $index => $trader)
+                                    <tr>
+                                        <td class="table-plus">{{ $trader->id }}</td>
+                                        <td>{{ $trader->username }}</td>
+                                        <td>$ {{ $trader->balance}} </td>
+                                        <td>{{ $trader->status }}</td>
+                                        <td>{{ $trader->created_at ? $trader->created_at->format('d-m-Y') : '--' }}</td>
+                                        <td>$ {{ $trader->Withdraw_amount }}</td>
+                                        <td>
+                                            <a href="{{ route('admin.trader-details', ['id' => $trader->id]) }}">
+                                                <span class="micon dw dw-edit-2"></span>
+                                            </a>
+                                            <a href="#"><span class="micon dw dw-chat3"></span></a>
+                                            <a href="#"><span class="micon dw dw-edit-1"></span></a>
+                                        </td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
+
+                        <!-- Pagination -->
+                        <div class="mt-3">
+                            {{ $traders->links() }}
+                        </div>
+
                     </div>
                 </div>
 
