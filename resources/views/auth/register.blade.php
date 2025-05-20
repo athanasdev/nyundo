@@ -141,7 +141,9 @@
                     <label class="label-ip">
                         <div class="box-input">
                             <i class="iconsax" icon-name="share"></i>
-                            <input type="text" placeholder="Invitation Code" name="invitation_code">
+                            {{-- <input type="text" placeholder="Invitation Code" name="invitation_code"> --}}
+                            <input type="text" name="invitation_code" placeholder="Invitation Code" value="{{ $ref ?? old('invitation_code') }}">
+
                         </div>
                     </label>
                 </fieldset>

@@ -12,14 +12,18 @@ use Illuminate\Support\Str;
 
 
 
-
 class UserAuthController extends Controller
 {
 
-    public function showRegisterForm()
+    public function showRegisterForm(Request $request)
     {
-        return view('auth.register');
+        $ref = $request->query('invited_by');
+        return view('auth.register', compact('ref'));
     }
+
+
+
+
 
     // public function register(Request $request)
     // {
@@ -32,20 +36,40 @@ class UserAuthController extends Controller
     //         'agree' => 'required|accepted',
     //     ]);
 
+    //     // Get referrer if valid referral code was given
+    //     $referrer = null;
+    //     if ($request->filled('invitation_code')) {
+    //         $referrer = User::where('referral_code', $request->invitation_code)->first();
+    //     }
+
+    //     // Generate unique ID
+    //     do {
+    //         $uniqueId = rand(8000000000, 8999999999);
+    //     } while (User::where('unique_id', $uniqueId)->exists());
+
+    //     // Generate unique referral code
+    //     do {
+    //         $referralCode = strtoupper(Str::random(6));
+    //     } while (User::where('referral_code', $referralCode)->exists());
+
+    //     Log::info("Generated user unique_id", ['unique_id' => $uniqueId]);
+
+    //     // Create user
     //     $user = User::create([
     //         'username' => $request->username,
     //         'email' => $request->email,
     //         'currency' => $request->currency,
-    //         'invitation_code' => $request->invitation_code,
     //         'password' => Hash::make($request->password),
+    //         'unique_id' => $uniqueId,
+    //         'referral_code' => $referralCode,
+    //         'referrer_id' => optional($referrer)->id,
     //     ]);
 
-    //     $number = rand(0, 9999);
-    //     Log::info("the info id", $number);
     //     Auth::login($user);
 
-    //     return redirect()->route('login');
+    //     return redirect()->route('dashboard');
     // }
+
 
 
     public function register(Request $request)
@@ -59,23 +83,22 @@ class UserAuthController extends Controller
             'agree' => 'required|accepted',
         ]);
 
-        // Find referrer by referral code if provided
+        // 1. Find referrer (Level 1)
         $referrer = null;
         if ($request->filled('invitation_code')) {
             $referrer = User::where('referral_code', $request->invitation_code)->first();
         }
 
-        // Generate unique_id - 10 digit number starting with 8
+        // 2. Create unique IDs
         do {
             $uniqueId = rand(8000000000, 8999999999);
         } while (User::where('unique_id', $uniqueId)->exists());
 
-        // Generate referral code - 6-character uppercase code
         do {
             $referralCode = strtoupper(Str::random(6));
         } while (User::where('referral_code', $referralCode)->exists());
-        Log::info("the user unique id", ['unique_id', $uniqueId]);
 
+        // 3. Create the new user
         $user = User::create([
             'username' => $request->username,
             'email' => $request->email,
@@ -83,20 +106,43 @@ class UserAuthController extends Controller
             'password' => Hash::make($request->password),
             'unique_id' => $uniqueId,
             'referral_code' => $referralCode,
-            'referrer_id' => optional(User::where('referral_code', $request->invitation_code)->first())->id,
+            'referrer_id' => optional($referrer)->id,
         ]);
 
+        // 4. Update referral teams up to 3 levels
+        $currentReferrer = $referrer;
+        $level = 1;
+
+        while ($currentReferrer && $level <= 3) {
+            $team = \App\Models\Team::firstOrNew([
+                'user_id' => $currentReferrer->id,
+                'level' => $level,
+            ]);
+
+            // Initialize if new
+            if (!$team->exists) {
+                $team->members = 0;
+                $team->deposit = 0;
+                $team->commissions = 0;
+            }
+
+            $team->members += 1;
+            $team->save();
+
+            $currentReferrer = $currentReferrer->referrer;
+            $level++;
+        }
+
+        // 5. Log the new user in
         Auth::login($user);
 
+        // 6. Redirect to dashboard
         return redirect()->route('dashboard');
     }
 
 
-
     public function showLoginForm()
     {
-        $number = '8' . str_pad(mt_rand(0, 999999999), 9, '0', STR_PAD_LEFT);
-        Log::info("Generated number", ['number' => $number]);
 
         return view('auth.login');
     }
