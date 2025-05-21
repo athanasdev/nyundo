@@ -129,15 +129,10 @@
                         </a>
                     </li>
                     <li class="dropdown">
-                        <a href="javascript:;" class="dropdown-toggle">
-                            <span class="micon dw dw-analytics-21"></span><span class="mtext">Charts</span>
+                        <a href="{{ route('admin.settings')}}" class="dropdown-toggle">
+                            <span class="micon dw dw-analytics-21"></span><span class="mtext">Setups</span>
                         </a>
-                        <ul class="submenu">
-                            <li><a href="highchart.html">Highchart</a></li>
-                            <li><a href="knob-chart.html">jQuery Knob</a></li>
-                            <li><a href="jvectormap.html">jvectormap</a></li>
-                            <li><a href="apexcharts.html">Apexcharts</a></li>
-                        </ul>
+
                     </li>
                     <li class="dropdown">
                         <a href="javascript:;" class="dropdown-toggle">

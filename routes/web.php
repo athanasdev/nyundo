@@ -30,7 +30,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AdminAuthController::class, 'login']);
     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
-
 });
 
 
@@ -41,7 +40,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 
 Route::middleware(['auth:web'])->group(function () {
-    Route::get('/dashboard', fn () => view('user.dashboard'))->name('dashboard');
+    Route::get('/dashboard', fn() => view('user.dashboard'))->name('dashboard');
 
     Route::get('/my-account', [DashboardController::class, 'myaccount'])->name('my-account');
     Route::get('/assets', [DashboardController::class, 'assets'])->name('assets');
@@ -67,10 +66,6 @@ Route::middleware(['auth:web'])->group(function () {
     Route::get('/team', [TeamController::class, 'team'])->name('team');
     Route::get('/ai-trading', [TeamController::class, 'aitrading'])->name('ai-trading');
     Route::get('/bonuses', [TeamController::class, 'bonuses'])->name('bonuses');
-
-
-
-
 });
 
 
@@ -88,13 +83,9 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
     Route::get('/withdraw', [AdminUserController::class, 'withdraw'])->name('admin.withdraw');
     Route::get('/user-team', [AdminUserController::class, 'team'])->name('admin.team');
     Route::get('/trader-details/{id}', [AdminUserController::class, 'traderDetails'])->name('admin.trader-details');
-
+    Route::get('/settings', [AdminUserController::class, 'settings'])->name('admin.settings');
 
 
     //  Managements
     Route::get('/logs', [AdminUserController::class, 'systemLogs'])->name('admin.logs');
-
 });
-
-
-

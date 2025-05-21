@@ -6,6 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Withdrawal;
+use App\Models\ReferralSettings;
+use App\Models\ReferralSetting;
+  use App\Models\Deposit;
+
 
 class AdminUserController extends Controller
 {
@@ -47,10 +51,29 @@ class AdminUserController extends Controller
         return view('admin.dashbord.pages.logs');
     }
 
-    public  function depost()
+
+
+    public function depost()
     {
-        return view('admin.dashbord.pages.depost');
+        $deposits = Deposit::with('user')->orderBy('created_at', 'desc')->paginate(10);
+
+        $pendingCount = Deposit::where('status', 'pending')->count();
+        $completedCount = Deposit::where('status', 'completed')->count();
+
+        $pendingTotal = Deposit::where('status', 'pending')->sum('amount');
+        $completedTotal = Deposit::where('status', 'completed')->sum('amount');
+
+        return view('admin.dashbord.pages.depost', [
+            'withdraws' => $deposits, // keep the variable name as in the Blade view or change it in both places
+            'pendingCount' => $pendingCount,
+            'completedCount' => $completedCount,
+            'pendingTotal' => $pendingTotal,
+            'completedTotal' => $completedTotal,
+        ]);
+
     }
+
+    
 
     public function withdraw()
     {
@@ -71,7 +94,6 @@ class AdminUserController extends Controller
             'completedTotal',
             'withdraws'
         ));
-        
     }
 
     public function team()
@@ -82,5 +104,16 @@ class AdminUserController extends Controller
     public function traderDetails()
     {
         return view('admin.dashbord.pages.traderdetails');
+    }
+
+
+
+    public function settings()
+    {
+
+        $referralSettings = ReferralSetting::select('id', 'level', 'commission_percentage')->paginate(20);
+
+
+        return view('admin.dashbord.pages.settings', compact('referralSettings'));
     }
 }
