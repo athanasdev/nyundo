@@ -65,48 +65,55 @@
 
                 </div>
 
-                
+
                 <!-- Export Datatable start -->
                 <div class="card-box mb-10">
                     <div class="pd-20">
                         <h4 class="text-blue h4">Traders</h4>
                     </div>
                     <div class="pb-20">
-                        <table class="table hover multiple-select-row table-stripled data-table-export nowrap">
-                            <thead>
-                                <tr>
-                                    <th class="table-plus datatable-nosort">Id</th>
-                                    <th>Username</th>
-                                    <th>Balance</th> {{-- Placeholder --}}
-                                    <th>Status</th> {{-- Placeholder --}}
-                                    <th>Join Date</th>
-                                    <th>Withdraw</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($traders as $index => $trader)
+                        <div class="table-responseive">
+                            <table class="table hover table-stripled data-table-export nowrap">
+                                <thead>
                                     <tr>
-                                        <td class="table-plus">{{ $trader->id }}</td>
-                                        <td>{{ $trader->username }}</td>
-                                        <td>$ {{ $trader->balance}} </td>
-                                        <td>{{ $trader->status }}</td>
-                                        <td>{{ $trader->created_at ? $trader->created_at->format('d-m-Y') : '--' }}</td>
-                                        <td>$ {{ $trader->Withdraw_amount }}</td>
-                                        <td>
-                                            <a href="{{ route('admin.trader-details', ['id' => $trader->id]) }}">
-                                                <span class="micon dw dw-edit-2"></span>
-                                            </a>
-                                            <a href="#"><span class="micon dw dw-chat3"></span></a>
-                                            <a href="#"><span class="micon dw dw-edit-1"></span></a>
-                                        </td>
+                                        <th class="table-plus">Id</th>
+                                        <th>UniqueID</th>
+                                        <th>Username</th>
+                                        <th>Balance</th>
+                                        <th>Status</th>
+                                        <th>Join Date</th>
+                                        <th>Withdraw</th>
+                                        <th>Action</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach ($traders as $index => $trader)
+                                        <tr>
+                                            <td class="table-plus">{{ $trader->id }}</td>
+                                            <td>{{ $trader->unique_id }}</td>
+                                            <td>{{ $trader->username }}</td>
+                                            <td>$ {{ $trader->balance }} </td>
+                                            <td>{{ $trader->status }}</td>
+                                            <td>{{ $trader->created_at ? $trader->created_at->format('d-m-Y') : '--' }}</td>
+                                            <td>$ {{ $trader->Withdraw_amount }}</td>
+                                            <td>
+                                                <a class="btn btn-sm btn-outline-success "
+                                                    href="{{ route('admin.trader-details', ['id' => $trader->id]) }}">Update
+                                                </a>
+                                                <a class="btn btn-sm {{ $trader->status === 'blocked' ? 'btn-success' : 'btn-danger' }}"
+                                                    href="{{ route('admin.trader-block', ['id' => $trader->id]) }}">
+                                                    {{ $trader->status === 'blocked' ? 'Unblock' : 'Block' }}
+                                                </a>
 
-                        <!-- Pagination -->
-                        <div class="mt-3">
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                        <div class="d-flex justify-content-end px-3 pb-3">
                             {{ $traders->links() }}
                         </div>
 

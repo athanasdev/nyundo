@@ -8,7 +8,10 @@ use App\Models\User;
 use App\Models\Withdrawal;
 use App\Models\ReferralSettings;
 use App\Models\ReferralSetting;
-  use App\Models\Deposit;
+use App\Models\Deposit;
+use App\Models\Transaction;
+use App\Models\Team;
+use Illuminate\Support\Facades\Log;
 
 
 class AdminUserController extends Controller
@@ -24,7 +27,7 @@ class AdminUserController extends Controller
     public function traderList()
     {
 
-        $traders = User::select('id', 'username', 'balance', 'status', 'Withdraw_amount', 'email', 'created_at')
+        $traders = User::select('id', 'unique_id', 'username', 'balance', 'status', 'Withdraw_amount', 'email', 'created_at')
             ->paginate(10);
 
         $totalUsers = User::count();
@@ -70,10 +73,9 @@ class AdminUserController extends Controller
             'pendingTotal' => $pendingTotal,
             'completedTotal' => $completedTotal,
         ]);
-
     }
 
-    
+
 
     public function withdraw()
     {
@@ -101,9 +103,36 @@ class AdminUserController extends Controller
         return view('admin.dashbord.pages.team');
     }
 
-    public function traderDetails()
+
+    public function traderDetails($id)
     {
-        return view('admin.dashbord.pages.traderdetails');
+        // Get user details
+        $user = User::findOrFail($id);
+
+        // Get transaction history
+        $transactions = Transaction::where('user_id', $user->id)->latest()->get();
+
+        // Get team referral data (assuming 3 levels)
+        $teams = Team::where('user_id', $user->id)->get()->groupBy('level');
+        $referralSummary = [
+            'totalMembers' => $teams->flatten()->count(),
+            'totalDeposit' => $teams->flatten()->sum('deposit'),
+            'totalCommissions' => $teams->flatten()->sum('commissions'),
+            'levels' => $teams
+        ];
+
+        return view('admin.dashbord.pages.traderdetails', compact('user', 'transactions', 'referralSummary'));
+    }
+
+    public function traderBlock(Request $request,  $id)
+    {
+        $user = User::findOrFail($id);
+
+        $user->status = 'blocked';
+        $user->save();
+
+        return redirect()->back()->with('success', 'User has been blocked successfully.');
+        
     }
 
 

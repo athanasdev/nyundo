@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AccountController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\UserAuthController;
 use App\Http\Controllers\Auth\AdminAuthController;
@@ -76,6 +77,7 @@ Route::middleware(['auth:web'])->group(function () {
 
 
 Route::prefix('admin')->middleware('auth:admin')->group(function () {
+
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
     Route::get('/reset-password', [AdminUserController::class, 'passwordResetList'])->name('admin.password');
     Route::get('/traders', [AdminUserController::class, 'traderList'])->name('admin.trader');
@@ -83,9 +85,15 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
     Route::get('/withdraw', [AdminUserController::class, 'withdraw'])->name('admin.withdraw');
     Route::get('/user-team', [AdminUserController::class, 'team'])->name('admin.team');
     Route::get('/trader-details/{id}', [AdminUserController::class, 'traderDetails'])->name('admin.trader-details');
+     Route::get('/admin.trader-block/{id}', [AdminUserController::class, 'traderBlock'])->name('admin.trader-block');
+
     Route::get('/settings', [AdminUserController::class, 'settings'])->name('admin.settings');
 
+    Route::post('/add-account', [AccountController::class, 'store'])->name('main-account.store');
+    Route::put('/update-account/{id}', [AccountController::class, 'update'])->name('main-account.update');
 
     //  Managements
     Route::get('/logs', [AdminUserController::class, 'systemLogs'])->name('admin.logs');
+
+
 });

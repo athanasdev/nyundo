@@ -73,7 +73,7 @@
                         <h4 class="text-blue h4">Withdraw Requests</h4>
                     </div>
                     <div class="pb-20">
-                        <table class="table hover multiple-select-row data-table-export nowrap">
+                        <table class="table hover data-table-export nowrap">
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -109,8 +109,8 @@
                                             {{ $withdraw->updated_at ? $withdraw->updated_at->format('d-m-Y H:i') : 'N/A' }}
                                         </td>
                                         <td>
-                                            <a href="#"><span class="micon dw dw-edit2"></span> Pay </a>
-                                            <a href="#"><span class="micon dw dw-trash"></span></a>
+                                            <a class="btn btn-success btn-sm" href="#">Pay </a>
+                                            <a href="#">__++__</a>
                                         </td>
                                     </tr>
                                 @endforeach
