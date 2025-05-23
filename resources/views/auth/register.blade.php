@@ -203,6 +203,7 @@
     @include('user.common.script')
 
     <script src="//code.jivosite.com/widget/7CRJb72HNd" async></script>
+    
     <script>
         const handleSwalButtons = () => {
             const actions = document.querySelector('.swal2-actions');

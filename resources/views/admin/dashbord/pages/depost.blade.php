@@ -100,8 +100,8 @@
                                             {{ $deposit->updated_at ? $deposit->updated_at->format('d-m-Y H:i') : 'N/A' }}
                                         </td>
                                         <td>
-                                            <a href="#"><span class="micon dw dw-edit2"></span> Approve</a>
-                                            <a href="#"><span class="micon dw dw-trash"></span></a>
+                                            <a class='btn btn-sm btn-warning ' href="{{route('admin.aprove-depost')}}"> Approve</a>
+
                                         </td>
                                     </tr>
                                 @endforeach

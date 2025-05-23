@@ -191,7 +191,7 @@
 
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 60px">
                     <div>
-                        <a href="{{ route ('user.forgot-password') }}" style="font-size:14px">Forgot Password?</a>
+                        <a href="{{ route ('password.request') }}" style="font-size:14px">Forgot Password?</a>
                     </div>
                 </div>
 

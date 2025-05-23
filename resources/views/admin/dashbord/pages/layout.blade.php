@@ -213,6 +213,17 @@
     <!-- SweetAlert CDN -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <script>
+        function copyToClipboard(code) {
+            navigator.clipboard.writeText(code).then(function() {
+                alert('Code copied: ' + code);
+            }, function(err) {
+                alert('Failed to copy: ', err);
+            });
+        }
+    </script>
+
+
     @if (session('success'))
         <script>
             Swal.fire({

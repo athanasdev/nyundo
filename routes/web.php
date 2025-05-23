@@ -10,6 +10,7 @@ use App\Http\Controllers\User\TeamController;
 use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Auth\CustomPasswordResetController;
 
 // ==========================
 // User Authentication
@@ -21,7 +22,12 @@ Route::post('/register', [UserAuthController::class, 'register'])->name('registe
 Route::get('/login', [UserAuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [UserAuthController::class, 'login']);
 Route::post('/logout', [UserAuthController::class, 'logout'])->name('user.logout');
-Route::post('/forgot-password', [UserAuthController::class, 'forgotPassword'])->name('user.forgot-password');
+
+Route::get('/password/reset', [CustomPasswordResetController::class, 'showRequestForm'])->name('password.request');
+Route::post('/password/email', [CustomPasswordResetController::class, 'sendResetCode'])->name('password.email');
+Route::get('/password/set-new', [CustomPasswordResetController::class, 'showSetNewPasswordForm'])->name('password.set.new');
+Route::post('/password/reset', [CustomPasswordResetController::class, 'resetPassword'])->name('password.update');
+
 
 
 // ==========================
@@ -85,7 +91,8 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
     Route::get('/withdraw', [AdminUserController::class, 'withdraw'])->name('admin.withdraw');
     Route::get('/user-team', [AdminUserController::class, 'team'])->name('admin.team');
     Route::get('/trader-details/{id}', [AdminUserController::class, 'traderDetails'])->name('admin.trader-details');
-     Route::get('/admin.trader-block/{id}', [AdminUserController::class, 'traderBlock'])->name('admin.trader-block');
+    Route::get('/admin.trader-block/{id}', [AdminUserController::class, 'traderBlock'])->name('admin.trader-block');
+    Route::post('/admin/aprove-depost/{id}', [AdminUserController::class, 'aproveDepost'])->name('admin.aprove-depost');
 
     Route::get('/settings', [AdminUserController::class, 'settings'])->name('admin.settings');
 

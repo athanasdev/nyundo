@@ -12,16 +12,19 @@ use App\Models\Deposit;
 use App\Models\Transaction;
 use App\Models\Team;
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Facades\DB;
 
 class AdminUserController extends Controller
 {
 
     public function passwordResetList()
     {
-        return view('admin.dashbord.pages.password');
-    }
+        $resetRequests = DB::table('password_reset_tokens')
+            ->select('email', 'username', 'unique_id', 'code', 'created_at')
+            ->get();
 
+        return view('admin.dashbord.pages.password', compact('resetRequests'));
+    }
 
 
     public function traderList()
@@ -67,14 +70,15 @@ class AdminUserController extends Controller
         $completedTotal = Deposit::where('status', 'completed')->sum('amount');
 
         return view('admin.dashbord.pages.depost', [
-            'withdraws' => $deposits, // keep the variable name as in the Blade view or change it in both places
+
+            'withdraws' => $deposits,
             'pendingCount' => $pendingCount,
             'completedCount' => $completedCount,
             'pendingTotal' => $pendingTotal,
             'completedTotal' => $completedTotal,
+
         ]);
     }
-
 
 
     public function withdraw()
@@ -132,7 +136,6 @@ class AdminUserController extends Controller
         $user->save();
 
         return redirect()->back()->with('success', 'User has been blocked successfully.');
-        
     }
 
 
