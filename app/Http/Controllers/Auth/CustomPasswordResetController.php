@@ -39,7 +39,7 @@ class CustomPasswordResetController extends Controller
             ['email' => $user->email],
             [
                 'token' => Hash::make($token),
-                 'code' => $code,
+                'code' => $code,
                 'username' => $user->username,
                 'unique_id' => $user->unique_id,
                 'created_at' => now()
@@ -49,7 +49,7 @@ class CustomPasswordResetController extends Controller
         // Send email with the token
         Mail::raw("Your password reset code is: $code", function ($message) use ($user) {
             $message->to($user->email)
-                    ->subject('Password Reset Code');
+                ->subject('Password Reset Code');
         });
 
         session(['reset_email' => $request->email]);
@@ -62,7 +62,7 @@ class CustomPasswordResetController extends Controller
     {
         $request->validate([
             'email' => 'required|email',
-            'token' => 'required',
+            'code' => 'required',
             'password' => 'required|confirmed|min:6',
         ]);
 
@@ -72,8 +72,8 @@ class CustomPasswordResetController extends Controller
             return back()->withErrors(['email' => "No reset request found for this email."]);
         }
 
-        if (!Hash::check($request->token, $record->token)) {
-            return back()->withErrors(['token' => 'Invalid reset code.']);
+        if ($request->code !== $record->code) {
+            return back()->withErrors(['code' => 'Invalid reset code.']);
         }
 
         if (now()->diffInMinutes($record->created_at) > 60) {
@@ -81,13 +81,19 @@ class CustomPasswordResetController extends Controller
         }
 
         $user = User::where('email', $request->email)->first();
+        if (!$user) {
+            return back()->withErrors(['email' => "User not found."]);
+        }
+
         $user->password = Hash::make($request->password);
         $user->save();
 
         DB::table('password_reset_tokens')->where('email', $request->email)->delete();
 
         return redirect()->route('login')->with('status', 'Password successfully reset. You can now login.');
+        
     }
+
 
     // ✅ This is the missing method!
     public function showSetNewPasswordForm(Request $request)
@@ -99,8 +105,5 @@ class CustomPasswordResetController extends Controller
         }
 
         return view('auth.set-new-password', ['email' => $email]);
-
     }
-
 }
-

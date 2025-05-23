@@ -254,6 +254,19 @@
         });
         window.Swal = swalConfig;
     </script>
+
+    @if(session('status'))
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: '{{ session('status') }}',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#3085d6'
+        });
+    </script>
+@endif
+
 </body>
 
 </html>

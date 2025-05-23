@@ -79,31 +79,8 @@
 <body>
     <script src="https://inexfx.com/vendor/sweetalert/sweetalert.all.js"></script>
 
-            <script>
-            document.addEventListener('click', function(event) {
-                // Check if the clicked element or its parent has the attribute
-                var target = event.target;
-                var confirmDeleteElement = target.closest('[data-confirm-delete]');
 
-                if (confirmDeleteElement) {
-                    event.preventDefault();
-                    Swal.fire().then(function(result) {
-                        if (result.isConfirmed) {
-                            var form = document.createElement('form');
-                            form.action = confirmDeleteElement.href;
-                            form.method = 'POST';
-                            form.innerHTML = `
-                            <input type="hidden" name="_token" value="CsCtlXnLEo0CFqyLvz4h9rdjTxbfd6y7sTgxFzjC" autocomplete="off">                            <input type="hidden" name="_method" value="DELETE">                        `;
-                            document.body.appendChild(form);
-                            form.submit();
-                        }
-                    });
-                }
-            });
-
-                            Swal.fire({"title":"Success","text":"Verification Code Sent","background":"#fff","width":"32rem","heightAuto":true,"padding":"1.25rem","showConfirmButton":true,"showCloseButton":false,"confirmButtonText":"Ok","cancelButtonText":"Close","timerProgressBar":false,"customClass":{"container":null,"popup":null,"header":null,"title":null,"closeButton":null,"icon":null,"image":null,"content":null,"input":null,"actions":null,"confirmButton":null,"cancelButton":null,"footer":null},"icon":"success","confirmButtonColor":"#3085d6","allowOutsideClick":false,"showCancelButton":true,"cancelButtonColor":"#aaa"});
-                    </script>
-        <div class="preloader preload-container">
+    <div class="preloader preload-container">
         <div class="preload-logo " style="display: flex; flex-direction: column; align-items: center;">
             <div class="lds-ring" style="margin-bottom: 10px">
                 <div></div>
@@ -111,17 +88,18 @@
                 <div></div>
                 <div></div>
             </div>
-            <h6>Loading...</h6>
         </div>
     </div>
 
     <div class="header fixed-top bg-surface">
-        <a href="#" class="left back-btn"><i class="iconsax back-icon-ct" icon-name="arrow-left"></i></a>
+        <a href="#" class="left back-btn">
+            <i class="iconsax back-icon-ct" icon-name="arrow-left"></i></a>
     </div>
     <div class="">
         <div class="tf-container" style="margin-left:6%; margin-right:6%">
             <form action="{{ route('password.update') }}" class="mt-32 mb-16" method="POST">
-                @csrf                <div style="display: flex;align-items:center;flex-direction:column">
+                @csrf
+                <div style="display: flex;align-items:center;flex-direction:column">
                     <img src="https://inexfx.com/images/logo/logo.png" style="width:75%" alt="">
                     <h4 class="text-center">Reset Password</h4>
                     <span style="font-size: 16px;font-weight:600;margin:6px 0 20px 0">Create a New Password</span>
@@ -130,8 +108,7 @@
                     <p class="mb-1 text-small">Email Address</p>
                     <div class="box-input" style="padding: 6px 6px 6px 10px">
                         <i class="iconsax" icon-name="mail"></i>
-                        <input placeholder="Email Address" name="email"
-                            value="mussa@gmail.com" readonly>
+                        <input placeholder="Email Address" name="email">
                     </div>
                     <!--</div>-->
                 </fieldset>
@@ -139,18 +116,16 @@
                     <p class="mb-1 text-small">Verification Code</p>
                     <div class="box-input">
                         <i class="iconsax" icon-name="password-check"></i>
-                        <input type="text" placeholder="Verification code" name="verification_code"
-                            value="">
+                        <input type="text" placeholder="Verificationcode" name="code" required>
                     </div>
                 </fieldset>
                 <fieldset class="mb-16">
-
                     <p class="mb-1 text-small">New Password</p>
                     <div class="box-input">
                         <i class="iconsax" icon-name="key"></i>
                         <div class="box-auth-pass">
                             <input type="password" required placeholder="New Password" class="password-field"
-                                name="password" style="" value="">
+                                name="password" style="">
                             <span class="show-pass" style="">
                                 <i class="icon-view"></i>
                                 <i class="icon-view-hide"></i>
@@ -159,13 +134,13 @@
                     </div>
                 </fieldset>
                 <fieldset class="mb-16">
-                    <p class="mb-1 text-small">Repeat Your Password</p>
+                    <p class="mb-1 text-small">Repeat new Password</p>
                     <div class="box-input">
                         <i class="iconsax" icon-name="key"></i>
                         <div class="box-auth-pass">
                             <input type="password" required placeholder="Repeat Your Password"
-                                class="password-field2" name="repeat_password" style=""
-                                value="">
+                                class="password-field2" name="password_confirmation">
+
                             <span class="show-pass2" style="">
                                 <i class="icon-view"></i>
                                 <i class="icon-view-hide"></i>
@@ -176,8 +151,8 @@
 
                 <button class="mt-40 tf-btn lg yl-btn" type="submit">Save New Password</button>
                 <p class="mt-20 text-center text-small">I Didn’t Receive the Code? <a
-                        href="{{route('password.request')}}"
-                        style="font-weight:600;color:#f2b90f;font-size:14px!important">Resend Again</a></p>
+                        href="{{ route('password.request') }}"
+                        style="font-weight:600;color:#0f31f2;font-size:14px!important">Resend Again</a></p>
             </form>
 
         </div>
@@ -209,6 +184,18 @@
         });
         window.Swal = swalConfig;
     </script>
+
+    @if ($errors->any())
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                html: `{!! implode('<br>', $errors->all()) !!}`,
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#d33'
+            });
+        </script>
+    @endif
 
 </body>
 

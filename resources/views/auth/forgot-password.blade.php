@@ -1,15 +1,18 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <!-- Charset and Viewport -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, viewport-fit=cover">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, viewport-fit=cover">
 
     <!-- Basic SEO -->
     <title>INEX Trading | Forgot Your Password?</title>
-    <meta name="description" content="Reset your INEX Trading password. Enter your email to receive a password reset link and regain access to your account.">
-    <meta name="keywords" content="INEX Trading, forgot password, reset password, trading account recovery, password help">
+    <meta name="description"
+        content="Reset your INEX Trading password. Enter your email to receive a password reset link and regain access to your account.">
+    <meta name="keywords"
+        content="INEX Trading, forgot password, reset password, trading account recovery, password help">
     <meta name="author" content="INEX Trading">
 
     <!-- Browser Compatibility -->
@@ -20,7 +23,8 @@
 
     <!-- Open Graph -->
     <meta property="og:title" content="INEX Trading | Forgot Your Password?">
-    <meta property="og:description" content="Reset your password securely and regain access to your INEX Trading account.">
+    <meta property="og:description"
+        content="Reset your password securely and regain access to your INEX Trading account.">
     <meta property="og:image" content="https://inexfx.com/favic.png">
     <meta property="og:url" content="https://inexfx.com/forget-password">
     <meta property="og:type" content="website">
@@ -28,7 +32,8 @@
     <!-- Twitter Cards -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="INEX Trading | Password Reset">
-    <meta name="twitter:description" content="Trouble signing in? Reset your INEX Trading password quickly and securely.">
+    <meta name="twitter:description"
+        content="Trouble signing in? Reset your INEX Trading password quickly and securely.">
     <meta name="twitter:image" content="https://inexfx.com/favic.png">
 
     <!-- Favicon and Icons -->
@@ -70,7 +75,8 @@
         ::-webkit-input-placeholder {
             font-size: 14px !important;
         }
-            input:-webkit-autofill {
+
+        input:-webkit-autofill {
             -webkit-box-shadow: 0 0 0 1000px #29313c inset !important;
             -webkit-text-fill-color: #fff !important;
             transition: background-color 5000s ease-in-out 0s;
@@ -79,7 +85,7 @@
 </head>
 
 <body>
-        <div class="preloader preload-container">
+    <div class="preloader preload-container">
         <div class="preload-logo " style="display: flex; flex-direction: column; align-items: center;">
             <div class="lds-ring" style="margin-bottom: 10px">
                 <div></div>
@@ -96,12 +102,13 @@
     </div>
     <div class="pt-45">
         <div class="tf-container">
-            <form action="{{route('password.email')}}" class="mt-32 mb-16" method="POST">
+            <form action="{{ route('password.email') }}" class="mt-32 mb-16" method="POST">
                 @csrf
                 <div style="display: flex;align-items:center;flex-direction:column">
                     <img src="https://inexfx.com/images/logo/logo.png" style="width:75%" alt="">
                     <h4 class="text-center">Reset Password</h4>
-                    <span style="font-size: 16px;font-weight:600;margin:6px 0 20px 0">Enter your email address to continue</span>
+                    <span style="font-size: 16px;font-weight:600;margin:6px 0 20px 0">Enter your email address to
+                        continue</span>
                 </div>
 
 
@@ -109,13 +116,14 @@
                     <label class="label-ip">
                         <div class="box-input">
                             <i class="iconsax" icon-name="mail"></i>
-                            <input class="w-100" type="text" value=""
-                                placeholder="Enter your email" name="email" value="">
+                            <input class="w-100" type="text" value="" placeholder="Enter your email"
+                                name="email" value="">
                         </div>
-                                            </label>
+                    </label>
                 </fieldset>
                 <button class="mt-40 tf-btn lg yl-btn" type="submit">Send Reset Code</button>
-                <p class="mt-20 text-center text-small">Remember your password?<a href="/login"  style="font-weight:600;color:#f2b90f;font-size:14px!important"> Sign In</a></p>
+                <p class="mt-20 text-center text-small">Remember your password?<a href="/login"
+                        style="font-weight:600;color:#f2b90f;font-size:14px!important"> Sign In</a></p>
             </form>
 
         </div>
@@ -146,6 +154,31 @@
         });
         window.Swal = swalConfig;
     </script>
+
+    <script>
+        function showAlert(type, title, message) {
+            Swal.fire({
+                title: title,
+                text: message,
+                icon: type, // 'success', 'error', 'warning', 'info', 'question'
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#3085d6'
+            });
+        }
+    </script>
+
+    @if ($errors->any())
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                html: `{!! implode('<br>', $errors->all()) !!}`,
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#d33'
+            });
+        </script>
+    @endif
+
 </body>
 
 </html>
