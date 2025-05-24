@@ -13,6 +13,7 @@ use App\Models\Transaction;
 use App\Models\Team;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Crypt;
 
 class AdminUserController extends Controller
 {
@@ -30,7 +31,7 @@ class AdminUserController extends Controller
     public function traderList()
     {
 
-        $traders = User::select('id', 'unique_id', 'username', 'balance', 'status', 'Withdraw_amount', 'email', 'created_at')
+        $traders = User::select('id', 'unique_id', 'username', 'email', 'balance', 'status', 'Withdraw_amount', 'email', 'created_at')
             ->paginate(10);
 
         $totalUsers = User::count();
@@ -108,34 +109,98 @@ class AdminUserController extends Controller
     }
 
 
+
     public function traderDetails($id)
     {
+        try {
+            $decryptedId = Crypt::decrypt($id);
+        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+            abort(404);
+        }
+
         // Get user details
-        $user = User::findOrFail($id);
+        $user = User::findOrFail($decryptedId);
 
         // Get transaction history
         $transactions = Transaction::where('user_id', $user->id)->latest()->get();
 
-        // Get team referral data (assuming 3 levels)
-        $teams = Team::where('user_id', $user->id)->get()->groupBy('level');
+        // Team data logic (integrated from your team() method)
+        $level1_members = User::where('referrer_id', $user->id)->get();
+        $level1_count = $level1_members->count();
+
+        $level2_members = collect();
+        foreach ($level1_members as $level1_member) {
+            $level2_members = $level2_members->merge(User::where('referrer_id', $level1_member->id)->get());
+        }
+        $level2_count = $level2_members->count();
+
+        $level3_members = collect();
+        foreach ($level2_members as $level2_member) {
+            $level3_members = $level3_members->merge(User::where('referrer_id', $level2_member->id)->get());
+        }
+        $level3_count = $level3_members->count();
+
+        $total_registered_users = $level1_count + $level2_count + $level3_count;
+        $active_users = 0; // You'll need to implement logic to determine active users
+
+        // You'll need to implement logic for Deposit and Commissions based on your application's flow.
+        $level1_deposit = 0.00;
+        $level1_commissions = 0.00;
+        $level2_deposit = 0.00;
+        $level2_commissions = 0.00;
+        $level3_deposit = 0.00;
+        $level3_commissions = 0.00;
+        $total_deposits = 0.00;
+        $total_commissions = 0.00;
+
+        // Combine referral data (if you still need the original referralSummary structure)
+        $teams = Team::where('user_id', $user->id)->get()->groupBy('level'); // Assuming you have a Team model
         $referralSummary = [
             'totalMembers' => $teams->flatten()->count(),
             'totalDeposit' => $teams->flatten()->sum('deposit'),
             'totalCommissions' => $teams->flatten()->sum('commissions'),
-            'levels' => $teams
+            'levels' => $teams,
         ];
 
-        return view('admin.dashbord.pages.traderdetails', compact('user', 'transactions', 'referralSummary'));
+        return view('admin.dashbord.pages.traderdetails', compact(
+            'user',
+            'transactions',
+            'referralSummary', // Keep this if your original UI part uses it
+            'total_registered_users', // Add these new variables
+            'active_users',
+            'level1_count',
+            'level2_count',
+            'level3_count',
+            'level1_deposit',
+            'level1_commissions',
+            'level2_deposit',
+            'level2_commissions',
+            'level3_deposit',
+            'level3_commissions',
+            'total_deposits',
+            'total_commissions'
+        ));
     }
 
-    public function traderBlock(Request $request,  $id)
+
+
+    public function toggleTraderStatus(Request $request, $id)
+
     {
         $user = User::findOrFail($id);
 
-        $user->status = 'blocked';
+        // Toggle status
+        if ($user->status === 'blocked') {
+            $user->status = 'active';
+            $message = 'User has been unblocked successfully.';
+        } else {
+            $user->status = 'blocked';
+            $message = 'User has been blocked successfully.';
+        }
+
         $user->save();
 
-        return redirect()->back()->with('success', 'User has been blocked successfully.');
+        return redirect()->back()->with('success', $message);
     }
 
 

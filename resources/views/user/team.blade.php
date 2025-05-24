@@ -48,17 +48,17 @@
     <link href="https://iconsax.gitlab.io/i/icons.css" rel="stylesheet">
     <link rel="stylesheet" href="https://inexfx.com/css/countrySelect.css">
     <style>
-         .account-mode{
-            background:#29313c;
-            padding:2px 6px;
-            border-radius:4px;
-            font-weight:700;
+        .account-mode {
+            background: #29313c;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 700;
         }
     </style>
 </head>
 
 <body style="overflow-x: hidden">
-        <!-- preloade -->
+    <!-- preloade -->
     <div class="preloader preload-container">
         <div class="preload-logo " style="display: flex; flex-direction: column; align-items: center;">
             <div class="lds-ring" style="margin-bottom: 10px">
@@ -71,7 +71,7 @@
         </div>
     </div>
     <!-- /preload -->
-        <style>
+    <style>
         body {
             background: #1e2730;
         }
@@ -131,7 +131,7 @@
             padding: 15px;
         }
     </style>
-        <div class="header fixed-top d-flex justify-content-center align-items-center" style="background: #1e2730;">
+    <div class="header fixed-top d-flex justify-content-center align-items-center" style="background: #1e2730;">
         <a href="#" class="left back-btn"><i class="iconsax back-icon-ct" icon-name="arrow-left"></i></a>
         <h3 style="font-size:16px!important;font-weight:600">Team Management</h3>
     </div>
@@ -141,59 +141,67 @@
                 <img src="https://inexfx.com/invite.png" style="width: 50%" alt="">
                 <div class="d-col mt-3 align-center justify-center">
                     <span style="color:#fff;font-weight:800;font-size:20px">Invite Friends to Earn</span>
-                    <span class="text-center" style="margin-top: 6px;font-size:13px;width:80%;font-weight:600">Invite your friends to join Inex and earn 2% of their first deposit. Plus, receive ongoing commissions of 8%, 4%, and 2% from referrals at different levels.</span>
+                    <span class="text-center" style="margin-top: 6px;font-size:13px;width:80%;font-weight:600">Invite
+                        your friends to join Inex and earn 2% of their first deposit. Plus, receive ongoing commissions
+                        of 8%, 4%, and 2% from referrals at different levels.</span>
                 </div>
                 <div class="w-100 d-row align-center" style="column-gap: 10px;padding:20px">
                     <div class="link-class d-col">
                         <span class="title">Referral Link</span>
-                        <span class="body"> https://inexfx.com/register?invited_by=977819</span>
+                        <span class="body">{{ config('app.url') }}?invited_by={{ $user->referral_code }}</span>
                     </div>
-                    <button class="copy-button" onclick="copy('https://inexfx.com/register?invited_by=977819','Invitation Link Copied Successfully')">
-                        Copy                    </button>
+                    <button class="copy-button"
+                        onclick="copy()">
+                        Copy </button>
                 </div>
             </div>
         </div>
-                 <div class="d-row justify-evenly" style="pading:20px">
+
+        <div class="d-row justify-evenly" style="pading:20px">
             <div class="top-team-cards d-col text-center">
+                <span style="font-size: 24px;font-weight:700;color:#fff">{{ $total_registered_users }}</span>
                 <span
-                    style="font-size: 24px;font-weight:700;color:#fff">1</span>
-                <span style="font-size:16px;margin-top:10px;font-weight:600;margin-bottom:6px;color:aliceblue">Registered Users</span>
+                    style="font-size:16px;margin-top:10px;font-weight:600;margin-bottom:6px;color:aliceblue">Registered
+                    Users</span>
                 <span class="text-center">
                     <i class="iconsax" icon-name="info-circle"></i>
-                    Total Users Registered in All 3 Levels                </span>
-
+                    Total Users Registered in All 3 Levels
+                </span>
             </div>
             <div class="top-team-cards d-col text-center">
-               <span style="font-size: 24px;font-weight:700;color:#fff">0</span>
-                <span style="font-size:16px;margin-top:10px;font-weight:600;margin-bottom:6px;color:aliceblue">Active Users</span>
+                <span style="font-size: 24px;font-weight:700;color:#fff">{{ $active_users }}</span>
+                <span style="font-size:16px;margin-top:10px;font-weight:600;margin-bottom:6px;color:aliceblue">Active
+                    Users</span>
                 <span class="text-center">
                     <i class="iconsax" icon-name="info-circle"></i>
-                    Direct Referrals with Activated Accounts                </span>
+                    Direct Referrals with Activated Accounts
+                </span>
             </div>
         </div>
         <div class="" style="padding: 0 20px">
             <div class="vips-class">
                 <div class="vip-card">
                     <div class="d-row mb-3">
-                        <span style="font-size: 16px;font-weight:600;margin-right:10px;color:aliceblue">Active Users</span>
+                        <span style="font-size: 16px;font-weight:600;margin-right:10px;color:aliceblue">Active
+                            Users</span>
 
                     </div>
                     <div class="d-row justify-space">
                         <div class="d-col w-50">
                             <span style="font-size:14px;margin-bottom:4px">Level 1</span>
-                            <span style="font-size:18px;color:aliceblue;font-weight:600">0</span>
+                            <span style="font-size:18px;color:aliceblue;font-weight:600">{{ $active_users }}</span>
                         </div>
                         <div class="d-col w-50">
                             <span style="font-size:14px;margin-bottom:4px">Level 2</span>
-                            <span style="font-size:18px;color:aliceblue;font-weight:600">0</span>
+                            <span style="font-size:18px;color:aliceblue;font-weight:600">{{ $active_users }}</span>
                         </div>
                         <div class="d-col w-50">
                             <span style="font-size:14px;margin-bottom:4px">Level 3</span>
-                            <span style="font-size:18px;color:aliceblue;font-weight:600">0</span>
+                            <span style="font-size:18px;color:aliceblue;font-weight:600">{{ $active_users }}</span>
                         </div>
-                         <div class="d-col w-50">
+                        <div class="d-col w-50">
                             <span style="font-size:14px;margin-bottom:4px">Total</span>
-                            <span style="font-size:18px;color:aliceblue;font-weight:600">0</span>
+                            <span style="font-size:18px;color:aliceblue;font-weight:600">{{ $active_users }}</span>
                         </div>
                     </div>
                 </div>
@@ -209,15 +217,17 @@
                     <div class="d-row justify-space">
                         <div class="d-col w-50">
                             <span style="font-size:14px;margin-bottom:4px">Members</span>
-                            <span style="font-size:16px;color:aliceblue">1</span>
+                            <span style="font-size:16px;color:aliceblue">{{ $level1_count }}</span>
                         </div>
                         <div class="d-col w-50">
                             <span style="font-size:14px;margin-bottom:4px">Deposit</span>
-                            <span style="font-size:16px;color:aliceblue">0.000 USDT</span>
+                            <span style="font-size:16px;color:aliceblue">{{ number_format($level1_deposit, 2) }}
+                                USDT</span>
                         </div>
                         <div class="d-col w-50">
                             <span style="font-size:14px;margin-bottom:4px">Commissions</span>
-                            <span style="font-size:16px;color:aliceblue">0.000 USDT</span>
+                            <span style="font-size:16px;color:aliceblue">{{ number_format($level1_commissions, 2) }}
+                                USDT</span>
                         </div>
                     </div>
                 </div>
@@ -228,15 +238,17 @@
                     <div class="d-row justify-space">
                         <div class="d-col w-50">
                             <span style="font-size:14px;margin-bottom:4px">Members</span>
-                            <span style="font-size:16px;color:aliceblue">0</span>
+                            <span style="font-size:16px;color:aliceblue">{{ $level2_count }}</span>
                         </div>
                         <div class="d-col w-50">
                             <span style="font-size:14px;margin-bottom:4px">Deposit</span>
-                            <span style="font-size:16px;color:aliceblue">0.000 USDT</span>
+                            <span style="font-size:16px;color:aliceblue">{{ number_format($level2_deposit, 2) }}
+                                USDT</span>
                         </div>
                         <div class="d-col w-50">
                             <span style="font-size:14px;margin-bottom:4px">Commissions</span>
-                            <span style="font-size:16px;color:aliceblue">0.000 USDT</span>
+                            <span style="font-size:16px;color:aliceblue">{{ number_format($level2_commissions, 2) }}
+                                USDT</span>
                         </div>
                     </div>
                 </div>
@@ -247,15 +259,17 @@
                     <div class="d-row justify-space">
                         <div class="d-col w-50">
                             <span style="font-size:14px;margin-bottom:4px">Members</span>
-                            <span style="font-size:16px;color:aliceblue">0</span>
+                            <span style="font-size:16px;color:aliceblue">{{ $level3_count }}</span>
                         </div>
                         <div class="d-col w-50">
                             <span style="font-size:14px;margin-bottom:4px">Deposit</span>
-                            <span style="font-size:16px;color:aliceblue">0.000 USDT</span>
+                            <span style="font-size:16px;color:aliceblue">{{ number_format($level3_deposit, 2) }}
+                                USDT</span>
                         </div>
                         <div class="d-col w-50">
                             <span style="font-size:14px;margin-bottom:4px">Commissions</span>
-                            <span style="font-size:16px;color:aliceblue">0.000 USDT</span>
+                            <span style="font-size:16px;color:aliceblue">{{ number_format($level3_commissions, 2) }}
+                                USDT</span>
                         </div>
                     </div>
                 </div>
@@ -266,23 +280,23 @@
                     <div class="d-row justify-space">
                         <div class="d-col w-50">
                             <span style="font-size:14px;margin-bottom:4px">Total Members</span>
-                            <span
-                                style="font-size:16px;color:aliceblue">1</span>
+                            <span style="font-size:16px;color:aliceblue">{{ $total_registered_users }}</span>
                         </div>
                         <div class="d-col w-50">
                             <span style="font-size:14px;margin-bottom:4px">Total Deposits</span>
-                            <span
-                                style="font-size:16px;color:aliceblue">0.000 USDT</span>
+                            <span style="font-size:16px;color:aliceblue">{{ number_format($total_deposits, 2) }}
+                                USDT</span>
                         </div>
                         <div class="d-col w-50">
                             <span style="font-size:14px;margin-bottom:4px">Commissions</span>
-                            <span
-                                style="font-size:16px;color:aliceblue">0.000 USDT</span>
+                            <span style="font-size:16px;color:aliceblue">{{ number_format($total_commissions, 2) }}
+                                USDT</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
 
     @include('user.components.footer')
@@ -296,17 +310,17 @@
     <script type="text/javascript" src="https://inexfx.com/js/line-chart.js"></script>
     <script type="text/javascript" src="https://inexfx.com/js/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.19.1/dist/sweetalert2.all.min.js"></script>
-     <script>
-        $('.system-mode-toggle').on('click',function(){
+    <script>
+        $('.system-mode-toggle').on('click', function() {
             var mode = "1";
-            if(mode == '1'){
+            if (mode == '1') {
                 Swal.fire({
                     title: "Switch to Demo account",
                     text: "You are about to switch to demo account are you sure?",
                     icon: 'info',
                     showCancelButton: true,
                     showConfirmButton: true,
-                }).then(function(result){
+                }).then(function(result) {
                     if (result.isConfirmed) {
                         window.location.href = "https://inexfx.com/switch-to-demo";
                     } else if (result.isDismissed) {
@@ -317,15 +331,15 @@
                         });
                     }
                 });
-            }else if(mode == 0){
+            } else if (mode == 0) {
                 Swal.fire({
-                   title: "Switch to Real account",
+                    title: "Switch to Real account",
                     text: "You are about to switch to real account are you sure?",
                     icon: 'info',
                     showCancelButton: true,
                     showConfirmButton: true,
-                }).then(function(result){
-                   if (result.isConfirmed) {
+                }).then(function(result) {
+                    if (result.isConfirmed) {
                         window.location.href = "https://inexfx.com/switch-to-real";
                     } else if (result.isDismissed) {
                         Swal.fire({
@@ -338,7 +352,7 @@
             }
         });
     </script>
-        <script>
+    <script>
         const handleSwalButtons = () => {
             const actions = document.querySelector('.swal2-actions');
             if (!actions) return;

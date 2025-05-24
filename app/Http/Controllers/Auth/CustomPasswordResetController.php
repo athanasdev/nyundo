@@ -91,7 +91,7 @@ class CustomPasswordResetController extends Controller
         DB::table('password_reset_tokens')->where('email', $request->email)->delete();
 
         return redirect()->route('login')->with('status', 'Password successfully reset. You can now login.');
-        
+
     }
 
 
@@ -105,5 +105,10 @@ class CustomPasswordResetController extends Controller
         }
 
         return view('auth.set-new-password', ['email' => $email]);
+
     }
+
+
+
 }
+

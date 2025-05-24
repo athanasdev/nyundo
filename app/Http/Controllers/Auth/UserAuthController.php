@@ -83,13 +83,13 @@ class UserAuthController extends Controller
             'agree' => 'required|accepted',
         ]);
 
-        // 1. Find referrer (Level 1)
+        // 1. Look for the referring user via referral_code
         $referrer = null;
         if ($request->filled('invitation_code')) {
             $referrer = User::where('referral_code', $request->invitation_code)->first();
         }
 
-        // 2. Create unique IDs
+        // 2. Generate unique_id and referral_code
         do {
             $uniqueId = rand(8000000000, 8999999999);
         } while (User::where('unique_id', $uniqueId)->exists());
@@ -98,8 +98,9 @@ class UserAuthController extends Controller
             $referralCode = strtoupper(Str::random(6));
         } while (User::where('referral_code', $referralCode)->exists());
 
-        // 3. Create the new user
+        // 3. Create the new user with the referrer_id if found
         $user = User::create([
+
             'username' => $request->username,
             'email' => $request->email,
             'currency' => $request->currency,
@@ -107,46 +108,20 @@ class UserAuthController extends Controller
             'unique_id' => $uniqueId,
             'referral_code' => $referralCode,
             'referrer_id' => optional($referrer)->id,
+
         ]);
 
-        // 4. Update referral teams up to 3 levels
-        $currentReferrer = $referrer;
-        $level = 1;
 
-        while ($currentReferrer && $level <= 3) {
-            $team = \App\Models\Team::firstOrNew([
-                'user_id' => $currentReferrer->id,
-                'level' => $level,
-            ]);
-
-            // Initialize if new
-            if (!$team->exists) {
-                $team->members = 0;
-                $team->deposit = 0;
-                $team->commissions = 0;
-            }
-
-            $team->members += 1;
-            $team->save();
-
-            $currentReferrer = $currentReferrer->referrer;
-            $level++;
-        }
-
-        // 5. Log the new user in
         Auth::login($user);
-
-        // 6. Redirect to dashboard
         return redirect()->route('dashboard');
-    }
 
+    }
 
     public function showLoginForm()
     {
 
         return view('auth.login');
     }
-
 
     public function login(Request $request)
     {
@@ -165,6 +140,8 @@ class UserAuthController extends Controller
         return back()->withErrors([
             'username' => 'The provided credentials do not match our records.',
         ])->onlyInput('username');
+
+
     }
 
 
@@ -178,5 +155,6 @@ class UserAuthController extends Controller
         return redirect('/login')->with('success', 'You have been logged out.');
     }
 
-    
+
+
 }

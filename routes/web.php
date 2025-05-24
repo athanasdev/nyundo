@@ -91,7 +91,7 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
     Route::get('/withdraw', [AdminUserController::class, 'withdraw'])->name('admin.withdraw');
     Route::get('/user-team', [AdminUserController::class, 'team'])->name('admin.team');
     Route::get('/trader-details/{id}', [AdminUserController::class, 'traderDetails'])->name('admin.trader-details');
-    Route::get('/admin.trader-block/{id}', [AdminUserController::class, 'traderBlock'])->name('admin.trader-block');
+    Route::get('/admin.trader-block/{id}', [AdminUserController::class, 'toggleTraderStatus'])->name('admin.trader-block');
     Route::post('/admin/aprove-depost/{id}', [AdminUserController::class, 'aproveDepost'])->name('admin.aprove-depost');
 
     Route::get('/settings', [AdminUserController::class, 'settings'])->name('admin.settings');
@@ -101,6 +101,4 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
 
     //  Managements
     Route::get('/logs', [AdminUserController::class, 'systemLogs'])->name('admin.logs');
-
-
 });

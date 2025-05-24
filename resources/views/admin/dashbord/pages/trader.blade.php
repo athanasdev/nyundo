@@ -64,8 +64,6 @@
                     </div>
 
                 </div>
-
-
                 <!-- Export Datatable start -->
                 <div class="card-box mb-10">
                     <div class="pd-20">
@@ -79,6 +77,7 @@
                                         <th class="table-plus">Id</th>
                                         <th>UniqueID</th>
                                         <th>Username</th>
+                                        <th>Email</th>
                                         <th>Balance</th>
                                         <th>Status</th>
                                         <th>Join Date</th>
@@ -92,18 +91,23 @@
                                             <td class="table-plus">{{ $trader->id }}</td>
                                             <td>{{ $trader->unique_id }}</td>
                                             <td>{{ $trader->username }}</td>
+                                            <td>{{ $trader->email }}</td>
                                             <td>$ {{ $trader->balance }} </td>
                                             <td>{{ $trader->status }}</td>
-                                            <td>{{ $trader->created_at ? $trader->created_at->format('d-m-Y') : '--' }}</td>
+                                            <td>{{ $trader->created_at ? $trader->created_at->format('d-m-Y') : '--' }}
+                                            </td>
                                             <td>$ {{ $trader->Withdraw_amount }}</td>
                                             <td>
-                                                <a class="btn btn-sm btn-outline-success "
-                                                    href="{{ route('admin.trader-details', ['id' => $trader->id]) }}">Update
-                                                </a>
-                                                <a class="btn btn-sm {{ $trader->status === 'blocked' ? 'btn-success' : 'btn-danger' }}"
-                                                    href="{{ route('admin.trader-block', ['id' => $trader->id]) }}">
+
+                                                <a class="btn btn-sm btn-outline-secondary "
+                                                    href="{{ route('admin.trader-details', ['id' => encrypt($trader->id)]) }}">View</a>
+
+                                                <a class="btn btn-sm {{ $trader->status === 'blocked' ? 'btn-success' : 'btn-outline-danger' }}"
+                                                    href="{{ route('admin.trader-block', ['id' => $trader->id]) }}"
+                                                    onclick="return confirm('Are you sure you want to {{ $trader->status === 'blocked' ? 'unblock' : 'block' }} this user?')">
                                                     {{ $trader->status === 'blocked' ? 'Unblock' : 'Block' }}
                                                 </a>
+
 
                                             </td>
                                         </tr>

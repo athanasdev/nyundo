@@ -23,6 +23,7 @@ class User extends Authenticatable
         'password',
         'currency',
         'unique_id',
+        'ref_by',
         'referral_code',
         'referrer_id',
     ];
