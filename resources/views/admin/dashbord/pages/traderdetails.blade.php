@@ -9,6 +9,17 @@
                         <div class="pd-20 card-box height-100-p">
                             <h5 class="text-center h5 mb-0">Username: {{ $user->username }}</h5>
                             <p class="text-center text-muted font-14">Trader ID {{ $user->unique_id }}</p>
+                            <div class="section mb-3 mt-1 text-center">
+
+                                @if (Auth::guard('admin')->check())
+                                    {{-- Only show if an admin is logged in --}}
+                                    <a href="{{ route('impersonate.login', $user->id) }}"
+                                        class="btn btn-warning btn-sm mt-3">
+                                        Login as {{ $user->username }}
+                                    </a>
+                                @endif
+
+                            </div>
                             <div class="profile-info">
                                 <h5 class="mb-20 h5 text-blue">Trader Account:</h5>
                                 <ul>
@@ -16,6 +27,7 @@
                                     <li><span>ID:</span> {{ $user->unique_id }}</li>
                                     <li><span>Country:</span> {{ $user->country }}</li>
                                     <li><span>Balance </span> {{ $user->balance }}</li>
+
                                 </ul>
                             </div>
                             <div class="mt-4">
@@ -43,7 +55,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="row">
                     <div class="col-12 mb-30">
                         <div class="pd-20 card-box height-100-p">

@@ -1,7 +1,7 @@
 /* @import url('../fonts/Binance\ PLEX.ttf'); */
 
 :root {
-    --primary: #f2b90f;
+    --primary: #5409DA;
     --interactive: #0076f3;
     --white: #fff;
     --secondary: #8d98a6;
@@ -3072,7 +3072,7 @@ div:where(.swal2-icon) {
 }
 
 .swal2-confirm {
-    background-color: #f2b90f !important;
+    background-color: #5409DA !important;
     color: #1e2730!important;
 }
 .swal2-cancel,
@@ -3521,7 +3521,7 @@ div:where(.swal2-container) div:where(.swal2-loader) {
     margin: 10px 0 ;
 }
 .yl-btn{
-    background: #f2b90f;
+    background: #5409DA;
     color: #1e2730;
     display: flex;
     align-items: center;
@@ -3533,7 +3533,7 @@ div:where(.swal2-container) div:where(.swal2-loader) {
 .yl-btn:focus,
 .yl-btn:hover,
 .yl-btn:active{
-    background: #f2b90f!important;
+    background: #5409DA!important;
     color: #1e2730!important;
     display: flex!important;
     align-items: center!important;

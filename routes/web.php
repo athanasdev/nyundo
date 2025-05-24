@@ -11,17 +11,24 @@ use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Auth\CustomPasswordResetController;
+use App\Http\Controllers\ImpersonateController;
 
 // ==========================
 // User Authentication
 // ==========================
 
 
+
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [UserAuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [UserAuthController::class, 'login']);
+});
+
 Route::get('/', [UserAuthController::class, 'showRegisterForm'])->name('home');
 Route::post('/register', [UserAuthController::class, 'register'])->name('register');
-Route::get('/login', [UserAuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [UserAuthController::class, 'login']);
-Route::post('/logout', [UserAuthController::class, 'logout'])->name('user.logout');
+// Route::get('/login', [UserAuthController::class, 'showLoginForm'])->name('login');
+// Route::post('/login', [UserAuthController::class, 'login']);
+
 
 Route::get('/password/reset', [CustomPasswordResetController::class, 'showRequestForm'])->name('password.request');
 Route::post('/password/email', [CustomPasswordResetController::class, 'sendResetCode'])->name('password.email');
@@ -36,7 +43,6 @@ Route::post('/password/reset', [CustomPasswordResetController::class, 'resetPass
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AdminAuthController::class, 'login']);
-    Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
 });
 
 
@@ -48,7 +54,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 Route::middleware(['auth:web'])->group(function () {
     Route::get('/dashboard', fn() => view('user.dashboard'))->name('dashboard');
-
     Route::get('/my-account', [DashboardController::class, 'myaccount'])->name('my-account');
     Route::get('/assets', [DashboardController::class, 'assets'])->name('assets');
     Route::get('/order', [DashboardController::class, 'order'])->name('order');
@@ -73,6 +78,11 @@ Route::middleware(['auth:web'])->group(function () {
     Route::get('/team', [TeamController::class, 'team'])->name('team');
     Route::get('/ai-trading', [TeamController::class, 'aitrading'])->name('ai-trading');
     Route::get('/bonuses', [TeamController::class, 'bonuses'])->name('bonuses');
+
+
+    // It is important that this route is under 'auth:web' because the user is currently authenticated via 'web' guard
+    Route::get('/impersonate/leave', [ImpersonateController::class, 'leave'])->name('impersonate.leave');
+    Route::post('/logout', [UserAuthController::class, 'logout'])->name('user.logout');
 });
 
 
@@ -101,4 +111,10 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
 
     //  Managements
     Route::get('/logs', [AdminUserController::class, 'systemLogs'])->name('admin.logs');
+
+    // Admin-initiated Impersonation
+    // This route needs to be protected by the 'auth:admin' middleware
+    Route::get('/impersonate/{id}', [ImpersonateController::class, 'loginAsUser'])->name('impersonate.login');
+
+    Route::post('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
 });

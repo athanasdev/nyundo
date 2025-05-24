@@ -69,30 +69,9 @@
         <div
             style="display: flex;flex-direction:row;align-items:center;gap:10px;justify-content:space-between;width:100%;padding:10px 16px;border-bottom:1px solid #858CA2;background:#1e2730">
             <div class="">
-                <a href="" class="text-button" style="font-size: 20px;font-weight:600">Inex Markets</a>
+                <a href="" class="text-button" style="font-size: 20px;font-weight:600">Nyundo Traders</a>
             </div>
             <div style="display:flex;flex-direction:row;column-gap:10px;align-items:center">
-                <a href="#" class="system-mode-toggle">
-                    <div class="d-row align-center account-mode" style="column-gap:4px">
-                        <i class="iconsax" icon-name="setting-1"></i>
-                        <span style="font-size:14px">Real</span>
-                    </div>
-                </a>
-                <a href="https://inexfx.com/vip" class="text-button">
-                    <img src="https://inexfx.com/diamond-icon.svg" alt="" style="width: 25px;height:25px">
-                </a>
-                <a href="https://jivo.chat/mYllXH6MUc" class="text-button">
-                    <svg style="height:24px!important;width:24px!important" xmlns="http://www.w3.org/2000/svg"
-                        width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="icon icon-tabler icons-tabler-outline icon-tabler-headset">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <path d="M4 14v-3a8 8 0 1 1 16 0v3" />
-                        <path d="M18 19c0 1.657 -2.686 3 -6 3" />
-                        <path d="M4 14a2 2 0 0 1 2 -2h1a2 2 0 0 1 2 2v3a2 2 0 0 1 -2 2h-1a2 2 0 0 1 -2 -2v-3z" />
-                        <path d="M15 14a2 2 0 0 1 2 -2h1a2 2 0 0 1 2 2v3a2 2 0 0 1 -2 2h-1a2 2 0 0 1 -2 -2v-3z" />
-                    </svg>
-                </a>
                 <a href="{{ route('my-account') }}" class="text-button">
                     <img src="https://inexfx.com/avatar.png" alt=""
                         style="width: 35px;height:35px;border-radius:50%">
@@ -738,7 +717,7 @@
     @include('user.components.footer')
 
     @include('user.common.script')
-    
+
     <script>
         $('.system-mode-toggle').on('click', function() {
             var mode = "1";

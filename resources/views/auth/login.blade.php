@@ -42,8 +42,7 @@
     <link rel="stylesheet" href="https://inexfx.com/fonts/fonts.css">
     <link rel="stylesheet" href="https://inexfx.com/fonts/font-icons.css">
     <link rel="stylesheet" href="https://inexfx.com/css/bootstrap.min.css">
-    <
-    <link href="https://iconsax.gitlab.io/i/icons.css" rel="stylesheet">
+    < <link href="https://iconsax.gitlab.io/i/icons.css" rel="stylesheet">
 </head>
 
 <body>
@@ -162,7 +161,26 @@
                 <h4 class="text-center" style="margin-top: 50px">Login</h4>
             </div>
 
-            <form action="{{ route('login')}}" class="mt-16" method="POST">
+            <div class="section mt-2 mb-2">
+                @if (session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+            </div>
+
+            <form action="{{ route('login') }}" class="mt-16" method="POST">
                 @csrf
                 <fieldset class="mt-16">
                     <label class="label-ip">
@@ -189,9 +207,10 @@
                     </label>
                 </fieldset>
 
+
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 60px">
                     <div>
-                        <a href="{{ route ('password.request') }}" style="font-size:14px">Forgot Password?</a>
+                        <a href="{{ route('password.request') }}" style="font-size:14px">Forgot Password?</a>
                     </div>
                 </div>
 
@@ -199,8 +218,8 @@
 
                 <p class="mt-20 text-center text-small" style="font-size:14px">
                     I don’t have an account?
-                    <a href="{{ route('home') }}"
-                        style="font-weight:600;color:#f2b90f;font-size:14px!important">Sign Up</a>
+                    <a href="{{ route('home') }}" style="font-weight:600;color:#f2b90f;font-size:14px!important">Sign
+                        Up</a>
                 </p>
             </form>
 
@@ -255,17 +274,17 @@
         window.Swal = swalConfig;
     </script>
 
-    @if(session('status'))
-    <script>
-        Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: '{{ session('status') }}',
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#3085d6'
-        });
-    </script>
-@endif
+    {{-- @if (session('status'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: '{{ session('status') }}',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#3085d6'
+            });
+        </script>
+    @endif --}}
 
 </body>
 

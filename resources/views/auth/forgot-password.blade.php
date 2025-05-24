@@ -44,7 +44,7 @@
     <link rel="stylesheet" href="https://inexfx.com/fonts/fonts.css">
     <link rel="stylesheet" href="https://inexfx.com/fonts/font-icons.css">
     <link rel="stylesheet" href="https://inexfx.com/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="https://inexfx.com/css/styles.css" />
+     <link rel="stylesheet" type="text/css" href="{{ asset('client/css/styles.css') }}" />
     <link href="https://iconsax.gitlab.io/i/icons.css" rel="stylesheet">
     <style>
         .box-input {
@@ -123,7 +123,7 @@
                 </fieldset>
                 <button class="mt-40 tf-btn lg yl-btn" type="submit">Send Reset Code</button>
                 <p class="mt-20 text-center text-small">Remember your password?<a href="/login"
-                        style="font-weight:600;color:#f2b90f;font-size:14px!important"> Sign In</a></p>
+                        style="font-weight:600;color:#0f3cf2;font-size:14px!important"> Sign In</a></p>
             </form>
 
         </div>
@@ -155,17 +155,7 @@
         window.Swal = swalConfig;
     </script>
 
-    <script>
-        function showAlert(type, title, message) {
-            Swal.fire({
-                title: title,
-                text: message,
-                icon: type, // 'success', 'error', 'warning', 'info', 'question'
-                confirmButtonText: 'OK',
-                confirmButtonColor: '#3085d6'
-            });
-        }
-    </script>
+
 
     @if ($errors->any())
         <script>
@@ -174,7 +164,7 @@
                 title: 'Oops...',
                 html: `{!! implode('<br>', $errors->all()) !!}`,
                 confirmButtonText: 'OK',
-                confirmButtonColor: '#d33'
+                confirmButtonColor: '#00bfff'
             });
         </script>
     @endif

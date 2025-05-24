@@ -100,7 +100,7 @@
         @endif
 
     </div>
-
+   
     <div class="left-side-bar">
         <div class="brand-logo">
             <span>
