@@ -92,19 +92,30 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($referralSettings as $setting)
+                                {{-- Loop through the 'referrals' collection, not 'referralSettings' --}}
+                                @foreach ($referrals as $setting)
                                     <tr>
                                         <td>{{ $setting->id }}</td>
                                         <td>{{ $setting->level }}</td>
-                                        <td>{{ number_format($setting->commission_percentage, 2) }}</td>
+                                        {{-- Use 'percent' field from the new table --}}
+                                        <td>{{ number_format($setting->percent, 2) }}</td>
                                         <td>{{ $setting->created_at ? $setting->created_at->format('d-m-Y H:i') : 'N/A' }}
                                         </td>
                                         <td>{{ $setting->updated_at ? $setting->updated_at->format('d-m-Y H:i') : 'N/A' }}
                                         </td>
                                         <td>
-                                            <button class="btn btn-success btn-sm" type="submit">update</button>
+                                            {{-- This 'update' button currently has type="submit" without a form.
+                                 If you want to edit individual rows, you'll need:
+                                 1. A form around each row OR
+                                 2. A modal/separate page for editing.
+                                 The previous example I gave for ReferralController@index
+                                 uses a single form to add/edit all levels dynamically.
+                                 This simple 'update' button doesn't do anything by itself here.
+                            --}}
+                                            <button class="btn btn-success btn-sm" type="button">Edit</button>
+                                            {{-- You might also want a delete button --}}
+                                            {{-- <button class="btn btn-danger btn-sm" type="button">Delete</button> --}}
                                         </td>
-
                                     </tr>
                                 @endforeach
                             </tbody>

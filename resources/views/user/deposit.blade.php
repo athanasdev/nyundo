@@ -132,9 +132,7 @@
     </style>
     <div class="header fixed-top bg-surface d-flex justify-content-center align-items-center">
         <a href="#" class="left back-btn"><i class="iconsax back-icon-ct" icon-name="arrow-left"></i></a>
-        <h3 style="font-size:16px!important;font-weight:600">Deposit            <span style="text-transform:uppercase">
-                                    USDT
-                            </span>
+        <h3 style="font-size:16px!important;font-weight:600">Deposit<span style="text-transform:uppercase">USDT</span>
         </h3>
     </div>
         <div class="pt-45 pb-90">

@@ -10,8 +10,11 @@ use App\Http\Controllers\User\TeamController;
 use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\ReferralController;
+use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Auth\CustomPasswordResetController;
 use App\Http\Controllers\ImpersonateController;
+
 
 // ==========================
 // User Authentication
@@ -111,6 +114,14 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
 
     //  Managements
     Route::get('/logs', [AdminUserController::class, 'systemLogs'])->name('admin.logs');
+
+
+    Route::get('/referrals', [ReferralController::class, 'index'])->name('admin.referrals.index');
+    Route::post('/referrals', [ReferralController::class, 'store'])->name('admin.referrals.store');
+    Route::get('/referrals/status/{key}', [ReferralController::class, 'status'])->name('admin.referrals.status'); // This route will be for toggling global referral status
+
+    Route::post('/transactions/add', [TransactionController::class, 'store'])->name('transactions.add');
+
 
     // Admin-initiated Impersonation
     // This route needs to be protected by the 'auth:admin' middleware

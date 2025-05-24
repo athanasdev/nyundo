@@ -32,8 +32,10 @@
                             </div>
                             <div class="mt-4">
                                 <h5 class="text-blue mb-3">Adjust Balance</h5>
-                                <form action="/transactions/add" method="POST">
-                                    <input type="hidden" name="user_id" value="{{ $user->id }}">
+                                {{-- This form would typically be in a user-facing dashboard or admin panel --}}
+                                <form action="{{ route('transactions.add') }}" method="POST">
+                                    @csrf {{-- Don't forget the CSRF token for security! --}}
+                                    <input type="hidden" name="user_id" value="{{ $user->id }}"> {{-- Make sure $user is passed to this view --}}
                                     <div class="form-group">
                                         <label>Amount</label>
                                         <input type="number" name="amount" step="0.01" class="form-control" required>
@@ -41,15 +43,15 @@
                                     <div class="form-group">
                                         <label>Type</label>
                                         <select name="type" class="form-control">
-                                            <option value="credit">Credit</option>
-                                            <option value="debit">Debit</option>
+                                            <option value="credit">Add Balance</option>
+                                            <option value="debit">Remove Balance</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <label>Description</label>
                                         <textarea name="description" class="form-control"></textarea>
                                     </div>
-                                    <button class="btn btn-primary">Submit</button>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
                                 </form>
                             </div>
                         </div>

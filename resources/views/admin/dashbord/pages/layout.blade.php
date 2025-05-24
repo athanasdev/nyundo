@@ -18,15 +18,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="{{ asset('admin/vendors/styles/core.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('admin/vendors/styles/icon-font.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('admin/vendors/styles/style.css') }}">
 
     {{--  admin css --}}
-
-    <link rel="stylesheet" type="text/css"
-        href="{{ asset('admin/src/plugins/datatables/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin/src/plugins/datatables/css/dataTables.bootstrap4.min.css') }}">
     <link rel="stylesheet" type="text/css"
         href="{{ asset('admin/src/plugins/datatables/css/responsive.bootstrap4.min.css') }}">
 
@@ -100,7 +101,7 @@
         @endif
 
     </div>
-   
+
     <div class="left-side-bar">
         <div class="brand-logo">
             <span>
@@ -146,6 +147,15 @@
                             <span class="micon dw dw-paint-brush"></span><span class="mtext"> Logs </span>
                         </a>
                     </li>
+
+
+                    <li class="dropdown ">
+                        <a href="{{ route('admin.referrals.index') }}" class="dropdown-toggle no-arrow">
+                            <span class="micon dw dw-user-2"></span>
+                            <span class="mtext">Referrals</span>
+                        </a>
+
+                    </li>
                     <li class="dropdown ">
                         <a href="{{ route('admin.settings') }}" class="dropdown-toggle no-arrow">
                             <span class="micon dw dw-settings"></span>
@@ -184,6 +194,7 @@
     <script src="{{ asset('admin/vendors/scripts/process.js') }}"></script>
     <script src="{{ asset('admin/vendors/scripts/layout-settings.js') }}"></script>
     <script src="{{ asset('admin/src/plugins/apexcharts/apexcharts.min.js') }}"></script>
+    <script src="{{ asset('admin/src/scripts/jquery.min.js') }}"></script>
     <script src="{{ asset('admin/src/plugins/datatables/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('admin/src/plugins/datatables/js/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('admin/src/plugins/datatables/js/dataTables.responsive.min.js') }}"></script>
@@ -247,8 +258,6 @@
             });
         </script>
     @endif
-
-
 
 </body>
 

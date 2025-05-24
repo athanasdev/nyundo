@@ -14,6 +14,7 @@ use App\Models\Team;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Crypt;
+use App\Models\Referral;
 
 class AdminUserController extends Controller
 {
@@ -207,10 +208,14 @@ class AdminUserController extends Controller
 
     public function settings()
     {
+        // Fetch all referral levels from the new 'referrals' table
+        // If you paginate here, ensure your view handles pagination links
+        $referrals = Referral::orderBy('level')->get(); // Or paginate(20) if you expect many levels
 
-        $referralSettings = ReferralSetting::select('id', 'level', 'commission_percentage')->paginate(20);
+        // If you have other general settings, you might fetch them here too
+        // For now, we'll focus on referrals
 
-
-        return view('admin.dashbord.pages.settings', compact('referralSettings'));
+        return view('admin.dashbord.pages.settings', compact('referrals'));
     }
+    
 }

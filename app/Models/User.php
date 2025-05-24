@@ -2,14 +2,12 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
     /**
@@ -23,9 +21,12 @@ class User extends Authenticatable
         'password',
         'currency',
         'unique_id',
-        'ref_by',
         'referral_code',
         'referrer_id',
+        'balance', // Added: Important for updating user balances
+        'status',  // Added: If you update user status via mass assignment
+        'withdraw_amount', // Added: If you update this via mass assignment
+        'country', // Added: Based on your `desc users;` output
     ];
 
     /**
@@ -47,11 +48,13 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'password'          => 'hashed',
+            'balance'           => 'decimal:2',       // Added: Ensures correct decimal handling for balance
+            'withdraw_amount'   => 'decimal:2',       // Added: Ensures correct decimal handling for withdraw_amount
         ];
     }
 
-    //  model relationships
+    // Model relationships
     public function deposits()
     {
         return $this->hasMany(Deposit::class);
@@ -67,25 +70,28 @@ class User extends Authenticatable
         return $this->hasMany(Team::class);
     }
 
-
     public function transactions()
     {
         return $this->hasMany(Transaction::class);
     }
 
-
+    /**
+     * Get the user who referred this user (the parent referrer).
+     * This defines the inverse relationship for the 'referrer_id' column.
+     */
     public function referrer()
     {
         return $this->belongsTo(User::class, 'referrer_id');
     }
 
-
+    /**
+     * Get the users that were directly referred by this user.
+     * This defines the one-to-many relationship for direct referrals.
+     */
     public function referrals()
     {
         return $this->hasMany(User::class, 'referrer_id');
     }
 
 
-
 }
-
