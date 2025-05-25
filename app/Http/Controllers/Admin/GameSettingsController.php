@@ -181,6 +181,7 @@ class GameSettingsController extends Controller
             Log::error("Error toggling payout status for {$gameSetting->id}: " . $e->getMessage());
             return back()->with('error', 'Failed to toggle payout status. Please try again.');
         }
+
     }
 
 
