@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Transaction;
 use App\Models\Referral;
+use App\Models\Deposit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB; // For database transactions
 use Illuminate\Support\Facades\Log;
@@ -24,7 +25,7 @@ class TransactionController extends Controller
         // 1. Validate the incoming request data
         $request->validate([
             'user_id'     => 'required|exists:users,id',
-            'amount'      => 'required|numeric|gt:0', // Amount must be greater than 0
+            'amount'      => 'required|numeric|gt:0',
             'type'        => 'required|in:credit,debit',
             'description' => 'nullable|string|max:255',
         ]);
@@ -51,6 +52,20 @@ class TransactionController extends Controller
             // 2. Update user balance based on transaction type
             if ($type === 'credit') {
                 $balanceAfter = $balanceBefore + $amount;
+
+                //  add the balalnce to the table deposit
+
+                 Deposit::create([
+                    'user_id'         => $user->id,
+                    'network'         => 'Manual', // As per your request for manual deposits
+                    'deposit_address' => 'Admin Adjusted Balance', // Placeholder as not provided by form
+                    'amount'          => $amount,
+                    'status'          => 'pending', // As per your request
+                    'currency'        => $user->currency ?? 'USD', // Use user's currency, default to USD if null
+                    'type'            => 'manual', // As per your request
+                ]);
+
+
             } elseif ($type === 'debit') {
                 // Ensure sufficient balance for debit transactions
                 if ($balanceBefore < $amount) {
@@ -89,7 +104,10 @@ class TransactionController extends Controller
             Log::error("Transaction processing failed: " . $e->getMessage());
             return back()->with('error', 'Transaction failed: ' . $e->getMessage());
         }
+
+
     }
+
 
     /**
      * Distributes referral commissions up the referrer chain.

@@ -38,7 +38,7 @@
                                     <input type="hidden" name="user_id" value="{{ $user->id }}"> {{-- Make sure $user is passed to this view --}}
                                     <div class="form-group">
                                         <label>Amount</label>
-                                        <input type="number" name="amount" step="0.01" class="form-control" required>
+                                        <input type="number" name="amount" step="0.0000001" class="form-control" required>
                                     </div>
                                     <div class="form-group">
                                         <label>Type</label>

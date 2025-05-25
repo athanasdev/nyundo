@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\Referral;
 
+
 class AdminUserController extends Controller
 {
 
@@ -217,5 +218,51 @@ class AdminUserController extends Controller
 
         return view('admin.dashbord.pages.settings', compact('referrals'));
     }
+
+
+    // public function aproveDepost(Request $request , $id)
+    // {
+    //      return null;
+    // }
+
+
+    public function aproveDepost(Request $request, $id)
+    {
+        // Use a database transaction for atomicity
+        DB::beginTransaction();
+
+        try {
+            // 1. Find the deposit
+            $deposit = Deposit::find($id);
+
+            // Check if the deposit exists
+            if (!$deposit) {
+                DB::rollBack();
+                return back()->with('error', 'Deposit not found.');
+            }
+
+            // Check if the deposit is already completed
+            if ($deposit->status === 'completed') {
+                DB::rollBack();
+                return back()->with('info', 'Deposit is already completed.');
+            }
+
+            // 2. Update deposit status to 'completed'
+            $deposit->status = 'completed';
+            $deposit->save();
+
+            // // If everything above is successful, commit the transaction
+            DB::commit();
+
+            return back()->with('success', 'Deposit approved and user balance updated successfully!');
+        } catch (\Exception $e) {
+            // If any error occurs, rollback all changes
+            DB::rollBack();
+            Log::error("Failed to approve deposit ID {$id}: " . $e->getMessage());
+            return back()->with('error', 'Failed to approve deposit. Please try again.');
+        }
+
+    }
+
     
 }

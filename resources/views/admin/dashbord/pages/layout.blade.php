@@ -148,6 +148,13 @@
                         </a>
                     </li>
 
+                     <li class="dropdown ">
+                        <a href="{{ route('admin.game_settings.index') }}" class="dropdown-toggle no-arrow">
+                            <span class="micon dw dw-user"></span>
+                            <span class="mtext">Siginal And Bolt</span>
+                        </a>
+
+                    </li>
 
                     <li class="dropdown ">
                         <a href="{{ route('admin.referrals.index') }}" class="dropdown-toggle no-arrow">
@@ -156,6 +163,7 @@
                         </a>
 
                     </li>
+
                     <li class="dropdown ">
                         <a href="{{ route('admin.settings') }}" class="dropdown-toggle no-arrow">
                             <span class="micon dw dw-settings"></span>

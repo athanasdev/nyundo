@@ -68,7 +68,7 @@
                         <h4 class="text-blue h4">Deposit Requests</h4>
                     </div>
                     <div class="pb-20">
-                        <table class="table hover multiple-select-row data-table-export nowrap">
+                        <table class="table hover data-table-export nowrap">
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -89,7 +89,8 @@
                                         <td>${{ number_format($deposit->amount, 2) }}</td>
                                         <td>{{ $deposit->payment_address }}</td>
                                         <td>
-                                            <span class="badge {{ $deposit->status == 'pending' ? 'badge-warning' : 'badge-success' }}">
+                                            <span
+                                                class="badge {{ $deposit->status == 'pending' ? 'badge-warning' : 'badge-success' }}">
                                                 {{ ucfirst($deposit->status) }}
                                             </span>
                                         </td>
@@ -100,8 +101,19 @@
                                             {{ $deposit->updated_at ? $deposit->updated_at->format('d-m-Y H:i') : 'N/A' }}
                                         </td>
                                         <td>
-                                            <a class='btn btn-sm btn-warning ' href="{{route('admin.aprove-depost')}}"> Approve</a>
-
+                                            {{-- Only show the approve button if the deposit is pending --}}
+                                            @if ($deposit->status === 'pending')
+                                                <form action="{{ route('admin.aprove-depost', ['id' => $deposit->id]) }}"
+                                                    method="POST" style="display:inline;">
+                                                    @csrf {{-- This is crucial for Laravel's POST security --}}
+                                                    <button type="submit" class="btn btn-sm btn-info"
+                                                        onclick="return confirm('Are you sure you want to approve this deposit?');">
+                                                        Approve
+                                                    </button>
+                                                </form>
+                                            @else
+                                                <span class="badge bg-success">Approved</span>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach

@@ -10,11 +10,13 @@ use App\Http\Controllers\User\TeamController;
 use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\GameSettingsController;
 use App\Http\Controllers\Admin\ReferralController;
 use App\Http\Controllers\Admin\TransactionController;
+use App\Http\Controllers\Admin\UserInvestmentsController;
 use App\Http\Controllers\Auth\CustomPasswordResetController;
 use App\Http\Controllers\ImpersonateController;
-
+use App\Http\Controllers\User\GameController;
 
 // ==========================
 // User Authentication
@@ -82,6 +84,9 @@ Route::middleware(['auth:web'])->group(function () {
     Route::get('/ai-trading', [TeamController::class, 'aitrading'])->name('ai-trading');
     Route::get('/bonuses', [TeamController::class, 'bonuses'])->name('bonuses');
 
+    // User Game Investment
+    Route::get('/game', [GameController::class, 'showInvestmentForm'])->name('user.game.invest_form');
+    Route::post('/game/invest', [GameController::class, 'invest'])->name('user.game.invest');
 
     // It is important that this route is under 'auth:web' because the user is currently authenticated via 'web' guard
     Route::get('/impersonate/leave', [ImpersonateController::class, 'leave'])->name('impersonate.leave');
@@ -123,9 +128,24 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
     Route::post('/transactions/add', [TransactionController::class, 'store'])->name('transactions.add');
 
 
+
+    Route::resource('game-settings', GameSettingsController::class)->names('admin.game_settings');
+    Route::post('game-settings/{game_setting}/toggle-investment', [GameSettingsController::class, 'toggleInvestmentStatus'])->name('admin.game_settings.toggle_investment');
+    Route::post('game-settings/{game_setting}/toggle-payout', [GameSettingsController::class, 'togglePayoutStatus'])->name('admin.game_settings.toggle_payout');
+
+
+    // User Investments Management (Admin)
+    Route::get('/user-investments', [UserInvestmentsController::class, 'index'])->name('admin.user_investments.index');
+    Route::post('/user-investments/{user_investment}/payout-profit', [UserInvestmentsController::class, 'payoutProfit'])->name('admin.user_investments.payout_profit');
+    Route::post('/user-investments/{user_investment}/return-principal', [UserInvestmentsController::class, 'returnPrincipal'])->name('admin.user_investments.return_principal');
+    Route::post('/user-investments/{user_investment}/cancel', [UserInvestmentsController::class, 'cancelInvestment'])->name('admin.user_investments.cancel');
+
     // Admin-initiated Impersonation
     // This route needs to be protected by the 'auth:admin' middleware
     Route::get('/impersonate/{id}', [ImpersonateController::class, 'loginAsUser'])->name('impersonate.login');
 
     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
+
+
+
 });

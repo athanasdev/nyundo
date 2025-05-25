@@ -55,6 +55,13 @@ class User extends Authenticatable
     }
 
     // Model relationships
+
+    public function investments()
+    {
+        return $this->hasMany(UserInvestment::class);
+    }
+
+
     public function deposits()
     {
         return $this->hasMany(Deposit::class);
