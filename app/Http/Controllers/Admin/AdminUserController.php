@@ -56,8 +56,11 @@ class AdminUserController extends Controller
 
 
     public function systemLogs()
+
     {
-        return view('admin.dashbord.pages.logs');
+         $transactions = Transaction::select('id', 'user_id', 'type', 'amount', 'description', 'created_at')
+            ->paginate(10);
+         return view('admin.dashbord.pages.logs', compact('transactions'));
     }
 
 
@@ -264,5 +267,5 @@ class AdminUserController extends Controller
 
     }
 
-    
+
 }
