@@ -42,22 +42,28 @@
                             <tr>
                                 <th>ID</th>
                                 {{-- <th>Name</th> --}}
-                                <th>Start Time</th>
-                                <th>End Time</th>
+                                <th>Start Time (Local)</th> {{-- Clarified label --}}
+                                <th>End Time (Local)</th>   {{-- Clarified label --}}
                                 <th>Earning (%)</th>
                                 <th>Active</th>
                                 <th>Payout Enabled</th>
-                                <th>Created At</th>
+                                <th>Created At (UTC)</th>   {{-- Clarified label, as created_at/updated_at are typically stored/displayed in app's default UTC --}}
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
+                            @php
+                                // Get the admin's timezone for consistent display across the table
+                                $adminTimezone = \App\Models\GameSetting::getAdminTimezone();
+                            @endphp
+
                             @forelse ($settings as $setting)
                                 <tr>
                                     <td>{{ $setting->id }}</td>
                                     {{-- <td>{{ $setting->name }}</td> --}}
-                                    <td>{{ $setting->start_time }}</td>
-                                    <td>{{ $setting->end_time }}</td>
+                                    {{-- Convert stored UTC time to admin's timezone for display --}}
+                                    <td>{{ $setting->start_time->setTimezone($adminTimezone)->format('h:i A') }}</td>
+                                    <td>{{ $setting->end_time->setTimezone($adminTimezone)->format('h:i A') }}</td>
                                     <td>{{ number_format($setting->earning_percentage, 2) }}%</td>
                                     <td>
                                         <span class="badge badge-{{ $setting->is_active ? 'success' : 'danger' }}">
@@ -69,6 +75,7 @@
                                             {{ $setting->payout_enabled ? 'Yes' : 'No' }}
                                         </span>
                                     </td>
+                                    {{-- created_at/updated_at are usually displayed in UTC (app's timezone) or converted to user's local if applicable --}}
                                     <td>{{ $setting->created_at->format('Y-m-d H:i') }}</td>
                                     <td>
                                         <div class="dropdown">
@@ -102,7 +109,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7">No game settings found.</td> {{-- Adjust colspan based on your columns --}}
+                                    <td colspan="8">No game settings found.</td> {{-- Adjust colspan based on your columns --}}
                                 </tr>
                             @endforelse
                         </tbody>

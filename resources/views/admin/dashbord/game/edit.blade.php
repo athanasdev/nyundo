@@ -51,13 +51,11 @@
                     --}}
 
                     @php
-                        // Get the admin's timezone for display from the GameSetting model
-                        // This will be 'Africa/Nairobi' as defined in your model
+                        // Get the admin's timezone for display (from the GameSetting model)
                         $adminTimezone = \App\Models\GameSetting::getAdminTimezone();
                     @endphp
 
                     <div class="mb-3">
-                        {{-- Label clarifies that the time is in the admin's local timezone --}}
                         <label for="start_time" class="form-label">Start Time (HH:MM - Your Local Time)</label>
                         <input type="time" class="form-control @error('start_time') is-invalid @enderror" id="start_time" name="start_time"
                                value="{{ old('start_time', $gameSetting->start_time->setTimezone($adminTimezone)->format('H:i')) }}" required>
@@ -69,7 +67,6 @@
                     </div>
 
                     <div class="mb-3">
-                        {{-- Label clarifies that the time is in the admin's local timezone --}}
                         <label for="end_time" class="form-label">End Time (HH:MM - Your Local Time)</label>
                         <input type="time" class="form-control @error('end_time') is-invalid @enderror" id="end_time" name="end_time"
                                value="{{ old('end_time', $gameSetting->end_time->setTimezone($adminTimezone)->format('H:i')) }}" required>
