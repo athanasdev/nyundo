@@ -19,7 +19,6 @@
                                         <th class="table-plus">Id</th>
                                         <th>User Id</th>
                                         <th>Type</th>
-
                                         <th>Amount</th>
                                         <th>Descriptions</th>
                                         <th>Created At</th>

@@ -47,94 +47,46 @@
 
 <body>
     <style>
+        /* Teal-themed UI colors for box input and language selector */
         .box-input {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            background: #29313c;
-            padding: 0 0 0 15px;
-            border-radius: 8px;
-        }
-
-        input:-webkit-autofill {
-            -webkit-box-shadow: 0 0 0 1000px #29313c inset !important;
-            -webkit-text-fill-color: #fff !important;
-            transition: background-color 5000s ease-in-out 0s;
-        }
-
-        .box-input i {
-            color: #ffffff;
-            font-size: 20px;
-        }
-
-        .box-input input {
-            width: 100%;
-            padding: 10px;
-            border-radius: 5px;
-            border: none;
-            font-size: 14px;
-            background: transparent;
-        }
-
-        ::-webkit-input-placeholder {
-            font-size: 14px !important;
+            background: #005f5f;
+            /* Dark teal background */
         }
 
         .lang-selector {
-            position: absolute;
-            right: 20px;
-            top: 20px;
-            padding: 10px;
-            background: #29313c;
-            border-radius: 6px;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            column-gap: 5px;
+            background: #007373;
+            /* Medium teal background */
         }
 
-        .lang-selector i {
-            font-size: 20px;
+        /* Keep input default look, only change focus appearance */
+        input:focus,
+        .search-field:focus {
+            outline: none !important;
+            border: 1px solid #008080 !important;
+            /* Teal border */
+            box-shadow: 0 0 0 2px rgba(0, 128, 128, 0.4) !important;
+            background-color: #fff;
+            /* Ensure input doesn't darken */
+            color: #000;
+            /* Text remains black */
         }
 
-        .lang-selector span {
-            font-size: 14px;
-            font-weight: 600
+        /* Optional autofill background fix for Chrome */
+        input:-webkit-autofill {
+            -webkit-box-shadow: 0 0 0 1000px white inset !important;
+            -webkit-text-fill-color: #000 !important;
         }
 
-        .search-field {
-            background: #29313c;
-            padding: 10px;
-            border-radius: 6px;
-        }
-
-        .search-field i {
-            font-size: 20px;
-        }
-
-        .search-field input {
-            background: transparent;
-            padding: 0;
+        /* Optional: Customize button appearance */
+        .tf-btn.lg.yl-btn {
+            background-color: #008080;
+            color: #ffffff;
             border: none;
+            transition: background-color 0.3s ease;
         }
 
-        .languages-list {
-            padding: 10px;
-        }
-
-        .language-class {
-            margin: 15px 0;
-        }
-
-        .language-class span {
-            font-size: 16px;
-            font-weight: 500;
-            color: #fff;
-        }
-
-        .language-class i {
-            font-size: 20px;
-            color: #fff;
+        .tf-btn.lg.yl-btn:hover {
+            background-color: #006666;
         }
     </style>
 
@@ -147,17 +99,15 @@
                 <div></div>
                 <div></div>
             </div>
-            <h6>...</h6>
+
         </div>
     </div>
     <!-- /preload -->
-    {{-- <div class="header fixed-top bg-surface">
-        <a href="#" class="left back-btn"><i class="iconsax back-icon-ct" icon-name="arrow-left"></i></a>
-    </div> --}}
+
     <div class="pt-45 pb-20">
         <div class="tf-container" style="margin-left:6%; margin-right:6%">
             <div class="mt-32" style="display: flex;align-items:center;flex-direction:column">
-                <img src="https://inexfx.com/images/logo/logo.png" style="width:75%" alt="">
+                <img src="{{ asset('images/logo/logo.png') }}" style="width:75%" alt="Logo">
                 <h4 class="text-center" style="margin-top: 50px">Login</h4>
             </div>
 
@@ -218,7 +168,7 @@
 
                 <p class="mt-20 text-center text-small" style="font-size:14px">
                     I don’t have an account?
-                    <a href="{{ route('home') }}" style="font-weight:600;color:#f2b90f;font-size:14px!important">Sign
+                    <a href="{{ route('home') }}" style="font-weight:600;color:#090703;font-size:14px!important">Sign
                         Up</a>
                 </p>
             </form>

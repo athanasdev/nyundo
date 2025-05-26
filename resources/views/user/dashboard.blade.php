@@ -73,59 +73,36 @@
             </div>
             <div style="display:flex;flex-direction:row;column-gap:10px;align-items:center">
                 <a href="{{ route('my-account') }}" class="text-button">
-                    <img src="https://inexfx.com/avatar.png" alt=""
-                        style="width: 35px;height:35px;border-radius:50%">
+                  
                 </a>
             </div>
         </div>
     </div>
 
     <div class="pb-80" style="padding: 65px 20px 80px 10px">
-        <div class="swiper mySwiper" style="height:160px!important;border-radius:6px">
-            <div class="swiper-wrapper">
-                <div class="swiper-slide">
-                    <a href="https://inexfx.com/ai-trading">
-                        <img src="https://inexfx.com/ai-trade-poster.png" alt="">
-                    </a>
-                </div>
-                <div class="swiper-slide">
-                    <a href="https://inexfx.com/my-team">
-                        <img src="https://inexfx.com/invite-banner.png" alt="">
-                    </a>
-                </div>
-                <div class="swiper-slide">
-                    <img src="https://inexfx.com/zero-know.png" alt="">
-                </div>
-                <div class="swiper-slide">
-                    <img src="https://inexfx.com/signal-time.png" alt="">
-                </div>
-                <div class="swiper-slide">
-                    <a href="https://t.me/inexchannel" target="_blank">
-                        <img src="https://inexfx.com/join-channel.png" alt="">
-                    </a>
-                </div>
-                <div class="swiper-slide">
-                    <a href="">
-                        <img src="https://inexfx.com/customer-support.png" alt="">
-                    </a>
-                </div>
+        <div class="swiper mySwiper" style="height:100px!important;border-radius:20px">
+
+
+
+            <div class="swiper-pagination">
+
             </div>
-            <div class="swiper-pagination"></div>
         </div>
+
 
         @include('user.components.menu-header')
 
 
-        <a href="https://inexfx.com/my-team">
-            <div style="margin-top:15px">
-                <img src="https://inexfx.com/deposit-bonus.png" style="border-radius:6px">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                <a href="https://www.coindesk.com/crypto-news" target="_blank">
+                    <img src="https://img.freepik.com/free-vector/crypto-currency-horizontal-banner-bitcoin-digital-web-money-technology_48369-13318.jpg?size=626&ext=jpg"
+                        alt="Cryptocurrency Banner" style="width: 100%; max-height: 200px; object-fit: cover;">
+                </a>
             </div>
-        </a>
-        <a href="https://inexfx.com/deposit">
-            <div style="margin-top:15px">
-                <img src="https://inexfx.com/deposit-now.png" style="border-radius:6px">
-            </div>
-        </a>
+        </div>
+
+
         <div class="tf-container" style="padding-left:0px">
             <div class="pb-12">
                 <div class="wrap-filter-swiper">

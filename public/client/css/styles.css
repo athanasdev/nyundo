@@ -1,12 +1,12 @@
 /* @import url('../fonts/Binance\ PLEX.ttf'); */
 
-:root {
+/* :root {
     --primary: #5409DA;
     --interactive: #0076f3;
     --white: #fff;
     --secondary: #8d98a6;
     --secondary2: #d9d9d9;
-    --surface: #1e2730;
+    --surface: #F5EFFF;
     --red: #d33535;
     --critical: #f53966;
     --remake: #f5c738;
@@ -14,7 +14,24 @@
     --menuDark: #222223;
     --backdrop: #161616;
     --shadow1: 0px 5.31717px 13.29293px 0px rgba(0, 0, 0, 0.05);
+} */
+
+:root {
+  --primary: #7A4DFF;        /* Softer violet to match --surface */
+  --interactive: #6A9BFF;    /* Light blue, pleasant for buttons/links */
+  --white: #FFFFFF;          /* Keep white for contrast */
+  --secondary: #A69DB0;      /* Muted gray-purple */
+  --secondary2: #E6E0F2;     /* Light background shade */
+  --surface: #2C2C2C;        /* Your chosen soft background */
+  --red: #FF6B6B;            /* Slightly softened red for alerts */
+  --critical: #FF4D6D;       /* Lighter critical color */
+  --remake: #FFD166;         /* Warm, friendly yellow for warnings/highlights */
+  --line: #B3A8C9;           /* Soft line border to match background */
+  --menuDark: #4B3F61;       /* Dark purple-gray for menu contrasts */
+  --backdrop: #2E253C;       /* For modal overlays or darker backgrounds */
+  --shadow1: 0px 5px 15px rgba(0, 0, 0, 0.08); /* Softer shadow */
 }
+
 
 @font-face {
     font-family: "binance-plex";

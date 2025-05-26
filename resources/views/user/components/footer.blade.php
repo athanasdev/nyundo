@@ -1,4 +1,4 @@
-<div class="menubar-footer footer-fixed" style="background: #1e2730; backdrop-filter: blur(6px);">
+<div class="menubar-footer footer-fixed" style="background: #000000; backdrop-filter: blur(6px);">
     <div class="section mt-2 mb-2">
         @if (Session::has('impersonated_by'))
             <div

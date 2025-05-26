@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+
 
 class GameController extends Controller
 {
@@ -41,42 +43,70 @@ class GameController extends Controller
     }
 
 
-
     public function invest(Request $request)
     {
-        // --- 1. Authenticate and type-hint the user immediately ---
         /** @var \App\Models\User $user */
-        $user = Auth::user(); // <-- Updated to use Auth::user()
+        $user = Auth::user();
 
-        // Check if user is authenticated. This is crucial before accessing user properties.
         if (!$user) {
-            return back()->with('error', 'You must be logged in to make an investment.');
+            return back()->with('error', 'You must be logged in for trade.');
         }
 
-        // --- 2. Validate the request with the user's actual balance ---
+        // --- 1. Get the active game setting ---
+        $gameSetting = GameSetting::where('is_active', true)->first();
+
+        // If no active game setting is found, the game is closed.
+        if (!$gameSetting) {
+            return back()->with('error', 'The signal is currently closed or not active for trade');
+        }
+
+        // --- 2. Implement the robust timezone-aware window check ---
+
+        // Get the admin's configured timezone (from .env)
+        $adminTimezone = GameSetting::getAdminTimezone(); // This will be 'Africa/Nairobi'
+
+        // Get the current time on the server, in the admin's configured timezone
+        $currentTimeInAdminTimezone = Carbon::now($adminTimezone);
+
+        // Retrieve start_time and end_time from the database (they are Carbon instances, default UTC)
+        $dbStartTimeUTC = $gameSetting->start_time->setTimezone('UTC');
+        $dbEndTimeUTC = $gameSetting->end_time->setTimezone('UTC');
+
+        // Create Carbon objects for the window, anchored to the *current date*
+        // in the admin's timezone. This is the **KEY FIX**.
+        $windowStartForComparison = $currentTimeInAdminTimezone->copy()
+            ->setTime($dbStartTimeUTC->hour, $dbStartTimeUTC->minute, $dbStartTimeUTC->second);
+
+        $windowEndForComparison = $currentTimeInAdminTimezone->copy()
+            ->setTime($dbEndTimeUTC->hour, $dbEndTimeUTC->minute, $dbEndTimeUTC->second);
+
+        // Handle cross-midnight windows (e.g., 23:00 - 01:00)
+        if ($windowEndForComparison->lt($windowStartForComparison)) {
+            $windowEndForComparison->addDay();
+        }
+
+        // Now, perform the comparison
+        $isInvestmentWindowOpen = $currentTimeInAdminTimezone->between($windowStartForComparison, $windowEndForComparison, true);
+
+        if (!$isInvestmentWindowOpen) {
+            // OPTIONAL: Add debug info to the error message for temporary troubleshooting
+            $errorMsg = 'The siginal is currently closed or not active for trading. ';
+            $errorMsg .= 'Current Time (' . $adminTimezone . '): ' . $currentTimeInAdminTimezone->format('Y-m-d H:i:s T') . '. ';
+            $errorMsg .= 'Window (' . $adminTimezone . '): ' . $windowStartForComparison->format('Y-m-d H:i:s T') . ' - ' . $windowEndForComparison->format('Y-m-d H:i:s T') . '.';
+
+            return back()->with('error', $errorMsg);
+        }
+
+        // --- 3. Validate the request with the user's actual balance (moved after window check) ---
         $request->validate([
-            'amount' => 'required|numeric|min:10|max:' . $user->balance, // Use $user->balance here
+            'amount' => 'required|numeric|min:10|max:' . $user->balance,
         ]);
 
         $amount = $request->amount;
 
-        $now = now();
-        $currentTime = $now->format('H:i:s');
-        $today = $now->toDateString();
-
-        // Check if a game setting is active and within the time window
-        $gameSetting = GameSetting::where('is_active', true)
-            ->where('start_time', '<=', $currentTime)
-            ->where('end_time', '>=', $currentTime)
-            ->first();
-
-        if (!$gameSetting) {
-            return back()->with('error', 'The game is currently closed or not active for investment.');
-        }
-
-        // Check if user has sufficient balance
+        // Check if user has sufficient balance (redundant with max validation, but harmless)
         if ($user->balance < $amount) {
-            return back()->with('error', 'Insufficient balance to make this investment.');
+            return back()->with('error', 'Insufficient balance to make this trading.');
         }
 
         // Use a database transaction for atomicity
@@ -90,39 +120,40 @@ class GameController extends Controller
             // Calculate daily profit amount based on the game setting's percentage
             $dailyProfit = ($amount * $gameSetting->earning_percentage) / 100;
 
+            // Use Carbon::today() in the admin timezone for investment_date
+            $investmentDate = Carbon::today($adminTimezone)->toDateString();
+
             // Create the UserInvestment record
             UserInvestment::create([
                 'user_id' => $user->id,
                 'game_setting_id' => $gameSetting->id,
-                'investment_date' => $today,
-                'amount' => $amount, // Principal invested
-                'daily_profit_amount' => $dailyProfit, // Daily profit
+                'investment_date' => $investmentDate, // Now correctly based on admin_timezone
+                'amount' => $amount,
+                'daily_profit_amount' => $dailyProfit,
                 'status' => 'active',
-                'next_payout_eligible_date' => $now->addDay()->toDateString(), // Eligible for first payout tomorrow
+                // next_payout_eligible_date should also be based on the admin_timezone for consistency
+                'next_payout_eligible_date' => Carbon::now($adminTimezone)->addDay()->toDateString(),
                 'total_profit_paid_out' => 0,
                 'principal_returned' => false,
             ]);
 
-            // Record a debit transaction for the investment of the principal
+            // Record a debit transaction
             Transaction::create([
                 'user_id' => $user->id,
                 'type' => 'debit',
                 'amount' => $amount,
                 'balance_before' => $balanceBefore,
                 'balance_after' => $user->balance,
-                'description' => "Investment in Game Round (ID: {$gameSetting->id}) - Principal",
+                'description' => "Trading in siginal Round (ID: {$gameSetting->id}) - Principal",
             ]);
 
-            DB::commit(); // Commit all changes if successful
-            return back()->with('success', 'Your investment has been placed!');
+            DB::commit();
+            return back()->with('success', 'Your order has been placed..!');
         } catch (\Exception $e) {
-            DB::rollBack(); // Rollback if any error occurs
+            DB::rollBack();
             Log::error("Investment failed for user {$user->id}: " . $e->getMessage());
-            return back()->with('error', 'Failed to place investment. Please try again.');
+            return back()->with('error', 'Failed to place order. Please try again.');
         }
-
     }
-
-    
 
 }

@@ -155,6 +155,15 @@
                         </a>
 
                     </li>
+                    <li class="dropdown text-warning">
+                        <a  href="{{ route('admin.user_investments.index') }}" class="dropdown-toggle no-arrow">
+                            <span class="micon dw dw-user"></span>
+                            <span class="mtext">Trader Beting Siginal</span>
+                        </a>
+
+                    </li>
+
+
 
                     <li class="dropdown ">
                         <a href="{{ route('admin.referrals.index') }}" class="dropdown-toggle no-arrow">

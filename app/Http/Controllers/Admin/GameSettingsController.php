@@ -35,49 +35,55 @@ class GameSettingsController extends Controller
     public function store(Request $request)
     {
         // Get the admin's configured timezone from the GameSetting model
+        // This is crucial: Ensure getAdminTimezone() returns a valid PHP timezone string (e.g., 'America/New_York', 'Europe/Bucharest')
         $adminTimezone = GameSetting::getAdminTimezone();
 
         // Validate the incoming request data
         $validatedData = $request->validate([
-            // 'name' => 'nullable|string|max:255', // Add this if you introduce a name field
-            'start_time' => 'required|date_format:H:i',
-            'end_time' => 'required|date_format:H:i',
+            'start_time' => 'required|date_format:H:i', // Time only, e.g., '09:00'
+            'end_time' => 'required|date_format:H:i',   // Time only, e.g., '17:00'
             'earning_percentage' => 'required|numeric|min:0|max:100',
+            'is_active' => 'nullable|boolean', // Added for clarity on boolean
+            'payout_enabled' => 'nullable|boolean', // Added for clarity on boolean
         ]);
 
-        // Custom validation for end_time after start_time, considering the timezone
-        $startTime = Carbon::createFromFormat('H:i', $validatedData['start_time'], $adminTimezone);
-        $endTime = Carbon::createFromFormat('H:i', $validatedData['end_time'], $adminTimezone);
+        // Get the current date in the admin's timezone
+        // This makes sure the date part of the datetime is always 'today' relative to the admin.
+        $todayInAdminTimezone = Carbon::now($adminTimezone);
 
+        // Create Carbon objects for start and end times, applying the current date
+        // and setting them in the admin's timezone.
+        $startTime = $todayInAdminTimezone->copy()->setTimeFromTimeString($validatedData['start_time']);
+        $endTime = $todayInAdminTimezone->copy()->setTimeFromTimeString($validatedData['end_time']);
+
+        // Custom validation for end_time after start_time, considering the timezone
+        // If end time is earlier than start time, it likely spans into the next day.
         if ($endTime->lt($startTime)) {
-            // If end time is earlier than start time, it likely spans into the next day.
-            // For simplicity, we'll just add a day to end time to make the comparison valid.
-            // You might want more sophisticated logic here depending on your business rules
-            // (e.g., explicitly disallow settings that span across midnight, or require a date input).
-            $endTime->addDay();
+            $endTime->addDay(); // Add a day to end time to make the comparison valid for cross-midnight spans
         }
 
-        if ($endTime->lte($startTime)) { // Use LSE to ensure end time is strictly after start time, even if by a second
+        if ($endTime->lte($startTime)) {
             return back()->withInput()->withErrors(['end_time' => 'The end time must be after the start time.']);
         }
-
 
         try {
             // Explicitly handle checkbox values as they might not be present if unchecked
             $validatedData['is_active'] = $request->has('is_active');
             $validatedData['payout_enabled'] = $request->has('payout_enabled');
 
-            // Convert local times to UTC for storage
-            $validatedData['start_time'] = $startTime->setTimezone('UTC')->format('H:i:s');
-            $validatedData['end_time'] = $endTime->setTimezone('UTC')->format('H:i:s');
-
+            // --- CRITICAL CHANGE HERE ---
+            // Convert the Carbon objects (which now contain the correct date + time in admin's timezone)
+            // to UTC and let Laravel's Eloquent handle the DATETIME formatting.
+            // Eloquent automatically converts Carbon instances to the correct database format.
+            $validatedData['start_time'] = $startTime->setTimezone('EAT');
+            $validatedData['end_time'] = $endTime->setTimezone('EAT');
+            // --- END CRITICAL CHANGE ---
 
             // Create the new GameSetting record in the database
             GameSetting::create($validatedData);
 
             // Redirect with a success message
             return redirect()->route('admin.game_settings.index')->with('success', 'Game setting created successfully.');
-
         } catch (\Exception $e) {
             // Log any unexpected errors and redirect back with an error message
             Log::error("Error creating game setting: " . $e->getMessage());
@@ -181,9 +187,5 @@ class GameSettingsController extends Controller
             Log::error("Error toggling payout status for {$gameSetting->id}: " . $e->getMessage());
             return back()->with('error', 'Failed to toggle payout status. Please try again.');
         }
-
     }
-
-
 }
-

@@ -100,7 +100,8 @@
             <form action="{{ route('password.update') }}" class="mt-32 mb-16" method="POST">
                 @csrf
                 <div style="display: flex;align-items:center;flex-direction:column">
-                    <img src="https://inexfx.com/images/logo/logo.png" style="width:75%" alt="">
+                    <img src="{{ asset('images/logo/logo.png') }}" style="width:75%" alt="Logo">
+
                     <h4 class="text-center">Reset Password</h4>
                     <span style="font-size: 16px;font-weight:600;margin:6px 0 20px 0">Create a New Password</span>
                 </div>

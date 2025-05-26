@@ -2,90 +2,192 @@
 <html lang="en">
 
 <head>
-    <!-- Charset and Viewport -->
     <meta charset="UTF-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, viewport-fit=cover">
-    <!-- Basic SEO -->
-    <title>Nyundo  | Empowering Your Financial Journey</title>
-    <meta name="description"
-        content="Nyundo  Trading tools, features, and services designed to help you trade smarter and grow your investments with confidence.">
-    <meta name="keywords"
-        content="Nyundo , trading platform, investment tools, finance, portfolio management, trading dashboard">
-    <meta name="author" content="Nyundo ">
+    <title>Nyundo | smart trade and earn</title>
 
-    <!-- Browser Compatibility -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-    <!-- Theme Color -->
-    <meta name="theme-color" content="#0a0a0a">
-
-    <!-- Open Graph -->
-    <meta property="og:title" content="Nyundo  | Smarter Investment Tools">
-    <meta property="og:description" content="Access intelligent tools and real-time insights with Nyundo .">
-    <meta property="og:image" content="https://inexfx.com/favic.png">
-    <meta property="og:url" content="https://inexfx.com/ai-trading">
-    <meta property="og:type" content="website">
-
-    <!-- Twitter Cards -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Nyundo  | Modern Investment Platform">
-    <meta name="twitter:description"
-        content="Simplify your trading experience with secure, user-friendly tools at Nyundo .">
-    <meta name="twitter:image" content="https://inexfx.com/favic.png">
-
-    <!-- Favicon and Icons -->
-    <link rel="shortcut icon" href="https://inexfx.com/favic.png" />
-    <link rel="apple-touch-icon-precomposed" href="https://inexfx.com/favic.png" />
-
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="https://inexfx.com/fonts/fonts.css">
-    <link rel="stylesheet" href="https://inexfx.com/fonts/font-icons.css">
-    <link rel="stylesheet" href="https://inexfx.com/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="https://inexfx.com/css/styles.css" />
-    <link rel="stylesheet" href="https://inexfx.com/css/swiper-bundle.min.css">
+    <link rel="shortcut icon" href="{{ asset('images/logo/favicon.ico') }}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="{{ asset('client/css/styles.css') }}" />
+    <link rel="stylesheet" href=" /css/swiper-bundle.min.css">
     <link href="https://iconsax.gitlab.io/i/icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://inexfx.com/css/countrySelect.css">
+    <link rel="stylesheet" href=" /css/countrySelect.css">
+
     <style>
-         .account-mode{
-            background:#29313c;
-            padding:2px 6px;
-            border-radius:4px;
-            font-weight:700;
+        .account-mode {
+            background: #8b9cb5;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 700;
+        }
+
+        /* Styles from the invest.blade.php that might conflict or need to be present */
+        .badge {
+            display: inline-block;
+            padding: 0.35em 0.65em;
+            font-size: 0.75em;
+            font-weight: 700;
+            line-height: 1;
+            color: #fff;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: 0.25rem;
+        }
+
+        .bg-success {
+            background-color: #198754 !important;
+        }
+
+        .bg-danger {
+            background-color: #dc3545 !important;
+        }
+
+        .bg-info {
+            background-color: #0dcaf0 !important;
+        }
+
+        .bg-primary {
+            background-color: #0d6efd !important;
+        }
+
+        .alert {
+            position: relative;
+            padding: 1rem 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid transparent;
+            border-radius: 0.25rem;
+        }
+
+        .alert-success {
+            color: #0f5132;
+            background-color: #d1e7dd;
+            border-color: #badbcc;
+        }
+
+        .alert-danger {
+            color: #842029;
+            background-color: #f8d7da;
+            border-color: #f5c2c7;
+        }
+
+        .alert-info {
+            color: #055160;
+            background-color: #cff4fc;
+            border-color: #b6effb;
+        }
+
+        .card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #fff;
+            background-clip: border-box;
+            border: 1px solid rgba(0, 0, 0, 0.125);
+            border-radius: 0.25rem;
+        }
+
+        .card-header {
+            padding: 0.5rem 1rem;
+            margin-bottom: 0;
+            background-color: rgba(0, 0, 0, 0.03);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+        }
+
+        .card-body {
+            flex: 1 1 auto;
+            padding: 1rem 1rem;
+        }
+
+        .table {
+            width: 100%;
+            margin-bottom: 1rem;
+            color: #212529;
+            vertical-align: top;
+            border-color: #dee2e6;
+        }
+
+        .table th,
+        .table td {
+            padding: 0.5rem 0.5rem;
+            vertical-align: top;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .table-striped>tbody>tr:nth-of-type(odd)>* {
+            --bs-table-accent-bg: var(--bs-table-striped-bg);
+            color: var(--bs-table-striped-color);
+        }
+
+        .text-danger {
+            color: #dc3545 !important;
+        }
+
+        .form-label {
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            display: block;
+            width: 100%;
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #212529;
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid #ced4da;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            border-radius: 0.25rem;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        .btn {
+            display: inline-block;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #212529;
+            text-align: center;
+            text-decoration: none;
+            vertical-align: middle;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+            background-color: transparent;
+            border: 1px solid transparent;
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            border-radius: 0.25rem;
+            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        .btn-primary {
+            color: #fff;
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+
+        .mb-3 {
+            margin-bottom: 1rem !important;
+        }
+
+        .mb-4 {
+            margin-bottom: 1.5rem !important;
         }
     </style>
-    <script src="//code.jivosite.com/widget/Cr6CmJv8z9" async></script>
+    {{-- <script src="//code.jivosite.com/widget/Cr6CmJv8z9" async></script> --}}
 
 </head>
 
 <body style="overflow-x: hidden">
-    <script src="https://inexfx.com/vendor/sweetalert/sweetalert.all.js"></script>
 
-            <script>
-            document.addEventListener('click', function(event) {
-                // Check if the clicked element or its parent has the attribute
-                var target = event.target;
-                var confirmDeleteElement = target.closest('[data-confirm-delete]');
 
-                if (confirmDeleteElement) {
-                    event.preventDefault();
-                    Swal.fire().then(function(result) {
-                        if (result.isConfirmed) {
-                            var form = document.createElement('form');
-                            form.action = confirmDeleteElement.href;
-                            form.method = 'POST';
-                            form.innerHTML = `
-                            <input type="hidden" name="_token" value="XINiamnpnjtZAlNR3CH0iL9D3oznd1oolocnqvFn" autocomplete="off">                            <input type="hidden" name="_method" value="DELETE">                        `;
-                            document.body.appendChild(form);
-                            form.submit();
-                        }
-                    });
-                }
-            });
-
-                            Swal.fire({"title":"Error","text":"AI trading is available for VIP 2 users or higher. Top up your balance to increase your VIP level","background":"#fff","width":"32rem","heightAuto":true,"padding":"1.25rem","showConfirmButton":true,"showCloseButton":false,"confirmButtonText":"Ok","cancelButtonText":"Close","timerProgressBar":false,"customClass":{"container":null,"popup":null,"header":null,"title":null,"closeButton":null,"icon":null,"image":null,"content":null,"input":null,"actions":null,"confirmButton":null,"cancelButton":null,"footer":null},"icon":"error","confirmButtonColor":"#3085d6","allowOutsideClick":false,"showCancelButton":true,"cancelButtonColor":"#aaa"});
-                    </script>
-        <!-- preloade -->
     <div class="preloader preload-container">
         <div class="preload-logo " style="display: flex; flex-direction: column; align-items: center;">
             <div class="lds-ring" style="margin-bottom: 10px">
@@ -94,17 +196,16 @@
                 <div></div>
                 <div></div>
             </div>
-            <h6>Loading...</h6>
+
         </div>
     </div>
-    <!-- /preload -->
-        <style>
+    <style>
         .fixed-top {
             display: none;
         }
 
         .ai-info {
-            background: #f2b90f30;
+            background: #89898930;
             color: #fff;
             padding: 10px;
             border-radius: 10px;
@@ -124,187 +225,215 @@
         }
 
         .subscribe-btn {
-            background: #f2b90f;
-            color: #29313c;
+            background: #16262f;
+            color: #fbfdff;
             font-weight: 700;
             font-size: 14px;
             width: 100%;
             border-radius: 10px;
             margin-top: 20px;
         }
-        .inactive-subscription{
+
+        .inactive-subscription {
             background: #f6465d30;
             color: #f6465d;
-            padding:4px 10px;
+            padding: 4px 10px;
             font-weight: 700;
-            border-radius:4px;
+            border-radius: 4px;
         }
-        .active-subscription{
+
+        .active-subscription {
             background: #1dbf6f30;
             color: #1dbf6f;
-            padding:4px 10px;
+            padding: 4px 10px;
             font-weight: 700;
-            border-radius:4px;
+            border-radius: 4px;
         }
     </style>
     <div class="tp-80 pb-80 mx-2">
         <div class="header fixed-top bg-surface d-flex justify-content-center align-items-center">
             <a href="#" class="left back-btn"><i class="iconsax back-icon-ct" icon-name="arrow-left"></i></a>
-            <h3 style="font-size:16px!important;font-weight:600">AI Trading Mode</h3>
+            <h3 style="font-size:16px!important;font-weight:600">AI Trading Bot</h3>
             <div style="position:absolute;right:20px">
-             <a href="#" class="system-mode-toggle">
-                <div class="d-row align-center account-mode" style="column-gap:4px">
-                    <i class="iconsax" icon-name="setting-1"></i>
-                                        <span style="font-size:14px">Real</span>
-                                    </div>
-            </a>
-         </div>
+                <a href="#" class="system-mode-toggle">
+
+                </a>
+            </div>
         </div>
 
         <div class="tf-container">
             <div class="pt-55" style="margin-bottom: 20px">
-                <img src="https://inexfx.com/ai-trade-poster.png" style="border-radius: 10px" alt="">
+                <img src="{{ asset('images/trading_bot2.png') }}" style="border-radius: 10px" alt="">
             </div>
             <div class="ai-info d-row" style="column-gap:4px">
-                <i class="iconsax" icon-name="info-circle" style="font-size:16px"></i>
-                <span>Inex Artificial Intelligence Bot is a modern and highly effective AI model designed and trained to execute trading orders with exceptional precision. It simplifies daily trading by automating order execution, making the process easier for traders. By subscribing to Inex AI, traders can benefit from hands-free trading as the bot handles orders on their behalf.</span>
+                <h2>AI Trading</h2>
             </div>
-                        <div class="ai-area">
+
+            <div class="ai-area">
                 <div class="">
                     <div class="d-row align-center justify-space">
                         <div class="d-col">
-                            <span style="color:#fff;font-weight:600;font-size:16px">Inex Artificial Intelligence Bot</span>
-                            <div class="d-row align-center" style="color:white;margin-top:4px;column-gap:4px;">
-                                <i class="iconsax" icon-name="users"></i>
-                                <span style="border-bottom:1px dotted #7e808830">2,454</span>
-                            </div>
+                            <span style="color:#fff;font-weight:600;font-size:16px">Automation Trading
+                                Bot</span>
+
                         </div>
-                                                    <span class="inactive-subscription">Inactive</span>
-                                            </div>
+                        <span id="toggle-trading-form" class="inactive-subscription"
+                            style="cursor: pointer;">Activate</span>
+                    </div>
                     <div class="hr"></div>
                     <div class="">
-                        <div class="d-row justify-space">
-                            <div class="d-col">
-                                <span>Eligibility</span>
-                                <span>Level 2 and Above</span>
+
+                        <div id="trading-section" class="container mt-4">
+
+                            @if (session('success'))
+                                <div class="alert alert-success">{{ session('success') }}</div>
+                            @endif
+                            @if (session('error'))
+                                <div class="alert alert-danger">{{ session('error') }}</div>
+                            @endif
+                            @if (session('info'))
+                                <div class="alert alert-info">{{ session('info') }}</div>
+                            @endif
+
+                            <div class="card mb-4">
+                                <div class="card-header">Current Siginal Status</div>
+                                <div class="card-body">
+                                    @if ($activeGameSetting)
+                                        <p>Siginal Time Range</p>
+                                        {{-- <p><strong>Siginal Active:</strong> <span class="badge bg-success">YES</span></p> --}}
+                                        <p><strong>Trading Window:</strong>
+                                            {{ \Carbon\Carbon::parse($activeGameSetting->start_time)->format('h:i A') }}
+                                            -
+                                            {{ \Carbon\Carbon::parse($activeGameSetting->end_time)->format('h:i A') }}
+                                        </p>
+                                        <p><strong>Daily Earning Percentage:</strong>
+                                            {{ number_format($activeGameSetting->earning_percentage, 2) }}%</p>
+                                        <p><strong>Your Current Balance:</strong>
+                                            ${{ number_format(auth()->user()->balance, 2) }}
+                                        </p>
+
+                                        <hr>
+                                        <h4>Make a trading</h4>
+                                        <form action="{{ route('user.game.invest') }}" method="POST">
+                                            @csrf
+                                            <div class="mb-3">
+                                                <label for="amount" class="form-label">Trade Amount (USD)</label>
+                                                <input type="number" step="0.01" name="amount" id="amount"
+                                                    class="form-control" required min="10"
+                                                    max="{{ auth()->user()->balance }}">
+                                                @error('amount')
+                                                    <div class="text-danger">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                            <button type="submit" class="btn btn subscribe-btn">Trade Now</button>
+                                        </form>
+                                    @else
+                                        <p class="text-warning">The siginal is currently closed for trade or no
+                                            active siginal
+                                        </p>
+                                    @endif
+                                </div>
                             </div>
-                            <div class="d-col">
-                                <span>Execution Mode</span>
-                                <span>Automatic</span>
+
+                            <div class="card">
+                                <div class="card-header">Your Active Order</div>
+                                <div class="card-body">
+                                    @if ($userInvestments->isEmpty())
+                                        <p>You have no active order yet.</p>
+                                    @else
+                                        <div class="table-responsive">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>Amount</th>
+                                                        <th>Daily Profit</th>
+                                                        <th>Status</th>
+                                                        <th>Trading Date</th>
+                                                        <th>Next Payout Eligible</th>
+                                                        <th>Total Profit Paid</th>
+                                                        <th>Principal Returned</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($userInvestments as $investment)
+                                                        <tr>
+                                                            <td>{{ $investment->id }}</td>
+                                                            <td>${{ number_format($investment->amount, 2) }}</td>
+                                                            <td>${{ number_format($investment->daily_profit_amount, 2) }}
+                                                            </td>
+                                                            <td><span
+                                                                    class="badge bg-primary">{{ $investment->status }}</span>
+                                                            </td>
+                                                            <td>{{ $investment->investment_date->format('Y-m-d') }}
+                                                            </td>
+                                                            <td>
+                                                                @if ($investment->next_payout_eligible_date)
+                                                                    {{ $investment->next_payout_eligible_date->format('Y-m-d') }}
+                                                                @else
+                                                                    N/A
+                                                                @endif
+                                                            </td>
+                                                            <td>${{ number_format($investment->total_profit_paid_out, 2) }}
+                                                            </td>
+                                                            <td>
+                                                                @if ($investment->principal_returned)
+                                                                    <span class="badge bg-success">Yes</span>
+                                                                @else
+                                                                    <span class="badge bg-danger">No</span>
+                                                                @endif
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
                         </div>
+
                     </div>
                     <div class="mt-3">
-                        <span style="">Eligible Assets</span>
-                        <div class="d-row" style="column-gap: 10px;margin-top:4px">
-                                                                                        <div class="d-row align-center" style="column-gap:4px">
-                                    <img src="https://inexfx.com/icons/btc.png"
-                                        style="height: 20px;width:20px;border-radius:50%" alt="">
-                                    <span style="color: white">BTC</span>
-                                </div>
-                                                            <div class="d-row align-center" style="column-gap:4px">
-                                    <img src="https://inexfx.com/icons/eth.png"
-                                        style="height: 20px;width:20px;border-radius:50%" alt="">
-                                    <span style="color: white">ETH</span>
-                                </div>
-                                                            <div class="d-row align-center" style="column-gap:4px">
-                                    <img src="https://inexfx.com/icons/bnb.png"
-                                        style="height: 20px;width:20px;border-radius:50%" alt="">
-                                    <span style="color: white">BNB</span>
-                                </div>
-                                                            <div class="d-row align-center" style="column-gap:4px">
-                                    <img src="https://inexfx.com/icons/sol.png"
-                                        style="height: 20px;width:20px;border-radius:50%" alt="">
-                                    <span style="color: white">SOL</span>
-                                </div>
-                                                            <div class="d-row align-center" style="column-gap:4px">
-                                    <img src="https://inexfx.com/icons/xrp.png"
-                                        style="height: 20px;width:20px;border-radius:50%" alt="">
-                                    <span style="color: white">XRP</span>
-                                </div>
-                                                        <div class="more-coins">
-                                +19
-                            </div>
-                        </div>
+
                     </div>
-                    <div class="" style="padding: 10px">
-                                                    <a href="https://inexfx.com/turn-on-ai" class="btn subscribe-btn">Subscribe</a>
-                                            </div>
-                    <div class="hr"></div>
+
+                    <div class="hr">
+
+                    </div>
+                    <hr>
+
                     <div class="d-col">
-                        <span style="color: #fff;font-weight:600;font-size:16px">What are the benefits of using Inex AI Bot?</span>
-                        <div class="d-row" style="column-gap:6px;margin-top:10px;color:white">
+                        <span style="color: #fff; font-weight:600; font-size:16px">Why Choose Our AI Trading
+                            Bot?</span>
+
+                        <div class="d-row" style="column-gap:6px; margin-top:10px; color:white">
                             <i class="iconsax" icon-name="bar-graph-3" style="font-size: 20px"></i>
-                            <span>Enjoy automatic execution of trading orders while you rest. Stay ahead of any obstacles that could delay your ability to place a trade.</span>
+                            <span>Trade smarter, not harder. Our AI bot executes trades automatically—even while you
+                                sleep—so you never miss an opportunity due to timing or hesitation.</span>
                         </div>
-                        <div class="d-row" style="column-gap:6px;margin-top:10px;color:white">
+
+                        <div class="d-row" style="column-gap:6px; margin-top:10px; color:white">
                             <i class="iconsax" icon-name="pie-chart" style="font-size: 20px"></i>
-                            <span>Experience unmatched accuracy like never before. Our AI is designed for flawless performance, minimizing errors in every trade.</span>
+                            <span>Make decisions with precision. Built for accuracy, the bot minimizes human error and
+                                ensures each trade is calculated and strategic.</span>
                         </div>
-                        <div class="d-row" style="column-gap:6px;margin-top:10px;color:white">
+
+                        <div class="d-row" style="column-gap:6px; margin-top:10px; color:white">
                             <i class="iconsax" icon-name="trend-up" style="font-size: 20px"></i>
-                            <span>Consistently grow your capital with the power of AI. With an active subscription, the system is designed to maximize profits and minimize losses.</span>
+                            <span>Grow your portfolio with confidence. Our AI is constantly optimizing for maximum
+                                returns and reduced risk—helping you stay on the path to long-term success.</span>
                         </div>
                     </div>
+
                 </div>
             </div>
-                    </div>
+        </div>
     </div>
 
-    @include('user.components.footer')
-
-    <script type="text/javascript" src="https://inexfx.com/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="https://inexfx.com/js/jquery.min.js"></script>
-    <script type="text/javascript" src="https://inexfx.com/js/swiper-bundle.min.js"></script>
-    <script type="text/javascript" src="https://inexfx.com/js/carousel.js"></script>
-    <script type="text/javascript" src="https://inexfx.com/js/apexcharts.js"></script>
-    <script type="text/javascript" src="https://inexfx.com/js/chart.bundle.min.js"></script>
-    <script type="text/javascript" src="https://inexfx.com/js/line-chart.js"></script>
-    <script type="text/javascript" src="https://inexfx.com/js/main.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.19.1/dist/sweetalert2.all.min.js"></script>
-     <script>
-        $('.system-mode-toggle').on('click',function(){
-            var mode = "1";
-            if(mode == '1'){
-                Swal.fire({
-                    title: "Switch to Demo account",
-                    text: "You are about to switch to demo account are you sure?",
-                    icon: 'info',
-                    showCancelButton: true,
-                    showConfirmButton: true,
-                }).then(function(result){
-                    if (result.isConfirmed) {
-                        window.location.href = "https://inexfx.com/switch-to-demo";
-                    } else if (result.isDismissed) {
-                        Swal.fire({
-                            title: "Action dismissed",
-                            text: "You choose to stay in Real account",
-                            icon: 'info',
-                        });
-                    }
-                });
-            }else if(mode == 0){
-                Swal.fire({
-                   title: "Switch to Real account",
-                    text: "You are about to switch to real account are you sure?",
-                    icon: 'info',
-                    showCancelButton: true,
-                    showConfirmButton: true,
-                }).then(function(result){
-                   if (result.isConfirmed) {
-                        window.location.href = "https://inexfx.com/switch-to-real";
-                    } else if (result.isDismissed) {
-                        Swal.fire({
-                            title: "Action dismissed",
-                            text: "You choose to stay in Demo account",
-                            icon: 'info',
-                        });
-                    }
-                });
-            }
-        });
-    </script>
-        <script>
+    @include('user.components.footer');
+    @include('user.common.script');
+    <script>
         const handleSwalButtons = () => {
             const actions = document.querySelector('.swal2-actions');
             if (!actions) return;
@@ -348,6 +477,20 @@
                 });
         }
     </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleButton = document.getElementById('toggle-trading-form');
+            const tradingSection = document.getElementById('trading-section');
+
+            toggleButton.addEventListener('click', function() {
+                const isVisible = tradingSection.style.display === 'block';
+                tradingSection.style.display = isVisible ? 'none' : 'block';
+                toggleButton.textContent = isVisible ? 'Inactive' : 'Close';
+            });
+        });
+    </script>
+
 </body>
 
 </html>

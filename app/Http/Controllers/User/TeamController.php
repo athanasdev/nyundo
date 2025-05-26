@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Referral;
-
+use App\Models\GameSetting; // Assuming you have a GameSetting model // Import the Auth facade
+use Carbon\Carbon;
 
 class TeamController extends Controller
 {
@@ -53,11 +54,10 @@ class TeamController extends Controller
     public function status($key)
     {
 
-        
+
 
         $notify[] = ['success', 'Referral commission status updated successfully'];
         return back()->withNotify($notify);
-
     }
 
 
@@ -127,10 +127,132 @@ class TeamController extends Controller
 
 
 
+    // public function aitrading()
+    // {
+    //     return view('user.aitrading');
+    // }
+
+    // public function aitrading()
+    // {
+    //     $now = Carbon::now(); // Get the current date and time
+    //     $currentTime = $now->format('H:i:s'); // Still useful for displaying the current time if needed
+
+    //     // To correctly check if the game is active NOW,
+    //     // you should compare the current time with the time parts of start_time and end_time,
+    //     // AND ensure the game is active for today.
+
+    //     $activeGameSetting = GameSetting::where('is_active', true)
+    //         // Use whereTime for comparing only the time part of the columns
+    //         ->whereTime('start_time', '<=', $currentTime)
+    //         ->whereTime('end_time', '>=', $currentTime)
+    //         // Additionally, check if the game setting is for the current day
+    //         // This assumes your game_settings are set up daily.
+    //         // If start_time and end_time also define the *day* of the game,
+    //         // you might need to adjust this further.
+    //         // For example, if a setting from yesterday could still be active today if it crosses midnight:
+    //         // ->whereDate('start_time', '<=', $now->toDateString())
+    //         // ->whereDate('end_time', '>=', $now->toDateString())
+    //         // A more precise way if your start/end times can span across midnight is to use full Carbon objects
+    //         // with the current date:
+    //         ->where(function ($query) use ($now, $currentTime) {
+    //             // Scenario 1: Game starts and ends on the same day
+    //             $query->whereDate('start_time', $now->toDateString())
+    //                 ->whereTime('start_time', '<=', $currentTime)
+    //                 ->whereTime('end_time', '>=', $currentTime);
+    //         })
+    //         ->orWhere(function ($query) use ($now, $currentTime) {
+    //             // Scenario 2: Game starts on previous day and ends today (crosses midnight)
+    //             $query->whereDate('start_time', $now->subDay()->toDateString()) // starts yesterday
+    //                 ->whereTime('start_time', '>', $currentTime) // started after current time yesterday (e.g. 11PM yesterday)
+    //                 ->whereDate('end_time', $now->addDay()->toDateString())   // ends today
+    //                 ->whereTime('end_time', '>=', $currentTime); // ends after current time today (e.g. 1AM today)
+    //         })
+    //         ->first();
+
+
+    //     // Reverting to a simpler and more common scenario based on your data:
+    //     // Assuming 'start_time' and 'end_time' are actual datetime columns
+    //     // and you want to check if the CURRENT datetime is within that range.
+    //     // If the date part of game_settings is always irrelevant or set to a future date,
+    //     // but only the *time* matters for daily activity, then 'whereTime' is correct.
+    //     // However, your database shows future dates (2025-05-26).
+    //     // Let's go with the most common interpretation:
+    //     // The game is active if the current time is between the start_time and end_time of a specific setting.
+
+    //     $activeGameSetting = GameSetting::where('is_active', true)
+    //         ->where('start_time', '<=', $now) // Compare against current Carbon instance
+    //         ->where('end_time', '>=', $now)   // Compare against current Carbon instance
+    //         ->first();
+
+
+    //     /** @var \App\Models\User $user */
+    //     $user = Auth::user();
+
+    //     if (!$user) {
+    //         return redirect()->route('login')->with('error', 'Please log in to view your investments.');
+    //     }
+
+    //     $userInvestments = $user->investments()->where('status', 'active')->get();
+
+    //     return view('user.aitrading', compact('activeGameSetting', 'userInvestments'));
+    // }
+
+    // public function aitrading()
+    // {
+    //     // Find the first game setting where 'is_active' is true.
+    //     // This will retrieve it regardless of its start_time or end_time.
+    //     $activeGameSetting = GameSetting::where('is_active', true)->first();
+
+    //     /** @var \App\Models\User $user */
+    //     $user = Auth::user();
+
+    //     // It's crucial to check if a user is actually logged in before proceeding.
+    //     if (!$user) {
+    //         return redirect()->route('login')->with('error', 'Please log in to view your investments.');
+    //     }
+
+    //     // Fetch user's active investments
+    //     $userInvestments = $user->investments()->where('status', 'active')->get();
+
+    //     // Pass the simplified activeGameSetting and userInvestments to the view
+    //     return view('user.aitrading', compact('activeGameSetting', 'userInvestments'));
+    // }
+
     public function aitrading()
     {
-        return view('user.aitrading');
+        // First, fetch the active game setting based on its 'is_active' status
+        // (If you also want to check if it's currently within its time window,
+        // you'd re-add the 'where' conditions for start_time and end_time vs Carbon::now())
+        $activeGameSetting = GameSetting::where('is_active', true)->first();
+
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        // Check if a user is authenticated
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'Please log in to view your investments.');
+        }
+
+        // --- Timezone Conversion for Display ---
+        // Assume the database stores times in UTC (recommended Laravel/PHP default behavior)
+        // Define the target timezone for display. This should ideally come from user preferences.
+        // For demonstration, let's use 'Africa/Dar_es_Salaam' (EAT, UTC+3) as per your example.
+        $userTimezone = 'Africa/Dar_es_Salaam'; // You might fetch this from $user->timezone_preference;
+
+        if ($activeGameSetting) {
+            // Convert start_time and end_time from UTC (database) to the user's local timezone
+            $activeGameSetting->start_time_local = Carbon::parse($activeGameSetting->start_time)->timezone($userTimezone);
+            $activeGameSetting->end_time_local = Carbon::parse($activeGameSetting->end_time)->timezone($userTimezone);
+        }
+        // --- End Timezone Conversion ---
+
+        // Fetch user's active investments
+        $userInvestments = $user->investments()->where('status', 'active')->get();
+
+        // Pass the activeGameSetting (now with local time properties) and userInvestments to the view
+        return view('user.aitrading', compact('activeGameSetting', 'userInvestments'));
     }
+
 
     public function bonuses()
     {

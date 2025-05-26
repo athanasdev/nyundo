@@ -8,11 +8,7 @@
         content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, viewport-fit=cover">
 
     <!-- Basic SEO -->
-    <title>Nyundo | Create Your Account</title>
-    <meta name="description"
-        content="Register for an Nyundo  account to access secure and powerful investment tools, real-time trading, and portfolio management.">
-    <meta name="keywords" content="INEX Trading, create account, sign up, register, investment platform, trading account">
-    <meta name="author" content="INEX Trading">
+    <title>Nyundo | Signup</title>
 
     <!-- Browser Compatibility -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -24,34 +20,26 @@
     <meta property="og:title" content="Nyundo  | Register Your Account">
     <meta property="og:description"
         content="Join Nyundo  and take control of your financial future. Register today to start trading.">
-    <meta property="og:image" content="https://inexfx.com/favic.png">
-    <meta property="og:url" content="https://inexfx.com/register">
+
     <meta property="og:type" content="website">
-
-    <!-- Twitter Cards -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Nyundo  | Sign Up Now">
-    <meta name="twitter:description"
-        content="Start your journey with INEX Trading. Create a free account and begin investing today.">
-    <meta name="twitter:image" content="https://inexfx.com/favic.png">
-
     <!-- Favicon and Icons -->
-    <link rel="shortcut icon" href="https://inexfx.com/favic.png" />
-    <link rel="apple-touch-icon-precomposed" href="https://inexfx.com/favic.png" />
+    <link rel="shortcut icon" href="{{ asset('images/logo/favicon.ico') }}" type="image/x-icon">
+
 
     <!-- Stylesheets -->
     <link rel="stylesheet" type="text/css" href="{{ asset('client/css/styles.css') }}" />
-    <link rel="stylesheet" href="https://inexfx.com/fonts/fonts.css">
-    <link rel="stylesheet" href="https://inexfx.com/fonts/font-icons.css">
-    <link rel="stylesheet" href="https://inexfx.com/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="https://inexfx.com/css/styles.css" />
+    <link rel="shortcut icon" href="{{ asset('images/logo/favicon.ico') }}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="{{ asset('client/css/styles.css') }}" />
+    <link rel="stylesheet" href=" /css/swiper-bundle.min.css">
+    <link href="https://iconsax.gitlab.io/i/icons.css" rel="stylesheet">
+    <link rel="stylesheet" href=" /css/countrySelect.css">
     <link href="https://iconsax.gitlab.io/i/icons.css" rel="stylesheet">
     <style>
         .box-input {
             display: flex;
             flex-direction: row;
             align-items: center;
-            background: #29313c;
+            background: #505050;
             padding: 0 0 0 15px;
             border-radius: 8px;
         }
@@ -88,29 +76,24 @@
                 <div></div>
                 <div></div>
             </div>
-            <h6>Loading...</h6>
+
         </div>
     </div>
     <!-- /preload -->
 
-    <div class="header fixed-top bg-surface">
-        <a href="#" class="left back-btn"><i class="iconsax back-icon-ct" icon-name="arrow-left"></i></a>
-    </div>
-    <div class="pb-3">
+
+    <div class="pb-3 mt-10">
         <div class="tf-container" style="margin-left:6%; margin-right:6%">
             <form action="{{ route('register') }}" class="mt-32 mb-16" method="POST">
                 @csrf
                 <div style="display: flex;align-items:center;flex-direction:column">
-                    <img src="https://inexfx.com/images/logo/logo.png" style="width:75%" alt="">
-                    <h4 class="text-center">Create account here</h4>
-                    <span style="font-size: 16px;font-weight:600;margin:6px 0 10px 0">Fill all details correctly to
-                        continue</span>
+                    <img src="{{ asset('images/logo/logo.png') }}" style="width:75%" alt="Logo">
+                    <h4 class="text-center">Create account now</h4>
                 </div>
 
                 <fieldset class="mt-20">
                     <label class="label-ip">
                         <div class="box-input">
-                            <i class="iconsax" icon-name="user-2"></i>
                             <input type="text" name="username" placeholder="Username" required>
                         </div>
                     </label>
@@ -119,7 +102,6 @@
                 <fieldset class="mt-16">
                     <label class="label-ip">
                         <div class="box-input">
-                            <i class="iconsax" icon-name="mail"></i>
                             <input class="w-100" type="email" placeholder="Email" name="email" required>
                         </div>
                     </label>
@@ -128,7 +110,6 @@
                 <fieldset class="mt-16">
                     <label class="label-ip">
                         <div class="box-input">
-                            <i class="iconsax" icon-name="card-coin"></i>
                             <select name="currency" class="w-100" required>
                                 <option disabled selected>Choose currency</option>
                                 <option value="usdttrc20" selected>USDT TRC-20</option>
@@ -140,10 +121,8 @@
                 <fieldset class="mt-16">
                     <label class="label-ip">
                         <div class="box-input">
-                            <i class="iconsax" icon-name="share"></i>
-                            {{-- <input type="text" placeholder="Invitation Code" name="invitation_code"> --}}
-                            <input type="text" name="invitation_code" placeholder="Invitation Code" value="{{ $ref ?? old('invitation_code') }}">
-
+                            <input type="text" name="invitation_code" placeholder="Invitation Code"
+                                value="{{ $ref ?? old('invitation_code') }}">
                         </div>
                     </label>
                 </fieldset>
@@ -151,7 +130,6 @@
                 <fieldset class="mt-16">
                     <label class="label-ip">
                         <div class="box-input">
-                            <i class="iconsax" icon-name="lock-2"></i>
                             <div class="box-auth-pass">
                                 <input type="password" required name="password" placeholder="8-20 characters"
                                     class="password-field">
@@ -167,7 +145,6 @@
                 <fieldset class="mt-16">
                     <label class="label-ip">
                         <div class="box-input">
-                            <i class="iconsax" icon-name="lock-2"></i>
                             <div class="box-auth-pass">
                                 <input type="password" required name="password_confirmation"
                                     placeholder="8-20 characters" class="password-field2">
@@ -192,18 +169,18 @@
 
                 <p class="mt-20 text-center text-small">
                     Already have an account?&ensp;
-                    <a href="{{ route('login') }}"
-                        style="font-weight:600;color:#f2b90f;font-size:14px!important">Sign In</a>
+                    <a href="{{ route('login') }}" style="font-weight:600;color:#f2b90f;font-size:14px!important">Sign
+                        In</a>
                 </p>
             </form>
-
         </div>
+
     </div>
 
     @include('user.common.script')
 
     <script src="//code.jivosite.com/widget/7CRJb72HNd" async></script>
-    
+
     <script>
         const handleSwalButtons = () => {
             const actions = document.querySelector('.swal2-actions');

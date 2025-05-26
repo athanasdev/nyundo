@@ -13,7 +13,7 @@
     </a>
     <a href="{{route('team')}}" class="d-col align-center">
         <div class="icon-box">
-            <i class="iconsax" icon-name="users"></i>
+            <i class="iconsax" icon-name="users"></i>   1`
         </div>
         <span style="color: #fff">Team</span>
     </a>
