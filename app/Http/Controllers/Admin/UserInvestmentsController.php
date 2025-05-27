@@ -21,6 +21,103 @@ class UserInvestmentsController extends Controller
         return view('admin.dashbord.game.investments', compact('investments'));
     }
 
+
+    // In App\Http\Controllers\Admin\UserInvestmentsController.php
+
+    public function completeInvestment(UserInvestment $userInvestment)
+    {
+        DB::beginTransaction();
+        try {
+            // --- Common Checks (re-use from existing methods) ---
+            $gameSetting = GameSetting::first();
+            if (!$gameSetting || !$gameSetting->payout_enabled) {
+                DB::rollBack();
+                return back()->with('error', 'Payouts are currently disabled by the admin.');
+            }
+
+            if ($userInvestment->status !== 'active') {
+                DB::rollBack();
+                return back()->with('error', 'Investment is not active for completion.');
+            }
+            if ($userInvestment->principal_returned) { // If principal already returned, it's already "completed" in essence
+                DB::rollBack();
+                return back()->with('info', 'Principal has already been returned for this investment. It is already completed.');
+            }
+
+            $user = $userInvestment->user;
+            if (!$user) {
+                DB::rollBack();
+                return back()->with('error', 'User not found for this investment.');
+            }
+
+            // --- 1. Process any outstanding DAILY PROFIT for today (if applicable) ---
+            $today = now()->toDateString();
+            $profitPayoutHappened = false;
+            if ($userInvestment->next_payout_eligible_date && $userInvestment->next_payout_eligible_date->lte($today)) {
+                $payoutAmount = $userInvestment->daily_profit_amount;
+
+                // Credit user's balance with the final daily profit
+                $balanceBeforeProfit = $user->balance;
+                $user->balance += $payoutAmount;
+                $user->save();
+
+                // Update investment record for profit
+                $userInvestment->total_profit_paid_out += $payoutAmount;
+                // We don't set next_payout_eligible_date as the investment is completing
+                $userInvestment->save();
+
+                // Record transaction for the final daily profit payout
+                Transaction::create([
+                    'user_id'        => $user->id,
+                    'type'           => 'credit',
+                    'amount'         => $payoutAmount,
+                    'balance_before' => $balanceBeforeProfit,
+                    'balance_after'  => $user->balance,
+                    'description'    => "Final Daily Profit Payout before completion for Investment ID: {$userInvestment->id}",
+                ]);
+
+                // Distribute referral commissions for this final profit
+                $transactionController = new TransactionController();
+                $transactionController->distributeReferralCommissions($user, $payoutAmount);
+                $profitPayoutHappened = true;
+            }
+
+            // --- 2. Return Principal ---
+            $principalAmount = $userInvestment->amount;
+            $balanceBeforePrincipal = $user->balance; // Get current balance after potential profit payout
+            $user->balance += $principalAmount;
+            $user->save();
+
+            // Update investment record for principal return and completion
+            $userInvestment->principal_returned = true;
+            $userInvestment->status = 'completed';
+            $userInvestment->save();
+
+            // Record transaction for principal return
+            Transaction::create([
+                'user_id'        => $user->id,
+                'type'           => 'credit',
+                'amount'         => $principalAmount,
+                'balance_before' => $balanceBeforePrincipal,
+                'balance_after'  => $user->balance,
+                'description'    => "Principal Return for Investment ID: {$userInvestment->id}",
+            ]);
+
+            DB::commit();
+
+            $message = 'Investment completed successfully!';
+            if ($profitPayoutHappened) {
+                $message .= ' Final daily profit credited and referral commissions distributed.';
+            }
+            $message .= ' Principal returned.';
+
+            return back()->with('success', $message);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("Failed to complete investment ID {$userInvestment->id}: " . $e->getMessage());
+            return back()->with('error', 'Failed to complete investment: ' . $e->getMessage());
+        }
+    }
     /**
      * Method to process manual daily profit payout for an investment and distribute referral commissions.
      *
@@ -45,6 +142,7 @@ class UserInvestmentsController extends Controller
             }
 
             // 3. Check if it's eligible for today's payout
+
             $today = now()->toDateString();
             if ($userInvestment->next_payout_eligible_date && $userInvestment->next_payout_eligible_date->gt($today)) {
                 DB::rollBack();
@@ -52,10 +150,12 @@ class UserInvestmentsController extends Controller
             }
 
             $user = $userInvestment->user;
+
             if (!$user) {
                 DB::rollBack();
                 return back()->with('error', 'User not found for this investment.');
             }
+
 
             $payoutAmount = $userInvestment->daily_profit_amount;
 
@@ -76,7 +176,7 @@ class UserInvestmentsController extends Controller
                 'amount'         => $payoutAmount,
                 'balance_before' => $balanceBefore,
                 'balance_after'  => $user->balance,
-                'description'    => "Manual Daily Profit Payout for Investment ID: {$userInvestment->id}",
+                'description'    => "Daily Profit Payout for trade",
 
             ]);
 
@@ -88,7 +188,6 @@ class UserInvestmentsController extends Controller
 
             DB::commit();
             return back()->with('success', 'Daily profit payout processed and referral commissions distributed successfully!');
-
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error("Failed to process manual profit payout for investment ID {$userInvestment->id}: " . $e->getMessage());
@@ -154,7 +253,6 @@ class UserInvestmentsController extends Controller
 
             DB::commit();
             return back()->with('success', 'Principal returned and investment completed successfully!');
-
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error("Failed to return principal for investment ID {$userInvestment->id}: " . $e->getMessage());
@@ -191,8 +289,5 @@ class UserInvestmentsController extends Controller
             Log::error("Failed to cancel investment ID {$userInvestment->id}: " . $e->getMessage());
             return back()->with('error', 'Failed to cancel investment: ' . $e->getMessage());
         }
-
     }
-
-
 }

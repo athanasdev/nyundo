@@ -24,16 +24,15 @@ class AdminAuthController extends Controller
             'password' => 'required|string|min:6',
         ]);
 
-        Log::info('Admin Login attempt', ['credentials' => $credentials]);
 
         if (Auth::guard('admin')->attempt($credentials)) {
             $request->session()->regenerate();
             Auth::guard('admin')->login(Auth::guard('admin')->user());
             return redirect()->route('admin.dashboard')->with('success', 'Logged in successfully.');
+
         }
 
 
-        Log::warning('Admin Login failed');
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ])->onlyInput('email');
@@ -46,5 +45,7 @@ class AdminAuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/admin/login')->with('success', 'You have been logged out.');
+
     }
+    
 }

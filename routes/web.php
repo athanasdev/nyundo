@@ -137,7 +137,7 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
     // User Investments Management (Admin)
     Route::get('/user-investments', [UserInvestmentsController::class, 'index'])->name('admin.user_investments.index');
     Route::post('/user-investments/{user_investment}/payout-profit', [UserInvestmentsController::class, 'payoutProfit'])->name('admin.user_investments.payout_profit');
-    Route::post('/user-investments/{user_investment}/return-principal', [UserInvestmentsController::class, 'returnPrincipal'])->name('admin.user_investments.return_principal');
+    Route::post('/user-investments/{user_investment}/return-principal', [UserInvestmentsController::class, 'completeInvestment'])->name('admin.user_investments.return_principal');
     Route::post('/user-investments/{user_investment}/cancel', [UserInvestmentsController::class, 'cancelInvestment'])->name('admin.user_investments.cancel');
 
     // Admin-initiated Impersonation

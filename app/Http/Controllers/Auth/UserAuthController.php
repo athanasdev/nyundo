@@ -102,7 +102,7 @@ class UserAuthController extends Controller
             'password' => 'required|string|min:6',
         ]);
 
-        Log::info('Login attempt', ['credentials' => ['username' => $credentials['username']]]);
+        
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
@@ -115,12 +115,12 @@ class UserAuthController extends Controller
             }
 
             $request->session()->regenerate();
-            Log::info('Login successful for user: ' . $user->username);
+
 
             return redirect()->intended(route('dashboard'))->with('success', 'Logged in successfully.');
         }
 
-        Log::warning('Login failed for username: ' . $credentials['username']);
+
 
         return back()->withErrors([
             'username' => 'The provided credentials do not match our records.',
