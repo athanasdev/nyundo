@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
+// Import the TransactionController to use its methods
+use App\Http\Controllers\Admin\TransactionController;
+
 class UserInvestmentsController extends Controller
 {
     public function index()
@@ -18,7 +21,12 @@ class UserInvestmentsController extends Controller
         return view('admin.dashbord.game.investments', compact('investments'));
     }
 
-    // Method to process manual daily profit payout for an investment
+    /**
+     * Method to process manual daily profit payout for an investment and distribute referral commissions.
+     *
+     * @param UserInvestment $userInvestment
+     * @return \Illuminate\Http\Response
+     */
     public function payoutProfit(UserInvestment $userInvestment)
     {
         DB::beginTransaction();
@@ -51,7 +59,7 @@ class UserInvestmentsController extends Controller
 
             $payoutAmount = $userInvestment->daily_profit_amount;
 
-            // 4. Credit user's balance
+            // 4. Credit user's balance with the daily profit
             $balanceBefore = $user->balance;
             $user->balance += $payoutAmount;
             $user->save();
@@ -63,16 +71,23 @@ class UserInvestmentsController extends Controller
 
             // 6. Record transaction for the payout
             Transaction::create([
-                'user_id' => $user->id,
-                'type' => 'credit',
-                'amount' => $payoutAmount,
+                'user_id'        => $user->id,
+                'type'           => 'credit',
+                'amount'         => $payoutAmount,
                 'balance_before' => $balanceBefore,
-                'balance_after' => $user->balance,
-                'description' => "Manual Daily Profit Payout for Investment ID: {$userInvestment->id}",
+                'balance_after'  => $user->balance,
+                'description'    => "Manual Daily Profit Payout for Investment ID: {$userInvestment->id}",
+
             ]);
 
+            // 7. Distribute referral commissions based on this payout amount
+            // Instantiate TransactionController to access its method
+            $transactionController = new TransactionController();
+            $transactionController->distributeReferralCommissions($user, $payoutAmount);
+
+
             DB::commit();
-            return back()->with('success', 'Daily profit payout processed successfully!');
+            return back()->with('success', 'Daily profit payout processed and referral commissions distributed successfully!');
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -81,7 +96,12 @@ class UserInvestmentsController extends Controller
         }
     }
 
-    // Method to return principal and complete the investment
+    /**
+     * Method to return principal and complete the investment.
+     *
+     * @param UserInvestment $userInvestment
+     * @return \Illuminate\Http\Response
+     */
     public function returnPrincipal(UserInvestment $userInvestment)
     {
         DB::beginTransaction();
@@ -124,12 +144,12 @@ class UserInvestmentsController extends Controller
 
             // 5. Record transaction for principal return
             Transaction::create([
-                'user_id' => $user->id,
-                'type' => 'credit',
-                'amount' => $principalAmount,
+                'user_id'        => $user->id,
+                'type'           => 'credit',
+                'amount'         => $principalAmount,
                 'balance_before' => $balanceBefore,
-                'balance_after' => $user->balance,
-                'description' => "Principal Return for Investment ID: {$userInvestment->id}",
+                'balance_after'  => $user->balance,
+                'description'    => "Principal Return for Investment ID: {$userInvestment->id}",
             ]);
 
             DB::commit();
@@ -142,7 +162,12 @@ class UserInvestmentsController extends Controller
         }
     }
 
-    // Optional: Method to manually cancel an investment (e.g., if user requests early withdrawal, no principal/profit return)
+    /**
+     * Optional: Method to manually cancel an investment (e.g., if user requests early withdrawal, no principal/profit return).
+     *
+     * @param UserInvestment $userInvestment
+     * @return \Illuminate\Http\Response
+     */
     public function cancelInvestment(UserInvestment $userInvestment)
     {
         DB::beginTransaction();
@@ -167,7 +192,7 @@ class UserInvestmentsController extends Controller
             return back()->with('error', 'Failed to cancel investment: ' . $e->getMessage());
         }
 
-
     }
-    
+
+
 }

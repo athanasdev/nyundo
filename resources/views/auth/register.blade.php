@@ -8,67 +8,28 @@
         content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, viewport-fit=cover">
 
     <!-- Basic SEO -->
-    <title>Nyundo | Signup</title>
+    <title>Cointrades | Signup</title>
 
     <!-- Browser Compatibility -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <!-- Theme Color -->
-    <meta name="theme-color" content="#0a0a0a">
-
-    <!-- Open Graph -->
-    <meta property="og:title" content="Nyundo  | Register Your Account">
     <meta property="og:description"
         content="Join Nyundo  and take control of your financial future. Register today to start trading.">
 
     <meta property="og:type" content="website">
-    <!-- Favicon and Icons -->
-    <link rel="shortcut icon" href="{{ asset('images/logo/favicon.ico') }}" type="image/x-icon">
-
 
     <!-- Stylesheets -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('client/css/styles.css') }}" />
     <link rel="shortcut icon" href="{{ asset('images/logo/favicon.ico') }}" type="image/x-icon">
     <link rel="stylesheet" type="text/css" href="{{ asset('client/css/styles.css') }}" />
     <link rel="stylesheet" href=" /css/swiper-bundle.min.css">
-    <link href="https://iconsax.gitlab.io/i/icons.css" rel="stylesheet">
     <link rel="stylesheet" href=" /css/countrySelect.css">
     <link href="https://iconsax.gitlab.io/i/icons.css" rel="stylesheet">
-    <style>
-        .box-input {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            background: #505050;
-            padding: 0 0 0 15px;
-            border-radius: 8px;
-        }
 
-        .box-input i {
-            color: #ffffff;
-            font-size: 20px;
-            /* margin-right: 10px; */
-        }
-
-        .box-input input,
-        .box-input select {
-            width: 100%;
-            padding: 10px;
-            border-radius: 5px;
-            border: none;
-            font-size: 14px;
-            background: #29313c;
-        }
-
-        ::-webkit-input-placeholder {
-            font-size: 14px !important;
-        }
-    </style>
 </head>
 
 <body>
     <!-- preloade -->
-    <div class="preloader preload-container">
+    {{-- <div class="preloader preload-container">
         <div class="preload-logo " style="display: flex; flex-direction: column; align-items: center;">
             <div class="lds-ring" style="margin-bottom: 10px">
                 <div></div>
@@ -78,7 +39,7 @@
             </div>
 
         </div>
-    </div>
+    </div> --}}
     <!-- /preload -->
 
 
@@ -107,12 +68,22 @@
                     </label>
                 </fieldset>
 
-                <fieldset class="mt-16">
+                {{-- <fieldset class="mt-16">
                     <label class="label-ip">
                         <div class="box-input">
                             <select name="currency" class="w-100" required>
                                 <option disabled selected>Choose currency</option>
-                                <option value="usdttrc20" selected>USDT TRC-20</option>
+                                <option value="usdttrc20" selected>TRC-20(USDT)</option>
+                            </select>
+                        </div>
+                    </label>
+                </fieldset> --}}
+
+                <fieldset class="mt-16" style="display: none;"> <label class="label-ip">
+                        <div class="box-input">
+                            <select name="currency" class="w-100" required>
+                                <option disabled selected>Choose currency</option>
+                                <option value="usdttrc20" selected>TRC-20(USDT)</option>
                             </select>
                         </div>
                     </label>
@@ -169,7 +140,7 @@
 
                 <p class="mt-20 text-center text-small">
                     Already have an account?&ensp;
-                    <a href="{{ route('login') }}" style="font-weight:600;color:#f2b90f;font-size:14px!important">Sign
+                    <a href="{{ route('login') }}" style="font-weight:600;color:#634b02a1;font-size:14px!important">Sign
                         In</a>
                 </p>
             </form>
@@ -178,8 +149,6 @@
     </div>
 
     @include('user.common.script')
-
-    <script src="//code.jivosite.com/widget/7CRJb72HNd" async></script>
 
     <script>
         const handleSwalButtons = () => {

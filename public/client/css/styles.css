@@ -3538,7 +3538,7 @@ div:where(.swal2-container) div:where(.swal2-loader) {
     margin: 10px 0 ;
 }
 .yl-btn{
-    background: #5409DA;
+    background: #C08B5C;
     color: #1e2730;
     display: flex;
     align-items: center;
@@ -3550,7 +3550,7 @@ div:where(.swal2-container) div:where(.swal2-loader) {
 .yl-btn:focus,
 .yl-btn:hover,
 .yl-btn:active{
-    background: #5409DA!important;
+    background: #C08B5C!important;
     color: #1e2730!important;
     display: flex!important;
     align-items: center!important;

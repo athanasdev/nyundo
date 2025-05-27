@@ -1,21 +1,21 @@
 <?php
 
-
 namespace App\Http\Controllers\Admin;
+
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Transaction;
 use App\Models\Referral;
-use App\Models\Deposit;
+use App\Models\Deposit; // Assuming Deposit model is for tracking actual deposits
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB; // For database transactions
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-
 
 class TransactionController extends Controller
 {
     /**
-     * Store a new transaction and handle balance updates and referral commissions.
+     * Store a new transaction and handle balance updates and deposit bonus.
+     * Referral commissions are NOT distributed here.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -41,8 +41,6 @@ class TransactionController extends Controller
         }
 
         // Use a database transaction to ensure atomicity
-        // All operations (user balance update, transaction record, referral commissions)
-        // must succeed together, or all must fail.
         DB::beginTransaction();
 
         try {
@@ -53,76 +51,101 @@ class TransactionController extends Controller
             if ($type === 'credit') {
                 $balanceAfter = $balanceBefore + $amount;
 
-                //  add the balalnce to the table deposit
+                // Calculate and apply 1% deposit bonus
+                $depositBonusRate = 0.01; // 1%
+                $bonusAmount = $amount * $depositBonusRate;
+                $balanceAfter += $bonusAmount; // Add bonus to the balance
 
-                 Deposit::create([
-                    'user_id'         => $user->id,
-                    'network'         => 'Manual', // As per your request for manual deposits
-                    'deposit_address' => 'Admin Adjusted Balance', // Placeholder as not provided by form
-                    'amount'          => $amount,
-                    'status'          => 'pending', // As per your request
-                    'currency'        => $user->currency ?? 'USD', // Use user's currency, default to USD if null
-                    'type'            => 'manual', // As per your request
+                // Update user's balance
+                $user->balance = $balanceAfter;
+                $user->save();
+
+                // Record the main deposit transaction
+                Transaction::create([
+                    'user_id'        => $user->id,
+                    'type'           => $type,
+                    'amount'         => $amount,
+                    'balance_before' => $balanceBefore, // This is before the initial deposit
+                    'balance_after'  => $balanceBefore + $amount, // This is after the initial deposit but before bonus
+                    'description'    => $description ?: 'Deposit',
                 ]);
 
+                // Record the deposit bonus transaction
+                Transaction::create([
+                    'user_id'        => $user->id,
+                    'type'           => 'credit', // Bonus is also a credit
+                    'amount'         => $bonusAmount,
+                    'balance_before' => $balanceBefore + $amount, // Balance after deposit, before bonus
+                    'balance_after'  => $balanceAfter, // Final balance after bonus
+                    'description'    => '1% Deposit Bonus',
+                ]);
+
+                // Record the deposit in the 'deposits' table
+                Deposit::create([
+                    'user_id'         => $user->id,
+                    'network'         => 'Manual',
+                    'deposit_address' => 'Admin Adjusted Balance',
+                    'amount'          => $amount,
+                    'status'          => 'completed', // Changed to completed as it's an admin-approved deposit
+                    'currency'        => $user->currency ?? 'USD',
+                    'type'            => 'manual',
+                ]);
 
             } elseif ($type === 'debit') {
                 // Ensure sufficient balance for debit transactions
                 if ($balanceBefore < $amount) {
-                    DB::rollBack(); // Rollback any changes made so far
+                    DB::rollBack();
                     return back()->with('error', 'Insufficient balance for this debit transaction.');
                 }
+
                 $balanceAfter = $balanceBefore - $amount;
+                $user->balance = $balanceAfter;
+                $user->save();
+
+                // Record the main debit transaction
+                Transaction::create([
+                    'user_id'        => $user->id,
+                    'type'           => $type,
+                    'amount'         => $amount,
+                    'balance_before' => $balanceBefore,
+                    'balance_after'  => $balanceAfter,
+                    'description'    => $description ?: 'Debit',
+                ]);
             }
 
-            // Update user's balance
-            $user->balance = $balanceAfter;
-            $user->save();
-
-            // 3. Record the main transaction
-            Transaction::create([
-                'user_id'        => $user->id,
-                'type'           => $type,
-                'amount'         => $amount,
-                'balance_before' => $balanceBefore,
-                'balance_after'  => $balanceAfter,
-                'description'    => $description,
-            ]);
-
-            // 4. Handle referral commissions for 'credit' transactions (deposits)
-            if ($type === 'credit') {
-                $this->distributeReferralCommissions($user, $amount);
-            }
+            // --- IMPORTANT: Referral commissions are NO LONGER handled here. ---
+            // They should be triggered by 'daily activity' earnings as per your new requirement.
+            // You will need a separate mechanism (e.g., a cron job or another method)
+            // to call distributeReferralCommissions when daily activity earnings are processed.
 
             DB::commit(); // Commit all changes if everything went well
 
-            return back()->with('success', 'Transaction processed and balance updated successfully!');
+            return back()->with('success', 'Transaction processed, balance updated, and 1% bonus added successfully!');
 
         } catch (\Exception $e) {
             DB::rollBack(); // Rollback all changes if any error occurred
-            // Log the error for debugging
             Log::error("Transaction processing failed: " . $e->getMessage());
             return back()->with('error', 'Transaction failed: ' . $e->getMessage());
         }
-
-
     }
-
 
     /**
      * Distributes referral commissions up the referrer chain.
+     * This method is now intended to be called when users earn daily activity.
      *
-     * @param \App\Models\User $referredUser The user who made the qualifying deposit.
-     * @param float $depositAmount The amount of the deposit.
+     * @param \App\Models\User $referredUser The user who made the qualifying action (e.g., daily activity earnings).
+     * @param float $qualifyingAmount The amount on which commission is calculated (e.g., daily activity earnings).
      * @return void
      */
-    protected function distributeReferralCommissions(User $referredUser, float $depositAmount)
+    public function distributeReferralCommissions(User $referredUser, float $qualifyingAmount)
     {
         // Fetch all active referral levels and their percentages, ordered by level
         $referralLevels = Referral::where('status', 1)->orderBy('level')->get();
 
         // Get the initial referrer (Level 1 referrer)
-        $currentReferrer = $referredUser->referrer; // Assuming a 'referrer' relationship in User model
+        // Ensure you have a 'referrer' relationship defined in your User model
+        // e.g., public function referrer() { return $this->belongsTo(User::class, 'referred_by'); }
+        $currentReferrer = $referredUser->referrer;
 
         $level = 1;
 
@@ -132,29 +155,30 @@ class TransactionController extends Controller
             $referralSetting = $referralLevels->where('level', $level)->first();
 
             if ($referralSetting && $referralSetting->percent > 0) {
-                $commissionAmount = ($depositAmount * $referralSetting->percent) / 100;
+                $commissionAmount = ($qualifyingAmount * $referralSetting->percent) / 100;
 
-                // Update referrer's balance
-                $referrerBalanceBefore = $currentReferrer->balance;
-                $currentReferrer->balance += $commissionAmount;
-                $currentReferrer->save();
+                // Ensure balance update and transaction logging for commission are atomic
+                DB::transaction(function () use ($currentReferrer, $commissionAmount, $level, $referredUser) {
+                    $referrerBalanceBefore = $currentReferrer->balance;
+                    $currentReferrer->balance += $commissionAmount;
+                    $currentReferrer->save();
 
-                // Record the commission transaction for the referrer
-                Transaction::create([
-                    'user_id'        => $currentReferrer->id,
-                    'type'           => 'credit',
-                    'amount'         => $commissionAmount,
-                    'balance_before' => $referrerBalanceBefore,
-                    'balance_after'  => $currentReferrer->balance,
-                    'description'    => "Referral Commission from Level {$level} user: {$referredUser->username}",
-                ]);
-
+                    // Record the commission transaction for the referrer
+                    Transaction::create([
+                        'user_id'        => $currentReferrer->id,
+                        'type'           => 'credit',
+                        'amount'         => $commissionAmount,
+                        'balance_before' => $referrerBalanceBefore,
+                        'balance_after'  => $currentReferrer->balance,
+                        'description'    => "Referral Commission (Level {$level}) from {$referredUser->username}'s activity",
+                    ]);
+                });
             }
 
             // Move up to the next level in the referral chain
             $currentReferrer = $currentReferrer->referrer; // Go to the current referrer's referrer
             $level++;
-
         }
     }
+    
 }

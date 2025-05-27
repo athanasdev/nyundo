@@ -4,44 +4,13 @@
 <head>
     <!-- Charset and Viewport -->
     <meta charset="UTF-8">
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, viewport-fit=cover">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, viewport-fit=cover">
     <!-- Basic SEO -->
-    <title>Nyundo | Login to your account</title>
-    <meta name="description"
-        content="Login to your Nyundo    account to manage your investments, view trading history, and more.">
-    <meta name="keywords" content="Nyundo   , trading platform, user login, investments, finance">
-    <meta name="author" content="Nyundo   ">
-
-    <!-- Browser Compatibility -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-    <!-- Theme Color for Mobile Browsers -->
-    <meta name="theme-color" content="#0a0a0a">
-
-    <!-- Open Graph (Facebook, LinkedIn, etc.) -->
-    <meta property="og:title" content="Nyundo    | Login to your account">
-    <meta property="og:description" content="Secure login to your Nyundo    account.">
-    <meta property="og:image" content="https://inexfx.com/favic.png">
-    <meta property="og:url" content="https://inexfx.com/login">
-    <meta property="og:type" content="website">
-
-    <!-- Twitter Cards -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Nyundo    | Login">
-    <meta name="twitter:description" content="Access your Nyundo    account securely.">
-    <meta name="twitter:image" content="https://inexfx.com/favic.png">
-
-    <!-- Favicon and Icons -->
-    <link rel="shortcut icon" href="https://inexfx.com/favic.png" />
-    <link rel="apple-touch-icon-precomposed" href="https://inexfx.com/favic.png" />
+    <title>Cointrades | Login to your account</title>
 
     <!-- Stylesheets -->
     <link rel="stylesheet" type="text/css" href="{{ asset('client/css/styles.css') }}" />
-    <link rel="stylesheet" href="https://inexfx.com/fonts/fonts.css">
-    <link rel="stylesheet" href="https://inexfx.com/fonts/font-icons.css">
-    <link rel="stylesheet" href="https://inexfx.com/css/bootstrap.min.css">
+
     < <link href="https://iconsax.gitlab.io/i/icons.css" rel="stylesheet">
 </head>
 
@@ -49,12 +18,12 @@
     <style>
         /* Teal-themed UI colors for box input and language selector */
         .box-input {
-            background: #005f5f;
+            background: #343434;
             /* Dark teal background */
         }
 
         .lang-selector {
-            background: #007373;
+            background: #181818;
             /* Medium teal background */
         }
 
@@ -62,7 +31,7 @@
         input:focus,
         .search-field:focus {
             outline: none !important;
-            border: 1px solid #008080 !important;
+            border: 1px solid #242424 !important;
             /* Teal border */
             box-shadow: 0 0 0 2px rgba(0, 128, 128, 0.4) !important;
             background-color: #fff;
@@ -79,19 +48,19 @@
 
         /* Optional: Customize button appearance */
         .tf-btn.lg.yl-btn {
-            background-color: #008080;
+            background-color: #C08B5C;
             color: #ffffff;
             border: none;
             transition: background-color 0.3s ease;
         }
 
         .tf-btn.lg.yl-btn:hover {
-            background-color: #006666;
+            background-color: #C08B5C;
         }
     </style>
 
     <!-- preloade -->
-    <div class="preloader preload-container">
+    {{-- <div class="preloader preload-container">
         <div class="preload-logo " style="display: flex; flex-direction: column; align-items: center;">
             <div class="lds-ring" style="margin-bottom: 10px">
                 <div></div>
@@ -101,7 +70,7 @@
             </div>
 
         </div>
-    </div>
+    </div> --}}
     <!-- /preload -->
 
     <div class="pt-45 pb-20">
@@ -135,7 +104,6 @@
                 <fieldset class="mt-16">
                     <label class="label-ip">
                         <div class="box-input">
-                            <i class="iconsax" icon-name="user-2"></i>
                             <input type="text" name="username" placeholder="Username" required>
                         </div>
                     </label>
@@ -144,7 +112,7 @@
                 <fieldset class="mt-16 mb-12">
                     <label class="label-ip">
                         <div class="box-input">
-                            <i class="iconsax" icon-name="unlock"></i>
+
                             <div class="box-auth-pass">
                                 <input type="password" name="password" required placeholder="Password"
                                     class="password-field">
@@ -156,7 +124,6 @@
                         </div>
                     </label>
                 </fieldset>
-
 
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 60px">
                     <div>
@@ -200,7 +167,6 @@
 
     @include('user.common.script')
 
-    <script src="//code.jivosite.com/widget/7CRJb72HNd" async></script>
     <script>
         const handleSwalButtons = () => {
             const actions = document.querySelector('.swal2-actions');
