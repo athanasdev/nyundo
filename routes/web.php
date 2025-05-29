@@ -17,6 +17,11 @@ use App\Http\Controllers\Admin\UserInvestmentsController;
 use App\Http\Controllers\Auth\CustomPasswordResetController;
 use App\Http\Controllers\ImpersonateController;
 use App\Http\Controllers\User\GameController;
+use App\Http\Controllers\Payment\NowPaymentcontroller;
+use App\Http\Controllers\CoinPaymentsController;
+use App\Http\Controllers\Payment\IPNController;
+use Illuminate\Support\Facades\Log;
+
 
 // ==========================
 // User Authentication
@@ -137,7 +142,8 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
     // User Investments Management (Admin)
     Route::get('/user-investments', [UserInvestmentsController::class, 'index'])->name('admin.user_investments.index');
     Route::post('/user-investments/{user_investment}/payout-profit', [UserInvestmentsController::class, 'payoutProfit'])->name('admin.user_investments.payout_profit');
-    Route::post('/user-investments/{user_investment}/return-principal', [UserInvestmentsController::class, 'completeInvestment'])->name('admin.user_investments.return_principal');
+    Route::post('/user-investments/{user_investment}/return-principal', [UserInvestmentsController::class, 'returnPrincipal'])->name('admin.user_investments.return_principal');
+    Route::post('/admin/user-investments/{user_investment}/complete', [UserInvestmentsController::class, 'completeInvestment'])->name('admin.user_investments.complete');
     Route::post('/user-investments/{user_investment}/cancel', [UserInvestmentsController::class, 'cancelInvestment'])->name('admin.user_investments.cancel');
 
     // Admin-initiated Impersonation
@@ -145,7 +151,18 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
     Route::get('/impersonate/{id}', [ImpersonateController::class, 'loginAsUser'])->name('impersonate.login');
 
     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
-
-
-
 });
+
+
+Route::get('/payment/initiate', [CoinPaymentsController::class, 'showPaymentForm'])->name('coinpayments.form');
+Route::get('/payment/success', [CoinPaymentsController::class, 'paymentSuccess'])->name('payment.success');
+Route::get('/payment/cancel', [CoinPaymentsController::class, 'paymentCancel'])->name('payment.cancel');
+Route::post('/payment/create', [CoinPaymentsController::class, 'createTransaction'])->name('coinpayments.create');
+Route::post('/ipn/coinpayments', [CoinPaymentsController::class, 'handleIpn'])->name('coinpayments.ipn');
+
+
+Route::get('/nowpayments/form', [NowPaymentController::class, 'paymentForm']);
+Route::post('/nowpayments/create', [NowPaymentcontroller::class, 'createPayment'])->name('nowpayment.create');
+Route::post('/ipn-callback', [IPNController::class, 'handle'])->name('ipn.callback');
+Route::get('/nowpayments/balance', [NowPaymentController::class, 'checkBalance']);
+Route::post('/nowpayments/validate-address', [NowPaymentController::class, 'validateAddress']);

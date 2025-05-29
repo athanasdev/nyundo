@@ -4,12 +4,17 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\User; // Your User model
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class DashboardController extends Controller
 {
       public function myaccount()
       {
-         return view('user.myaccount');
+         $user = Auth::user();
+
+         return view('user.myaccount', compact('user'));
       }
 
 
@@ -27,7 +32,10 @@ class DashboardController extends Controller
       {
          return view('user.language');
       }
-      
+
+
+
+
 
 
 }

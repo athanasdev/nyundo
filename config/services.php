@@ -35,4 +35,11 @@ return [
         ],
     ],
 
+    'coinpayments' => [
+        'public_key' => env('COINPAYMENTS_PUBLIC_KEY'),
+        'private_key' => env('COINPAYMENTS_PRIVATE_KEY'),
+        'ipn_url' => env('COINPAYMENTS_IPN_URL'),
+    ],
+
+
 ];

@@ -126,13 +126,8 @@
         <a href="#" class="left back-btn"><i class="iconsax back-icon-ct" icon-name="arrow-left"></i></a>
         <h3 style="font-size:16px!important;font-weight:600"></h3>
         <div class="d-row align-center" style="margin-right: 10px;color: #fff;font-size: 20px;column-gap:10px">
-            <a href="#" class="system-mode-toggle">
-                <div class="d-row align-center account-mode" style="column-gap:4px">
-                    <i class="iconsax" icon-name="setting-1"></i>
-                    <span style="font-size:14px">Real</span>
-                </div>
-            </a>
-            <a href="https://jivo.chat/mYllXH6MUc">
+
+            <a href="#">
                 <i class="iconsax" icon-name="question-message"></i>
             </a>
         </div>
@@ -144,12 +139,11 @@
                     style="height: 60px;width:60px;border-radius:15px">
                 <div class="d-row align-center justify-space w-100">
                     <div class="d-col">
-                        <span style="font-size: 13px;font-weight:600">ID: 8008275162</span>
+                        <span style="font-size: 13px;font-weight:600">ID: {{ $user->unique_id }}</span>
                         <span
-                            style="font-size: 18px;color:#fff;font-weight:600;margin:6px 0;text-transform:capitalize">mussa</span>
+                            style="font-size: 18px;color:#fff;font-weight:600;margin:6px 0;text-transform:capitalize">{{ $user->username }}</span>
                         <div class="d-row mt-1">
-                            <span class="vip-tag">VIP 0</span>
-                            <span class="unverified-tag">Unverified</span>
+                            <span class="unverified-tag">{{ $user->status }}</span>
                         </div>
                     </div>
                     <a href="{{route('user.logout')}}"
@@ -190,7 +184,7 @@
     <div class="hr"></div>
     <div class="" style="padding-bottom:80px">
         <div class="tf-container" style="padding-left:0px;padding-right:0px">
-            <a href="https://inexfx.com/kyc-verification" class="d-row setting-item align-center w-100">
+            <a href="#" class="d-row setting-item align-center w-100">
                 <i class="iconsax leading-icon" icon-name="verify"></i>
                 <div class="d-row justify-space w-100 align-center">
                     <div class="d-col">
@@ -200,7 +194,7 @@
                     <i class="iconsax" icon-name="chevron-right"></i>
                 </div>
             </a>
-            <a href="https://inexfx.com/two-fa" class="d-row setting-item align-center w-100">
+            <a href="#" class="d-row setting-item align-center w-100">
                 <i class="iconsax leading-icon" icon-name="shield-lock"></i>
                 <div class="d-row justify-space w-100 align-center">
                     <div class="d-col">

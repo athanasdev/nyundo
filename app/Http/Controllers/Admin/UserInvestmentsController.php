@@ -6,12 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\UserInvestment;
 use App\Models\GameSetting;
 use App\Models\Transaction;
+use App\Models\User; // Make sure to import the User model
+use App\Models\Referral; // Import the Referral model
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
-
-// Import the TransactionController to use its methods
-use App\Http\Controllers\Admin\TransactionController;
 
 class UserInvestmentsController extends Controller
 {
@@ -21,14 +20,11 @@ class UserInvestmentsController extends Controller
         return view('admin.dashbord.game.investments', compact('investments'));
     }
 
-
-    // In App\Http\Controllers\Admin\UserInvestmentsController.php
-
     public function completeInvestment(UserInvestment $userInvestment)
     {
         DB::beginTransaction();
         try {
-            // --- Common Checks (re-use from existing methods) ---
+
             $gameSetting = GameSetting::first();
             if (!$gameSetting || !$gameSetting->payout_enabled) {
                 DB::rollBack();
@@ -50,7 +46,7 @@ class UserInvestmentsController extends Controller
                 return back()->with('error', 'User not found for this investment.');
             }
 
-            // --- 1. Process any outstanding DAILY PROFIT for today (if applicable) ---
+
             $today = now()->toDateString();
             $profitPayoutHappened = false;
             if ($userInvestment->next_payout_eligible_date && $userInvestment->next_payout_eligible_date->lte($today)) {
@@ -77,8 +73,7 @@ class UserInvestmentsController extends Controller
                 ]);
 
                 // Distribute referral commissions for this final profit
-                $transactionController = new TransactionController();
-                $transactionController->distributeReferralCommissions($user, $payoutAmount);
+                $this->distributeReferralCommissions($user, $payoutAmount); // Call the method directly
                 $profitPayoutHappened = true;
             }
 
@@ -117,6 +112,7 @@ class UserInvestmentsController extends Controller
             Log::error("Failed to complete investment ID {$userInvestment->id}: " . $e->getMessage());
             return back()->with('error', 'Failed to complete investment: ' . $e->getMessage());
         }
+
     }
     /**
      * Method to process manual daily profit payout for an investment and distribute referral commissions.
@@ -181,9 +177,7 @@ class UserInvestmentsController extends Controller
             ]);
 
             // 7. Distribute referral commissions based on this payout amount
-            // Instantiate TransactionController to access its method
-            $transactionController = new TransactionController();
-            $transactionController->distributeReferralCommissions($user, $payoutAmount);
+            $this->distributeReferralCommissions($user, $payoutAmount); // Call the method directly
 
 
             DB::commit();
@@ -265,7 +259,10 @@ class UserInvestmentsController extends Controller
      *
      * @param UserInvestment $userInvestment
      * @return \Illuminate\Http\Response
+     *
+     *
      */
+
     public function cancelInvestment(UserInvestment $userInvestment)
     {
         DB::beginTransaction();
@@ -289,5 +286,57 @@ class UserInvestmentsController extends Controller
             Log::error("Failed to cancel investment ID {$userInvestment->id}: " . $e->getMessage());
             return back()->with('error', 'Failed to cancel investment: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Distributes referral commissions up the referrer chain.
+     *
+     * @param \App\Models\User $referredUser The user who made the qualifying deposit.
+     * @param float $depositAmount The amount of the deposit.
+     * @return void
+     *
+     */
+
+    protected function distributeReferralCommissions(User $referredUser, float $depositAmount)
+    {
+        // Fetch all active referral levels and their percentages, ordered by level
+        $referralLevels = Referral::where('status', 1)->orderBy('level')->get();
+
+        // Get the initial referrer (Level 1 referrer)
+        $currentReferrer = $referredUser->referrer; // Assuming a 'referrer' relationship in User model
+
+        $level = 1;
+
+        // Loop through the referral chain and distribute commissions
+        while ($currentReferrer && $level <= $referralLevels->count()) {
+            // Find the commission percentage for the current level
+            $referralSetting = $referralLevels->where('level', $level)->first();
+
+            if ($referralSetting && $referralSetting->percent > 0) {
+                $commissionAmount = ($depositAmount * $referralSetting->percent) / 100;
+
+                // Update referrer's balance
+                $referrerBalanceBefore = $currentReferrer->balance;
+                $currentReferrer->balance += $commissionAmount;
+                $currentReferrer->save();
+
+                // Record the commission transaction for the referrer
+                Transaction::create([
+                    'user_id'        => $currentReferrer->id,
+                    'type'           => 'credit',
+                    'amount'         => $commissionAmount,
+                    'balance_before' => $referrerBalanceBefore,
+                    'balance_after'  => $currentReferrer->balance,
+                    'description'    => "Referral Commission from Level {$level} user: {$referredUser->username}",
+                ]);
+            }
+
+            // Move up to the next level in the referral chain
+            $currentReferrer = $currentReferrer->referrer; // Go to the current referrer's referrer
+            $level++;
+
+
+        }
+
     }
 }
