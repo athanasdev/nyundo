@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable
 {
@@ -26,7 +28,11 @@ class User extends Authenticatable
         'balance', // Added: Important for updating user balances
         'status',  // Added: If you update user status via mass assignment
         'withdraw_amount', // Added: If you update this via mass assignment
-        'country', // Added: Based on your `desc users;` output
+        'country',
+        // New fields:
+        'withdrawal_address',
+        'withdrawal_pin_hash', // Though you might not mass-assign the hash directly
+        'withdrawal_pin_set_at',
     ];
 
     /**
@@ -37,6 +43,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'withdrawal_pin_hash',
     ];
 
     /**
@@ -51,7 +58,37 @@ class User extends Authenticatable
             'password'          => 'hashed',
             'balance'           => 'decimal:2',       // Added: Ensures correct decimal handling for balance
             'withdraw_amount'   => 'decimal:2',       // Added: Ensures correct decimal handling for withdraw_amount
+            'withdrawal_pin_set_at' => 'datetime',
         ];
+    }
+
+
+    /**
+     * Set the user's withdrawal PIN (hashed).
+     *
+     * @param  string  $rawPin
+     * @return void
+     */
+    public function setWithdrawalPin(string $rawPin): void
+    {
+        $this->attributes['withdrawal_pin_hash'] = Hash::make($rawPin);
+        $this->attributes['withdrawal_pin_set_at'] = Carbon::now();
+        // No need to call $this->save() here if you call it in the controller after this method.
+        // Or, you can call $this->save() if this method is the sole point of update for these.
+    }
+
+    /**
+     * Check if the given raw PIN matches the user's hashed withdrawal PIN.
+     *
+     * @param  string  $rawPin
+     * @return bool
+     */
+    public function checkWithdrawalPin(string $rawPin): bool
+    {
+        if (empty($this->attributes['withdrawal_pin_hash'])) {
+            return false; // No PIN set
+        }
+        return Hash::check($rawPin, $this->attributes['withdrawal_pin_hash']);
     }
 
     // Model relationships
@@ -99,6 +136,4 @@ class User extends Authenticatable
     {
         return $this->hasMany(User::class, 'referrer_id');
     }
-
-
 }
