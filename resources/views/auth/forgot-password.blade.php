@@ -1,106 +1,233 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <!-- Charset and Viewport -->
     <meta charset="UTF-8">
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forgot Password - TradePro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    <!-- Basic SEO -->
-    <title>Forgot Your Password?</title>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0b0e11;
+            color: #eaecef;
+            min-height: 100vh;
+            font-size: 14px;
+            line-height: 1.5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
 
-    <!-- Browser Compatibility -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link rel="shortcut icon" href="{{ asset('images/logo/favicon.ico') }}" type="image/x-icon">
-    <link rel="stylesheet" type="text/css" href="{{ asset('client/css/styles.css') }}" />
-    <link rel="stylesheet" href=" /css/swiper-bundle.min.css">
-    <link rel="stylesheet" href=" /css/countrySelect.css">
-    <link href="https://iconsax.gitlab.io/i/icons.css" rel="stylesheet">
+        .forgot-password-card-container {
+            background: #1e2329;
+            border-radius: 8px;
+            border: 1px solid #2b3139;
+            padding: 30px 35px;
+            width: 100%;
+            max-width: 450px; /* Consistent width, can adjust if needed */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            position: relative;
+            /* text-align: center; Centering is handled by .form-header for its content */
+        }
+
+        .forgot-password-card-container::before { /* Accent border top */
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #f0b90b;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .form-header { /* Consistent header for logo, title, subtitle */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .form-header img.form-logo { /* Added class for consistency */
+            width: 65%; /* Can be a percentage of the container */
+            max-width: 180px; /* Or a fixed max for better control */
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        .form-header h4 {
+            color: #f0b90b;
+            font-size: 1.6em;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        .form-header h4 i {
+            margin-right: 8px;
+        }
+
+        .form-header .subtitle {
+            font-size: 0.95em;
+            font-weight: 500;
+            color: #c1c8d1;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        fieldset {
+            border: none;
+            padding: 0;
+            margin-bottom: 20px;
+        }
+
+        /* label.label-ip can be styled if visible text is used */
+
+        .box-input input[type="email"] { /* Specific to email, or use a general class */
+            width: 100%;
+            padding: 12px 15px;
+            background: #0b0e11;
+            border: 1px solid #2b3139;
+            border-radius: 4px;
+            color: #eaecef;
+            font-size: 1em;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .box-input input[type="email"]:focus {
+            outline: none;
+            border-color: #f0b90b;
+            box-shadow: 0 0 0 3px rgba(240, 185, 11, 0.25);
+        }
+
+        .box-input input::placeholder {
+            color: #565f6b;
+        }
+
+        button.tf-btn { /* Submit button */
+            width: 100%;
+            padding: 12px 15px;
+            background: #f0b90b;
+            color: #1e2329;
+            border: none;
+            border-radius: 4px;
+            font-size: 1em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            margin-top: 5px; /* Reduced margin from fieldset to button */
+        }
+
+        button.tf-btn:hover {
+            background: #d8a40a;
+        }
+        button.tf-btn:active {
+            transform: scale(0.98);
+        }
+        button.tf-btn i {
+            margin-right: 8px;
+        }
+
+        .signin-link-container { /* "Remember password?" link section */
+            margin-top: 25px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #848e9c;
+        }
+
+        .signin-link-container a {
+            color: #f0b90b;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .signin-link-container a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive design */
+        @media (max-width: 480px) {
+            .forgot-password-card-container {
+                padding: 25px 20px;
+            }
+            .form-header img.form-logo {
+                max-width: 150px; /* Adjust for smaller screens */
+            }
+            .form-header h4 {
+                font-size: 1.4em;
+            }
+            .form-header .subtitle {
+                font-size: 0.9em;
+            }
+            .box-input input[type="email"] {
+                padding: 10px 12px;
+            }
+            button.tf-btn {
+                padding: 10px 12px;
+            }
+            .signin-link-container {
+                font-size: 0.85em;
+            }
+        }
+    </style>
 </head>
-
 <body>
-    {{-- <div class="preloader preload-container">
-        <div class="preload-logo " style="display: flex; flex-direction: column; align-items: center;">
-            <div class="lds-ring" style="margin-bottom: 10px">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
+
+    <div class="forgot-password-card-container">
+        <form action="{{route('password.email')}}" method="POST"> <div class="form-header">
+               @csrf
+                <img src="{{ asset('images/logo/logo.png') }}" alt="TradePro Logo" class="form-logo">
+                <h4><i class="fas fa-lock-open"></i> Reset Password</h4>
+                <span class="subtitle">Enter your email address to receive a reset code.</span>
             </div>
 
-        </div>
-    </div> --}}
-
-
-    <div class="pt-45">
-        <div class="tf-container">
-            <form action="{{ route('password.email') }}" class="mt-32 mb-16" method="POST">
-                @csrf
-                <div style="display: flex;align-items:center;flex-direction:column">
-                    <img src="{{ asset('images/logo/logo.png') }}" style="width:75%" alt="Logo">
-
-                    <h4 class="text-center">Reset Password</h4>
-                    <span style="font-size: 16px;font-weight:600;margin:6px 0 20px 0">Enter your email address to
-                        continue</span>
+            <fieldset>
+                <label class="label-ip" for="email" style="display:none;">Email</label>
+                <div class="box-input">
+                    <input id="email" class="w-100" type="email" placeholder="Enter your email"
+                           name="email" value="{{ old('email') }}" required> {{-- value attribute for Laravel old input --}}
                 </div>
+            </fieldset>
 
+            <button class="tf-btn lg yl-btn" type="submit">
+                <i class="fas fa-paper-plane"></i> Send Reset Code
+            </button>
 
-                <fieldset class="mt-16">
-                    <label class="label-ip">
-                        <div class="box-input">
-
-                            <input class="w-100" type="text" value="" placeholder="Enter your email"
-                                name="email" value="">
-                        </div>
-                    </label>
-                </fieldset>
-                <button class="mt-40 tf-btn lg yl-btn" type="submit">Send Reset Code</button>
-                <p class="mt-20 text-center text-small">Remember your password?<a href="/login"
-                        style="font-weight:600;color:#69633c;font-size:14px!important"> Sign In</a></p>
-            </form>
-
-        </div>
+            <p class="signin-link-container">
+                Remember your password?
+                <a href="{{route('login')}}">Sign In</a> </p>
+        </form>
     </div>
 
-   @include('user.common.script')
     <script>
-        const handleSwalButtons = () => {
-            const actions = document.querySelector('.swal2-actions');
-            if (!actions) return;
-
-            const buttons = actions.querySelectorAll('button');
-            const visibleButtons = Array.from(buttons).filter(btn => btn.style.display !== 'none');
-
-            buttons.forEach(btn => btn.classList.remove('only-visible-button'));
-
-            if (visibleButtons.length === 1) {
-                visibleButtons[0].classList.add('only-visible-button');
-            }
-        };
-
-        const swalConfig = Swal.mixin({
-            didRender: () => {
-                handleSwalButtons();
+        // No specific JavaScript needed for this page's core functionality if using HTML5 validation.
+        // Example for more complex client-side validation if needed:
+        /*
+        document.addEventListener('DOMContentLoaded', function () {
+            const forgotPasswordForm = document.querySelector('.forgot-password-card-container form');
+            if (forgotPasswordForm) {
+                forgotPasswordForm.addEventListener('submit', function(event) {
+                    const emailInput = forgotPasswordForm.querySelector('input[name="email"]');
+                    // A simple check for non-empty; HTML5 'required' handles this better.
+                    // For more complex validation (e.g., email format), you might add JS.
+                    if (!emailInput.value.includes('@')) { // Very basic email check
+                        // alert('Please enter a valid email address.');
+                        // event.preventDefault(); // Stop submission
+                    }
+                    // console.log('Forgot password form submitted for:', emailInput.value);
+                });
             }
         });
-        window.Swal = swalConfig;
+        */
     </script>
 
-
-
-    @if ($errors->any())
-        <script>
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                html: `{!! implode('<br>', $errors->all()) !!}`,
-                confirmButtonText: 'OK',
-                confirmButtonColor: '#00bfff'
-            });
-        </script>
-    @endif
-
 </body>
-
 </html>

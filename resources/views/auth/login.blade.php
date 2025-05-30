@@ -1,207 +1,310 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <!-- Charset and Viewport -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, viewport-fit=cover">
-    <!-- Basic SEO -->
-    <title>Cointrades | Login to your account</title>
-
-    <!-- Stylesheets -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('client/css/styles.css') }}" />
-
-    < <link href="https://iconsax.gitlab.io/i/icons.css" rel="stylesheet">
-</head>
-
-<body>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - TradePro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        /* Teal-themed UI colors for box input and language selector */
-        .box-input {
-            background: #343434;
-            /* Dark teal background */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        .lang-selector {
-            background: #181818;
-            /* Medium teal background */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0b0e11;
+            color: #eaecef;
+            min-height: 100vh;
+            font-size: 14px;
+            line-height: 1.5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
 
-        /* Keep input default look, only change focus appearance */
-        input:focus,
-        .search-field:focus {
-            outline: none !important;
-            border: 1px solid #242424 !important;
-            /* Teal border */
-            box-shadow: 0 0 0 2px rgba(0, 128, 128, 0.4) !important;
-            background-color: #fff;
-            /* Ensure input doesn't darken */
-            color: #000;
-            /* Text remains black */
+        .login-card-container {
+            background: #1e2329;
+            border-radius: 8px;
+            border: 1px solid #2b3139;
+            padding: 30px 35px;
+            width: 100%;
+            max-width: 420px; /* Login card can be a bit narrower than signup */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            position: relative;
+            /* text-align: center; No longer needed here if header handles it */
         }
 
-        /* Optional autofill background fix for Chrome */
-        input:-webkit-autofill {
-            -webkit-box-shadow: 0 0 0 1000px white inset !important;
-            -webkit-text-fill-color: #000 !important;
+        .login-card-container::before { /* Accent border top */
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #f0b90b;
+            border-radius: 8px 8px 0 0;
         }
 
-        /* Optional: Customize button appearance */
-        .tf-btn.lg.yl-btn {
-            background-color: #C08B5C;
-            color: #ffffff;
+        /* New header style for Login, similar to Register page's .signup-header */
+        .login-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 25px; /* Space before form fields */
+        }
+
+        .login-header .form-logo { /* Class for logo inside the form header */
+            max-width: 60%; /* Adjust as needed, slightly less than signup potentially */
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        .login-header h2 { /* Title inside the login-header */
+            color: #f0b90b;
+            /* margin-bottom: 25px; This margin is now on .login-header */
+            font-size: 1.8em; /* Kept from original login title */
+            font-weight: 600;
+            text-align: center;
+        }
+        .login-header h2 i {
+            margin-right: 8px;
+        }
+
+        fieldset { /* fieldset is used in login, form-group in signup */
             border: none;
-            transition: background-color 0.3s ease;
+            padding: 0;
+            margin-bottom: 18px;
+        }
+        fieldset.mb-12 {
+            margin-bottom: 12px!important;
         }
 
-        .tf-btn.lg.yl-btn:hover {
-            background-color: #C08B5C;
+        label.label-ip { /* Not used with visible text in login, but kept for structure */
+            display: block;
+        }
+
+        .box-input {
+            position: relative;
+        }
+
+        .box-input input[type="text"],
+        .box-input input[type="password"] {
+            width: 100%;
+            padding: 12px 15px;
+            background: #0b0e11;
+            border: 1px solid #2b3139;
+            border-radius: 4px;
+            color: #eaecef;
+            font-size: 1em;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .box-auth-pass input[type="password"] {
+            padding-right: 40px;
+        }
+
+        .box-input input[type="text"]:focus,
+        .box-input input[type="password"]:focus {
+            outline: none;
+            border-color: #f0b90b;
+            box-shadow: 0 0 0 3px rgba(240, 185, 11, 0.25);
+        }
+
+        .box-input input::placeholder {
+            color: #565f6b;
+        }
+
+        .box-auth-pass {
+            position: relative;
+        }
+        .show-pass { /* Class for password toggle on login page */
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #848e9c;
+            font-size: 1.1em;
+        }
+        .show-pass:hover {
+            color: #f0b90b;
+        }
+        .show-pass .icon-view-hide { /* Initially hide the "hide" icon */
+            display: none;
+        }
+
+        .forgot-password-container {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-bottom: 25px;
+            margin-top: 5px;
+        }
+
+        .forgot-password-container a {
+            color: #848e9c;
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: color 0.2s;
+        }
+
+        .forgot-password-container a:hover {
+            color: #f0b90b;
+            text-decoration: underline;
+        }
+
+        button.tf-btn { /* Login button */
+            width: 100%;
+            padding: 12px 15px;
+            background: #f0b90b;
+            color: #1e2329;
+            border: none;
+            border-radius: 4px;
+            font-size: 1em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            margin-top: 0;
+        }
+
+        button.tf-btn:hover {
+            background: #d8a40a;
+        }
+        button.tf-btn:active {
+            transform: scale(0.98);
+        }
+        button.tf-btn i {
+            margin-right: 8px;
+        }
+
+        .signup-link-container { /* "Don't have an account?" link section */
+            margin-top: 25px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #848e9c;
+        }
+
+        .signup-link-container a {
+            color: #f0b90b;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .signup-link-container a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+            .login-header .form-logo {
+                 max-width: 50%; /* Adjust logo size for small screens */
+            }
+            .login-header h2 {
+                font-size: 1.6em;
+            }
+            .login-card-container {
+                padding: 25px 20px;
+            }
+            .box-input input[type="text"],
+            .box-input input[type="password"] {
+                padding: 10px 12px;
+            }
+            .box-auth-pass input[type="password"] {
+                padding-right: 35px;
+            }
+            .show-pass { right: 10px; }
+
+            button.tf-btn {
+                padding: 10px 12px;
+            }
+            .forgot-password-container, .signup-link-container {
+                font-size: 0.85em;
+            }
         }
     </style>
+</head>
+<body>
 
-    <!-- preloade -->
-    {{-- <div class="preloader preload-container">
-        <div class="preload-logo " style="display: flex; flex-direction: column; align-items: center;">
-            <div class="lds-ring" style="margin-bottom: 10px">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
+    <div class="login-card-container">
+        <form action="{{route('login')}}" method="POST"> <div class="login-header">
+             @csrf
+                <img src="{{ asset('images/logo/logo.png') }}" alt="TradePro Logo" class="form-logo">
+                <h2><i class="fas fa-sign-in-alt"></i> Sign In</h2>
             </div>
 
-        </div>
-    </div> --}}
-    <!-- /preload -->
+            <fieldset>
+                <div class="box-input">
+                    <input type="text" name="username" placeholder="Username" required>
+                </div>
+            </fieldset>
 
-    <div class="pt-45 pb-20">
-        <div class="tf-container" style="margin-left:6%; margin-right:6%">
-            <div class="mt-32" style="display: flex;align-items:center;flex-direction:column">
-                <img src="{{ asset('images/logo/logo.png') }}" style="width:75%" alt="Logo">
-                <h4 class="text-center" style="margin-top: 50px">Login</h4>
-            </div>
-
-            <div class="section mt-2 mb-2">
-                @if (session('success'))
-                    <div class="alert alert-success">
-                        {{ session('success') }}
-                    </div>
-                @endif
-
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul class="mb-0">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-
-            </div>
-
-            <form action="{{ route('login') }}" class="mt-16" method="POST">
-                @csrf
-                <fieldset class="mt-16">
-                    <label class="label-ip">
-                        <div class="box-input">
-                            <input type="text" name="username" placeholder="Username" required>
-                        </div>
-                    </label>
-                </fieldset>
-
-                <fieldset class="mt-16 mb-12">
-                    <label class="label-ip">
-                        <div class="box-input">
-
-                            <div class="box-auth-pass">
-                                <input type="password" name="password" required placeholder="Password"
-                                    class="password-field">
-                                <span class="show-pass">
-                                    <i class="icon-view"></i>
-                                    <i class="icon-view-hide"></i>
-                                </span>
-                            </div>
-                        </div>
-                    </label>
-                </fieldset>
-
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 60px">
-                    <div>
-                        <a href="{{ route('password.request') }}" style="font-size:14px">Forgot Password?</a>
+            <fieldset class="mb-12">
+                <div class="box-input">
+                    <div class="box-auth-pass">
+                        <input type="password" name="password" required placeholder="Password"
+                               class="password-field" id="loginPassword">
+                        <span class="show-pass" data-target="loginPassword">
+                            <i class="fas fa-eye icon-view"></i>
+                            <i class="fas fa-eye-slash icon-view-hide"></i>
+                        </span>
                     </div>
                 </div>
+            </fieldset>
 
-                <button class="mt-20 tf-btn lg yl-btn" type="submit">LOGIN</button>
+            <div class="forgot-password-container">
+                <a href="{{route('password.request')}}">Forgot Password?</a> </div>
 
-                <p class="mt-20 text-center text-small" style="font-size:14px">
-                    I don’t have an account?
-                    <a href="{{ route('home') }}" style="font-weight:600;color:#090703;font-size:14px!important">Sign
-                        Up</a>
-                </p>
-            </form>
+            <button class="tf-btn lg yl-btn" type="submit">
+                <i class="fas fa-paper-plane"></i> Login
+            </button>
 
-
-        </div>
-        <div class="modal fade modalRight" id="notification">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="header fixed-top bg-surface d-flex justify-content-center align-items-center">
-                        <span class="left" data-bs-dismiss="modal" aria-hidden="true"><i
-                                class="icon-left-btn"></i></span>
-                        <h3>Language</h3>
-                    </div>
-                    <div class="overflow-auto pt-45 pb-16">
-                        <div class="tf-container">
-                            <div class="search-field d-row align-center" style="column-gap: 6px">
-                                <i class="iconsax" icon-name="search-normal-2"></i>
-                                <input type="text" placeholder="Search">
-                            </div>
-
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
+            <p class="signup-link-container">
+                I don’t have an account?
+                <a href="{{route('home')}}">Sign Up</a> </p>
+        </form>
     </div>
 
-    @include('user.common.script')
-
     <script>
-        const handleSwalButtons = () => {
-            const actions = document.querySelector('.swal2-actions');
-            if (!actions) return;
+        document.addEventListener('DOMContentLoaded', function () {
+            const passwordToggles = document.querySelectorAll('.show-pass');
 
-            const buttons = actions.querySelectorAll('button');
-            const visibleButtons = Array.from(buttons).filter(btn => btn.style.display !== 'none');
+            passwordToggles.forEach(toggle => {
+                toggle.addEventListener('click', function () {
+                    const targetInputId = this.getAttribute('data-target');
+                    const targetInput = document.getElementById(targetInputId);
+                    const iconView = this.querySelector('.icon-view');
+                    const iconViewHide = this.querySelector('.icon-view-hide');
 
-            buttons.forEach(btn => btn.classList.remove('only-visible-button'));
+                    if (targetInput.type === 'password') {
+                        targetInput.type = 'text';
+                        iconView.style.display = 'none';
+                        iconViewHide.style.display = 'inline';
+                    } else {
+                        targetInput.type = 'password';
+                        iconView.style.display = 'inline';
+                        iconViewHide.style.display = 'none';
+                    }
+                });
+            });
 
-            if (visibleButtons.length === 1) {
-                visibleButtons[0].classList.add('only-visible-button');
-            }
-        };
-
-        const swalConfig = Swal.mixin({
-            didRender: () => {
-                handleSwalButtons();
+            // Optional: Basic form submission handler (for demonstration or simple client validation)
+            const loginForm = document.querySelector('.login-card-container form');
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(event) {
+                    // const username = loginForm.querySelector('input[name="username"]').value;
+                    // if (!username) {
+                    //     // alert('Please enter your username.');
+                    //     // event.preventDefault(); // Stop submission if needed
+                    // }
+                    // console.log('Login attempt...');
+                });
             }
         });
-        window.Swal = swalConfig;
     </script>
 
-    {{-- @if (session('status'))
-        <script>
-            Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: '{{ session('status') }}',
-                confirmButtonText: 'OK',
-                confirmButtonColor: '#3085d6'
-            });
-        </script>
-    @endif --}}
-
 </body>
-
 </html>

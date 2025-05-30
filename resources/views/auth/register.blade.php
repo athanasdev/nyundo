@@ -1,177 +1,416 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <!-- Charset and Viewport -->
     <meta charset="UTF-8">
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - TradePro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    <!-- Basic SEO -->
-    <title>Cointrades | Signup</title>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0b0e11;
+            color: #eaecef;
+            min-height: 100vh;
+            font-size: 14px;
+            line-height: 1.5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
 
-    <!-- Browser Compatibility -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        .signup-card-container {
+            background: #1e2329;
+            border-radius: 8px;
+            border: 1px solid #2b3139;
+            padding: 30px 35px;
+            width: 100%;
+            max-width: 480px; /* Slightly wider for more fields */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            position: relative;
+        }
 
-    <meta property="og:description"
-        content="Join Nyundo  and take control of your financial future. Register today to start trading.">
+        .signup-card-container::before { /* Accent border top */
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #f0b90b;
+            border-radius: 8px 8px 0 0;
+        }
 
-    <meta property="og:type" content="website">
+        .signup-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 25px;
+        }
 
-    <!-- Stylesheets -->
-    <link rel="shortcut icon" href="{{ asset('images/logo/favicon.ico') }}" type="image/x-icon">
-    <link rel="stylesheet" type="text/css" href="{{ asset('client/css/styles.css') }}" />
-    <link rel="stylesheet" href=" /css/swiper-bundle.min.css">
-    <link rel="stylesheet" href=" /css/countrySelect.css">
-    <link href="https://iconsax.gitlab.io/i/icons.css" rel="stylesheet">
+        .signup-header img {
+            max-width: 65%; /* Control logo size */
+            height: auto;
+            margin-bottom: 15px;
+        }
 
+        .signup-header h4 {
+            color: #f0b90b;
+            font-size: 1.6em; /* Adjusted size */
+            font-weight: 600;
+            text-align: center;
+        }
+        .signup-header h4 i {
+            margin-right: 8px;
+        }
+
+        .form-group { /* Replaces fieldset for styling */
+            margin-bottom: 18px; /* Consistent spacing */
+            text-align: left;
+        }
+
+        .form-group label.input-label { /* Explicit label text */
+            display: block;
+            color: #848e9c;
+            font-size: 0.9em;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+
+        /* Styling for the div that directly wraps the input */
+        .box-input {
+            position: relative; /* For password toggle positioning */
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="password"],
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            background: #0b0e11;
+            border: 1px solid #2b3139;
+            border-radius: 4px;
+            color: #eaecef;
+            font-size: 1em;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        /* Specific padding for password fields if icon is present */
+        .box-auth-pass input[type="password"] {
+            padding-right: 40px;
+        }
+
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="email"]:focus,
+        .form-group input[type="password"]:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #f0b90b;
+            box-shadow: 0 0 0 3px rgba(240, 185, 11, 0.25);
+        }
+
+        .form-group input::placeholder,
+        .form-group select { /* For "Choose currency" */
+            color: #565f6b;
+        }
+        .form-group select option {
+             background: #1e2329;
+             color: #eaecef;
+        }
+
+
+        /* Password visibility toggle */
+        .box-auth-pass {
+            position: relative;
+        }
+        .show-pass-toggle { /* Replaces .show-pass and .show-pass2 */
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #848e9c;
+            font-size: 1.1em;
+        }
+        .show-pass-toggle:hover {
+            color: #f0b90b;
+        }
+
+
+        /* Checkbox styling */
+        .terms-group { /* Replaces .group-cb */
+            display: flex;
+            align-items: center;
+            margin-top: 12px; /* from mt-12 */
+            padding: 10px 0;  /* from style="padding: 10px" - adjusted to remove side padding */
+        }
+
+        .terms-group input[type="checkbox"].tf-checkbox {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            background-color: #0b0e11;
+            border: 1px solid #2b3139;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-right: 10px;
+            position: relative;
+            flex-shrink: 0; /* Prevent shrinking */
+        }
+
+        .terms-group input[type="checkbox"].tf-checkbox:checked {
+            background-color: #f0b90b;
+            border-color: #f0b90b;
+        }
+
+        .terms-group input[type="checkbox"].tf-checkbox:checked::before {
+            content: '\f00c'; /* Font Awesome check icon */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: 12px;
+            color: #1e2329; /* Dark check for contrast on yellow */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .terms-group label[for="cb-ip"] { /* Style for the "I agree..." label */
+            color: #c1c8d1;
+            font-size: 0.9em;
+            cursor: pointer;
+            line-height: 1.3;
+        }
+        .terms-group label[for="cb-ip"] a {
+            color: #f0b90b;
+            text-decoration: none;
+        }
+        .terms-group label[for="cb-ip"] a:hover {
+            text-decoration: underline;
+        }
+
+
+        .signup-button { /* Replaces .tf-btn.lg.yl-btn */
+            width: 100%;
+            padding: 12px 15px;
+            background: #f0b90b;
+            color: #1e2329;
+            border: none;
+            border-radius: 4px;
+            font-size: 1em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            margin-top: 25px; /* from mt-40, adjusted */
+            height: 46px; /* from style */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .signup-button:hover {
+            background: #d8a40a;
+        }
+        .signup-button:active {
+            transform: scale(0.98);
+        }
+        .signup-button i {
+            margin-right: 8px;
+        }
+
+
+        .login-link-container { /* Replaces p.mt-20.text-center.text-small */
+            margin-top: 20px; /* from mt-20 */
+            text-align: center;
+            font-size: 0.9em; /* from text-small */
+            color: #848e9c;
+        }
+
+        .login-link-container a {
+            color: #f0b90b; /* from style */
+            font-weight: 600; /* from style */
+            text-decoration: none;
+            font-size: 1em; /* to inherit from parent or be 14px effectively */
+        }
+        .login-link-container a:hover {
+            text-decoration: underline;
+        }
+
+
+        /* Utility for margins (approximating mt- classes if needed elsewhere) */
+        .mt-12 { margin-top: 12px; }
+        .mt-16 { margin-top: 16px; }
+        .mt-20 { margin-top: 20px; }
+        .mt-32 { margin-top: 32px; }
+        .mt-40 { margin-top: 40px; }
+        .mb-16 { margin-bottom: 16px; }
+
+
+        /* Responsive design */
+        @media (max-width: 480px) {
+            .signup-card-container {
+                padding: 25px 20px;
+            }
+            .signup-header h4 {
+                font-size: 1.4em;
+            }
+            .form-group input, .form-group select {
+                padding: 10px 12px;
+            }
+             .box-auth-pass input[type="password"] {
+                padding-right: 35px;
+            }
+            .show-pass-toggle { right: 10px; }
+
+            .signup-button {
+                padding: 10px 12px;
+            }
+            .terms-group label[for="cb-ip"] {
+                font-size: 0.85em;
+            }
+        }
+    </style>
 </head>
-
 <body>
-    <!-- preloade -->
-    {{-- <div class="preloader preload-container">
-        <div class="preload-logo " style="display: flex; flex-direction: column; align-items: center;">
-            <div class="lds-ring" style="margin-bottom: 10px">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
+
+    <div class="signup-card-container">
+        <form action="{{ route('register') }}" method="POST"> @csrf
+            <div class="signup-header">
+                <img src="{{ asset('images/logo/logo.png') }}" alt="cointradesLogo"> <h4><i class="fas fa-user-plus"></i> Create Your Account</h4>
             </div>
 
-        </div>
-    </div> --}}
-    <!-- /preload -->
-
-
-    <div class="pb-3 mt-10">
-        <div class="tf-container" style="margin-left:6%; margin-right:6%">
-            <form action="{{ route('register') }}" class="mt-32 mb-16" method="POST">
-                @csrf
-                <div style="display: flex;align-items:center;flex-direction:column">
-                    <img src="{{ asset('images/logo/logo.png') }}" style="width:75%" alt="Logo">
-                    <h4 class="text-center">Create account now</h4>
+            <div class="form-group">
+                <label class="input-label" for="username">Username</label>
+                <div class="box-input">
+                    <input type="text" id="username" name="username" placeholder="Choose a unique username" required>
                 </div>
+            </div>
 
-                <fieldset class="mt-20">
-                    <label class="label-ip">
-                        <div class="box-input">
-                            <input type="text" name="username" placeholder="Username" required>
-                        </div>
-                    </label>
-                </fieldset>
+            <div class="form-group">
+                <label class="input-label" for="email">Email Address</label>
+                <div class="box-input">
+                    <input class="w-100" id="email" type="email" placeholder="Enter your email" name="email" required>
+                </div>
+            </div>
 
-                <fieldset class="mt-16">
-                    <label class="label-ip">
-                        <div class="box-input">
-                            <input class="w-100" type="email" placeholder="Email" name="email" required>
-                        </div>
-                    </label>
-                </fieldset>
+            <div class="form-group" style="display: none;">
+                <label class="input-label" for="currency">Currency</label>
+                <div class="box-input">
+                    <select name="currency" id="currency" class="w-100" required>
+                        <option disabled>Choose currency</option>
+                        <option value="usdttrc20" selected>TRC-20(USDT)</option>
+                    </select>
+                </div>
+            </div>
 
-                {{-- <fieldset class="mt-16">
-                    <label class="label-ip">
-                        <div class="box-input">
-                            <select name="currency" class="w-100" required>
-                                <option disabled selected>Choose currency</option>
-                                <option value="usdttrc20" selected>TRC-20(USDT)</option>
-                            </select>
-                        </div>
-                    </label>
-                </fieldset> --}}
+            <div class="form-group">
+                <label class="input-label" for="invitation_code">Invitation Code (Optional)</label>
+                <div class="box-input">
+                    <input type="text" id="invitation_code" name="invitation_code" placeholder="Enter invitation code"
+                           value="{{ $ref ?? old('invitation_code') }}">
+                </div>
+            </div>
 
-                <fieldset class="mt-16" style="display: none;"> <label class="label-ip">
-                        <div class="box-input">
-                            <select name="currency" class="w-100" required>
-                                <option disabled selected>Choose currency</option>
-                                <option value="usdttrc20" selected>TRC-20(USDT)</option>
-                            </select>
-                        </div>
-                    </label>
-                </fieldset>
+            <div class="form-group">
+                <label class="input-label" for="password">Password</label>
+                <div class="box-input box-auth-pass">
+                    <input type="password" required name="password" id="password" placeholder="8-20 characters, secure!"
+                           class="password-field">
+                    <span class="show-pass-toggle" data-target="password">
+                        <i class="fas fa-eye"></i>
+                    </span>
+                </div>
+            </div>
 
-                <fieldset class="mt-16">
-                    <label class="label-ip">
-                        <div class="box-input">
-                            <input type="text" name="invitation_code" placeholder="Invitation Code"
-                                value="{{ $ref ?? old('invitation_code') }}">
-                        </div>
-                    </label>
-                </fieldset>
+            <div class="form-group">
+                <label class="input-label" for="password_confirmation">Confirm Password</label>
+                <div class="box-input box-auth-pass">
+                    <input type="password" required name="password_confirmation" id="password_confirmation"
+                           placeholder="Re-enter your password" class="password-field2">
+                    <span class="show-pass-toggle" data-target="password_confirmation">
+                         <i class="fas fa-eye"></i>
+                    </span>
+                </div>
+            </div>
 
-                <fieldset class="mt-16">
-                    <label class="label-ip">
-                        <div class="box-input">
-                            <div class="box-auth-pass">
-                                <input type="password" required name="password" placeholder="8-20 characters"
-                                    class="password-field">
-                                <span class="show-pass">
-                                    <i class="icon-view"></i>
-                                    <i class="icon-view-hide"></i>
-                                </span>
-                            </div>
-                        </div>
-                    </label>
-                </fieldset>
+            <div class="terms-group"> <input type="checkbox" class="tf-checkbox" name="agree" value="1" id="cb-ip" checked required>
+                <label for="cb-ip">I agree to the <a href="#terms">Terms and Conditions</a></label>
+            </div>
 
-                <fieldset class="mt-16">
-                    <label class="label-ip">
-                        <div class="box-input">
-                            <div class="box-auth-pass">
-                                <input type="password" required name="password_confirmation"
-                                    placeholder="8-20 characters" class="password-field2">
-                                <span class="show-pass2">
-                                    <i class="icon-view"></i>
-                                    <i class="icon-view-hide"></i>
-                                </span>
-                            </div>
-                        </div>
-                    </label>
-                </fieldset>
+            <button class="signup-button" type="submit">
+                <i class="fas fa-check-circle"></i> Create Account
+            </button>
 
-                <fieldset class="group-cb cb-signup mt-12" style="padding: 10px">
-                    <input type="checkbox" class="tf-checkbox" name="agree" value="1" id="cb-ip" checked
-                        required>
-                    <label for="cb-ip">I agree to the Terms and Conditions</label>
-                </fieldset>
-
-                <button class="mt-40 tf-btn lg yl-btn"
-                    style="height: 46px!important;display:flex;align-items:center;justify-content:center"
-                    type="submit">Create an Account</button>
-
-                <p class="mt-20 text-center text-small">
-                    Already have an account?&ensp;
-                    <a href="{{ route('login') }}" style="font-weight:600;color:#634b02a1;font-size:14px!important">Sign
-                        In</a>
-                </p>
-            </form>
-        </div>
-
+            <p class="login-link-container">
+                Already have an account?&ensp;
+                <a href="{{ route('login') }}">Sign In</a>
+            </p>
+        </form>
     </div>
 
-    @include('user.common.script')
-
     <script>
-        const handleSwalButtons = () => {
-            const actions = document.querySelector('.swal2-actions');
-            if (!actions) return;
+        document.addEventListener('DOMContentLoaded', function () {
+            const passwordToggles = document.querySelectorAll('.show-pass-toggle');
 
-            const buttons = actions.querySelectorAll('button');
-            const visibleButtons = Array.from(buttons).filter(btn => btn.style.display !== 'none');
+            passwordToggles.forEach(toggle => {
+                toggle.addEventListener('click', function () {
+                    const targetInputId = this.getAttribute('data-target');
+                    const targetInput = document.getElementById(targetInputId);
+                    const icon = this.querySelector('i');
 
-            buttons.forEach(btn => btn.classList.remove('only-visible-button'));
+                    if (targetInput.type === 'password') {
+                        targetInput.type = 'text';
+                        icon.classList.remove('fa-eye');
+                        icon.classList.add('fa-eye-slash');
+                    } else {
+                        targetInput.type = 'password';
+                        icon.classList.remove('fa-eye-slash');
+                        icon.classList.add('fa-eye');
+                    }
+                });
+            });
 
-            if (visibleButtons.length === 1) {
-                visibleButtons[0].classList.add('only-visible-button');
-            }
-        };
+            // Basic form submission handler (for demonstration)
+            const signupForm = document.querySelector('form'); // Assuming only one form
+            if (signupForm) {
+                signupForm.addEventListener('submit', function(event) {
+                    // For a real application, remove preventDefault or handle AJAX submission.
+                    // event.preventDefault();
 
-        const swalConfig = Swal.mixin({
-            didRender: () => {
-                handleSwalButtons();
+                    const password = document.getElementById('password').value;
+                    const passwordConfirmation = document.getElementById('password_confirmation').value;
+
+                    if (password !== passwordConfirmation) {
+                        event.preventDefault(); // Stop submission
+                        alert('Passwords do not match. Please re-enter.');
+                        // Optionally, you can add error styling to the fields here.
+                        document.getElementById('password').focus();
+                        return false;
+                    }
+
+                    if (!document.getElementById('cb-ip').checked) {
+                        event.preventDefault(); // Stop submission
+                        alert('You must agree to the Terms and Conditions.');
+                        return false;
+                    }
+
+                    // If client-side validation passes and not preventing default:
+                    // alert('Form submitted (for real this time if not prevented)!');
+                });
             }
         });
-        window.Swal = swalConfig;
     </script>
-</body>
 
+</body>
 </html>
