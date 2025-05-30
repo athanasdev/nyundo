@@ -14,12 +14,12 @@
         <div class="card-body">
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-value positive" id="totalValueAccPage">$0.00</div>
-                    <div class="stat-label">Total Value</div>
+                    <div class="stat-value positive" id="totalValueAccPage1">$ {{$user->balance}}</div>
+                    <div class="stat-label">Total Balance</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value" id="availableBalanceAccPage">$0.00</div>
-                    <div class="stat-label">Available Funds</div>
+                    <div class="stat-value" id="availableBalanceAccPage1">$</div>
+                    <div class="stat-label">Total Referral Earning</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-value" id="investedAccPage">$0.00</div>
@@ -42,7 +42,7 @@
         </div>
         <div class="card-body">
             <div id="transactionsListContainer">
-                {{-- Transactions data will be injected here by JavaScript --}}
+
             </div>
         </div>
     </div>
@@ -56,8 +56,13 @@
         { type: 'Buy', coin: 'BTC', amountCoin: 0.1, amountUSD: 4523.45, date: '2025-05-28 10:30', status: 'Completed' },
         { type: 'Sell', coin: 'ETH', amountCoin: 0.5, amountUSD: 1578.39, date: '2025-05-28 09:15', status: 'Completed' },
         { type: 'Deposit', coin: 'USD', amountCoin: 1000, amountUSD: 1000, date: '2025-05-27 15:00', status: 'Confirmed' },
+        { type: 'Withdrawal', coin: 'USD', amountCoin: 500, amountUSD: 500, date: '2025-05-26 12:00', status: 'Pending' },
+         { type: 'Buy', coin: 'BTC', amountCoin: 0.1, amountUSD: 4523.45, date: '2025-05-28 10:30', status: 'Completed' },
+        { type: 'Sell', coin: 'ETH', amountCoin: 0.5, amountUSD: 1578.39, date: '2025-05-28 09:15', status: 'Completed' },
+        { type: 'Deposit', coin: 'USD', amountCoin: 1000, amountUSD: 1000, date: '2025-05-27 15:00', status: 'Confirmed' },
         { type: 'Withdrawal', coin: 'USD', amountCoin: 500, amountUSD: 500, date: '2025-05-26 12:00', status: 'Pending' }
     ];
+    
     let accountOverviewData = { // Example data
         totalValue: 12456.78,
         availableFunds: 3245.67,

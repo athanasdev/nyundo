@@ -23,7 +23,7 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
 
-        return view('user.myaccount', compact('user'));
+        return view('user.layouts.accounts', compact('user'));
     }
 
 

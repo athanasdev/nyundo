@@ -254,13 +254,13 @@
         }
 
         const paymentAddress = paymentData.pay_address || 'N/A';
-        const payAmount = parseFloat(paymentData.pay_amount) || 0;
+        const payAmount = parseFloat(paymentData.price_amount) || 0;
         const payCurrency = paymentData.pay_currency ? paymentData.pay_currency.toUpperCase() : 'COIN';
         const orderId = paymentData.order_id || 'N/A';
         const network = paymentData.network || 'N/A';
         const paymentId = paymentData.payment_id || 'N/A';
         const status = paymentData.status || 'waiting';
-        const expiresAt = paymentData.expires_at || 'N/A';
+        const expiresAt = paymentData.valid_until || 'N/A';
 
         // Set field values
         document.getElementById('payAmountDisplay').textContent = payAmount.toFixed(8);

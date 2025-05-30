@@ -50,7 +50,7 @@ class NowPaymentcontroller extends Controller
 
             $data = json_decode($response->getBody(), true);
 
-            Log::info($data);
+            Log::info(['Deposted Data:'=>$data]);
 
             // return response()->json($data);
             // Return the Blade view and pass the $data to it

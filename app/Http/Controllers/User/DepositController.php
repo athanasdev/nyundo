@@ -15,16 +15,7 @@ class DepositController extends Controller
          return view('user.layouts.deposit', compact('user'));
      }
 
-     public function buyCrypto()
-     {
-        return view('user.buycrypto');
-     }
-
-     public function transfer()
-     {
-        return view('user.transfer');
-     }
-
+    
      public function fundsTransfer(Request $request)
      {
         //   save the data to the database
