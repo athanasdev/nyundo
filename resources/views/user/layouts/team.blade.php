@@ -268,7 +268,7 @@
                 <div class="w-100 d-row align-center referral-link-section">
                     <div class="link-class d-col">
                         <span class="title">Your Unique Referral Link</span>
-                        <span class="body" id="referralLinkElement">{{ config('app.url') }}/register?ref={{ $user->referral_code }}</span>
+                        <span class="body" id="referralLinkElement">{{ config('app.url') }}/?invited_by={{ $user->referral_code }}</span>
                     </div>
                     <button class="copy-button" onclick="copyReferralLink()">
                         <i class="fas fa-copy"></i> Copy Link
@@ -301,35 +301,6 @@
             </div>
         </div>
 
-        {{-- Trading Team Performance Card (Original CoinTrades Style) --}}
-        <div class="card"> {{-- This card uses the main layout's .card styling --}}
-            <div class="card-header">
-                <div class="card-title">
-                    <i class="fas fa-chart-line"></i>
-                    Trading Team Performance
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="stats-grid"> {{-- This class styles the 4 inner cards --}}
-                    <div class="stat-card">
-                        <div class="stat-value">15</div> {{-- Static: Replace with $variable from controller if available --}}
-                        <div class="stat-label">Active Traders</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value positive">87.3%</div> {{-- Static: Replace with $variable --}}
-                        <div class="stat-label">Avg. Success Rate</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value positive">${{ number_format(45123, 0) }}</div> {{-- Static: Replace with $variable --}}
-                        <div class="stat-label">Team Profit (Month)</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">234</div> {{-- Static: Replace with $variable --}}
-                        <div class="stat-label">Team Trades Today</div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         {{-- My Referred Users Table --}}
         <div class="card" style="margin-top: 20px;">

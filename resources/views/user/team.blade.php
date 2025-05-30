@@ -138,7 +138,7 @@
     <div class="pt-45" style="padding-bottom:70px">
         <div class="tf-container" style="padding-left:0px;padding-right:0px">
             <div class="d-col align-center">
-                <img src="https://inexfx.com/invite.png" style="width: 50%" alt="">
+                
                 <div class="d-col mt-3 align-center justify-center">
                     <span style="color:#fff;font-weight:800;font-size:20px">Invite Friends to Earn</span>
                     <span class="text-center" style="margin-top: 6px;font-size:13px;width:80%;font-weight:600">Invite
@@ -301,14 +301,7 @@
 
     @include('user.components.footer')
 
-    <script type="text/javascript" src="https://inexfx.com/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="https://inexfx.com/js/jquery.min.js"></script>
-    <script type="text/javascript" src="https://inexfx.com/js/swiper-bundle.min.js"></script>
-    <script type="text/javascript" src="https://inexfx.com/js/carousel.js"></script>
-    <script type="text/javascript" src="https://inexfx.com/js/apexcharts.js"></script>
-    <script type="text/javascript" src="https://inexfx.com/js/chart.bundle.min.js"></script>
-    <script type="text/javascript" src="https://inexfx.com/js/line-chart.js"></script>
-    <script type="text/javascript" src="https://inexfx.com/js/main.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.19.1/dist/sweetalert2.all.min.js"></script>
     <script>
         $('.system-mode-toggle').on('click', function() {
