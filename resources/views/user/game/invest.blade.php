@@ -1,6 +1,6 @@
 {{-- resources/views/user/game/invest.blade.php --}}
 
-@extends('layouts.app') {{-- Assuming your main app layout --}}
+@extends('user.layouts.app') {{-- Assuming your main app layout --}}
 
 @section('content')
 <div class="container">

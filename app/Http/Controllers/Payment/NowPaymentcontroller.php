@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Payment;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 
@@ -25,13 +26,13 @@ class NowPaymentcontroller extends Controller
     {
         $validated = $request->validate([
             'price_amount' => 'required|numeric',
-            'price_currency' => 'required|string', // ✅ Add this
+            'price_currency' => 'required|string',
             'pay_currency' => 'required|string',
             'order_id' => 'required|string',
             'order_description' => 'required|string',
             'ipn_callback_url' => 'required|url',
+            'customer_email' => 'nullable|email',
         ]);
-
 
         $client = new Client();
 
@@ -48,7 +49,14 @@ class NowPaymentcontroller extends Controller
             ]);
 
             $data = json_decode($response->getBody(), true);
-            return response()->json($data);
+
+            Log::info($data);
+
+            // return response()->json($data);
+            // Return the Blade view and pass the $data to it
+            return view('user.layouts.confirm-deposit', ['paymentData' => $data], [
+                'user' => Auth::user(),
+            ]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }

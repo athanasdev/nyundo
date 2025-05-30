@@ -73,28 +73,6 @@ class UserAuthController extends Controller
         return view('auth.login');
     }
 
-    // public function login(Request $request)
-    // {
-    //     $credentials = $request->validate([
-    //         'username' => 'required|string',
-    //         'password' => 'required|string|min:6',
-    //     ]);
-
-    //     Log::info('Login attempt', ['credentials' => $credentials]);
-    //     if (Auth::attempt($credentials)) {
-    //         $request->session()->regenerate();
-    //         Log::info('Login successful');
-    //         Log::info('Redirecting to dashboard');
-    //         return redirect()->intended(route('dashboard'))->with('success', 'Logged in successfully.');
-    //     }
-    //     Log::warning('Login failed');
-    //     return back()->withErrors([
-    //         'username' => 'The provided credentials do not match our records.',
-    //     ])->onlyInput('username');
-
-
-    // }
-
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -102,7 +80,7 @@ class UserAuthController extends Controller
             'password' => 'required|string|min:6',
         ]);
 
-        
+
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();

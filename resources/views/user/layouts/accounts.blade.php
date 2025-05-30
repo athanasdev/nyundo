@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('user.layouts.app')
 
 @section('title', 'Account - CoinTrades')
 
@@ -114,7 +114,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         updateAccountPageOverview();
         updateTransactionsOnPage();
-        
+
     });
 </script>
 

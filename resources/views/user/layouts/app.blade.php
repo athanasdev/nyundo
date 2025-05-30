@@ -40,6 +40,8 @@
             border: 1px solid #2b3139;
         }
 
+
+
         .logo {
             display: flex;
             align-items: center;
@@ -175,7 +177,7 @@
             justify-content: center; gap: 8px; font-size: 14px;
         }
         .action-btn.buy { background: #0ecb81; color: white; }
-        .action-btn.sell { background: #f6465d; color: white; }
+        .action-btn.sell { background: #2d2c2c; color: white; }
         .action-btn:hover { opacity: 0.8; transform: translateY(-1px); }
 
         .portfolio-item {
@@ -303,6 +305,12 @@
             .nav-item { padding: 6px 8px; gap: 2px;}
             .nav-item i { font-size: 14px; }
         }
+          .logo img {
+            align-self: center;
+            max-width: 65%; /* Control logo size */
+            height: auto;
+            margin-bottom: 15px;
+        }
     </style>
     @stack('styles') {{-- For page-specific CSS --}}
 </head>
@@ -310,12 +318,11 @@
     <div class="container-main">
         <div class="header">
             <div class="logo">
-                <i class="fas fa-chart-line"></i>
-                CoinTrades
+                 <img src="{{ asset('images/logo/logo.png') }}" alt="TradePro Logo" class="form-logo">
             </div>
             <div class="user-balance">
                 <div class="balance-item">
-                    <div class="balance-amount positive" id="userBalanceDisplay">$0.00</div>
+                    <div class="balance-amount positive" id="userBalanceDisplay">$ {{ $user->balance }}</div>
                     <div class="balance-label">Total Balance</div>
                 </div>
                 <div class="balance-item">
@@ -331,11 +338,11 @@
 
     <div class="bottom-nav">
         <div class="nav-container">
-            <a href="{{ route('assets') }}" class="nav-item {{ Request::is('assets*') ? 'active' : '' }}" data-section="assets">
+            <a href="{{ route('dashboard') }}" class="nav-item {{ Request::is('dashboard*') ? 'active' : '' }}" data-section="dashboard">
                 <i class="fas fa-coins"></i>
-                <span class="nav-text">Assets</span>
+                <span class="nav-text">Home</span>
             </a>
-            <a href="{{ route('accounts') }}" class="nav-item {{ Request::is('accounts*') ? 'active' : '' }}" data-section="accounts">
+            <a href="{{ route('my-account') }}" class="nav-item {{ Request::is('accounts*') ? 'active' : '' }}" data-section="account">
                 <i class="fas fa-user"></i>
                 <span class="nav-text">Account</span>
             </a>
@@ -343,7 +350,7 @@
                 <i class="fas fa-users"></i>
                 <span class="nav-text">Team</span>
             </a>
-            <a href="{{ route('bot') }}" class="nav-item {{ Request::is('bot*') ? 'active' : '' }}" data-section="bot">
+            <a href="{{ route('ai-trading') }}" class="nav-item {{ Request::is('bot*') ? 'active' : '' }}" data-section="bot">
                 <i class="fas fa-robot"></i>
                 <span class="nav-text">Bot</span>
             </a>
@@ -357,8 +364,8 @@
 
         // Update header balances (example, should be driven by real data)
         function updateGlobalHeaderDisplay(totalBalance, pnl) {
-            const userBalanceEl = document.getElementById('userBalanceDisplay');
-            const todayPnLEl = document.getElementById('todayPnLDisplay');
+            const userBalanceEl = document.getElementById('userBalanceDisplay1');
+            const todayPnLEl = document.getElementById('todayPnLDisplay1');
             if (userBalanceEl) {
                 userBalanceEl.textContent = formatCurrency(totalBalance);
                 userBalanceEl.className = `balance-amount ${totalBalance >= 0 ? 'positive' : 'negative'}`;
@@ -368,10 +375,11 @@
                 todayPnLEl.className = `balance-amount ${pnl >= 0 ? 'positive' : 'negative'}`;
             }
         }
-        // Example initial update
-        // updateGlobalHeaderDisplay(12456.78, 234.56);
+
     </script>
 
-    @stack('scripts') {{-- For page-specific JavaScript --}}
+    @stack('scripts')
+    
+
 </body>
 </html>

@@ -63,7 +63,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 
 Route::middleware(['auth:web'])->group(function () {
-    Route::get('/dashboard', fn() => view('user.dashboard'))->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'home'])->name('dashboard');
     Route::get('/my-account', [DashboardController::class, 'myaccount'])->name('my-account');
     Route::get('/assets', [DashboardController::class, 'assets'])->name('assets');
     Route::get('/order', [DashboardController::class, 'order'])->name('order');
@@ -154,11 +154,11 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
 });
 
 
-Route::get('/payment/initiate', [CoinPaymentsController::class, 'showPaymentForm'])->name('coinpayments.form');
-Route::get('/payment/success', [CoinPaymentsController::class, 'paymentSuccess'])->name('payment.success');
-Route::get('/payment/cancel', [CoinPaymentsController::class, 'paymentCancel'])->name('payment.cancel');
-Route::post('/payment/create', [CoinPaymentsController::class, 'createTransaction'])->name('coinpayments.create');
-Route::post('/ipn/coinpayments', [CoinPaymentsController::class, 'handleIpn'])->name('coinpayments.ipn');
+// Route::get('/payment/initiate', [CoinPaymentsController::class, 'showPaymentForm'])->name('coinpayments.form');
+// Route::get('/payment/success', [CoinPaymentsController::class, 'paymentSuccess'])->name('payment.success');
+// Route::get('/payment/cancel', [CoinPaymentsController::class, 'paymentCancel'])->name('payment.cancel');
+// Route::post('/payment/create', [CoinPaymentsController::class, 'createTransaction'])->name('coinpayments.create');
+// Route::post('/ipn/coinpayments', [CoinPaymentsController::class, 'handleIpn'])->name('coinpayments.ipn');
 
 
 Route::get('/nowpayments/form', [NowPaymentController::class, 'paymentForm']);

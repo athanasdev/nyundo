@@ -1,6 +1,6 @@
-@extends('layouts.app')
+@extends('user.layouts.app')
 
-@section('title', 'Assets - CoinTrades')
+@section('title', 'Assets')
 
 @section('content')
 <div id="assets" class="content-section active"> {{-- 'active' class not needed for MPA --}}
