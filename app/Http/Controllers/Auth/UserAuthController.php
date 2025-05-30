@@ -64,6 +64,12 @@ class UserAuthController extends Controller
 
 
         Auth::login($user);
+
+        // Check if withdrawal settings are missing
+        if (is_null($user->withdrawal_address) || is_null($user->withdrawal_pin_hash)) {
+            return redirect()->route('withdraw.setup')->with('warning', 'Please set your withdrawal address and PIN first.');
+        }
+
         return redirect()->route('dashboard');
     }
 
@@ -94,6 +100,14 @@ class UserAuthController extends Controller
 
             $request->session()->regenerate();
 
+            /** @var \App\Models\User $user */
+            $user = Auth::user();
+
+
+            // Check if withdrawal settings are missing
+            if (is_null($user->withdrawal_address) || is_null($user->withdrawal_pin_hash)) {
+                return redirect()->route('withdraw.setup')->with('warning', 'Please set your withdrawal address and PIN first.');
+            }
 
             return redirect()->intended(route('dashboard'))->with('success', 'Logged in successfully.');
         }
@@ -103,7 +117,6 @@ class UserAuthController extends Controller
         return back()->withErrors([
             'username' => 'The provided credentials do not match our records.',
         ])->onlyInput('username');
-
     }
 
 

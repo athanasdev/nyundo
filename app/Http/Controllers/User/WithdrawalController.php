@@ -4,9 +4,14 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use App\Models\Setting;
+use App\Models\Withdrawal;
+use App\Models\User;
+use App\Models\Transaction;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class WithdrawalController extends Controller
 {
@@ -15,21 +20,85 @@ class WithdrawalController extends Controller
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-
         // Check if withdrawal settings are missing
         if (is_null($user->withdrawal_address) || is_null($user->withdrawal_pin_hash)) {
             return redirect()->route('withdraw.setup')->with('warning', 'Please set your withdrawal address and PIN first.');
         }
 
+        $settings = DB::table('settings')->first();
+        $minWithdrawal = $settings->min_withdraw_amount;
+        $withdrawFeePercent = $settings->withdraw_fee_percentage;
         // Show withdraw page if everything is set
-        return view('user.layouts.withdraw', compact('user'));
+        return view('user.layouts.withdraw', compact('user', 'minWithdrawal', 'withdrawFeePercent'));
     }
 
     public function withdrawRequest(Request $request)
     {
-         Log::info('Withdraw form input:', $request->all());
-         return null;
+        Log::info('Withdraw form input:', $request->all());
+
+        $request->validate([
+            'amount' => 'required|numeric|min:0.01',
+            'withdraw_password' => 'required|string',
+        ]);
+
+        /** @var \Illuminate\Auth\AuthManager $auth */
+        $auth = auth();
+        $user = $auth->user();
+
+
+        if (!$user->withdrawal_pin_hash) {
+            return redirect()->back()->withErrors(['error' => 'You have not set a withdrawal PIN.']);
+        }
+
+        // Validate the withdrawal password
+        if (!Hash::check($request->withdraw_password, $user->withdrawal_pin_hash)) {
+            return redirect()->back()->withErrors(['error' => 'Incorrect withdrawal password.']);
+        }
+
+        // Check withdrawal address
+        if (!$user->withdrawal_address) {
+            return redirect()->back()->withErrors(['error' => 'No withdrawal address set.']);
+        }
+
+        // Fetch settings
+        $setting = Setting::first();
+        if (!$setting) {
+            return redirect()->back()->withErrors(['error' => 'Withdrawal settings not configured.']);
+        }
+
+        $amount = $request->amount;
+
+        // Check minimum withdrawal amount
+        if ($amount < $setting->min_withdraw_amount) {
+            return redirect()->back()->withErrors(['error' => 'Amount is less than the minimum withdrawal limit.']);
+        }
+
+        // Check user balance
+        if ($user->balance < $amount) {
+            return redirect()->back()->withErrors(['error' => 'Insufficient balance.']);
+        }
+
+        // Calculate fee and net
+        $fee = ($amount * $setting->withdraw_fee_percentage) / 100;
+        $netAmount = $amount - $fee;
+
+        // Store withdrawal
+        $withdrawal = new Withdrawal();
+        $withdrawal->user_id = $user->id;
+        $withdrawal->payment_address = $user->withdrawal_address;
+        $withdrawal->withdraw_password = bcrypt($request->withdraw_password); // optional, hashed copy
+        $withdrawal->status = 'pending';
+        $withdrawal->amount = $netAmount;
+        $withdrawal->save();
+
+        // Deduct balance
+        $user->balance -= $amount;
+        $user->save();
+
+        return redirect()->back()->with('success', 'Withdraw request submitted successfully. Amount: ' . $amount . ', Fee: ' . $fee . ', Net: ' . $netAmount);
     }
+
+
 
     public function setup()
     {
@@ -53,6 +122,4 @@ class WithdrawalController extends Controller
 
         return redirect()->route('withdraw')->with('success', 'Withdrawal settings saved successfully.');
     }
-
-
 }

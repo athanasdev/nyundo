@@ -221,7 +221,7 @@ class TeamController extends Controller
         $level1_count = $level1_members->count();
         // Count active Level 1 members using the 'status' field
         $level1_active_count = User::where('referrer_id', $user->id)
-            ->where('status', 'active') // <<< CORRECTED LOGIC
+            ->where('balance', '>', 15) // <<< CORRECTED LOGIC
             ->count();
 
         // Level 2 referrals
@@ -233,7 +233,7 @@ class TeamController extends Controller
                 $level2_members = $level2_members->merge($current_level2_members);
                 // Count active ones among these L2 members
                 $level2_active_count += User::where('referrer_id', $level1_member->id)
-                    ->where('status', 'active') // <<< CORRECTED LOGIC
+                    ->where('balance', '>', 15)  // <<< CORRECTED LOGIC
                     ->count();
             }
         }
@@ -248,7 +248,7 @@ class TeamController extends Controller
                 $level3_members = $level3_members->merge($current_level3_members);
                 // Count active ones among these L3 members
                 $level3_active_count += User::where('referrer_id', $level2_member->id)
-                    ->where('status', 'active') // <<< CORRECTED LOGIC
+                    ->where('balance', '>', 15)  // <<< CORRECTED LOGIC
                     ->count();
             }
         }

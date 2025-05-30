@@ -240,5 +240,6 @@
         // If you need real-time updates for bot stats even when this page is active
         // setInterval(() => updateBotStatsOnPage(true), 3000); // But be careful if global interval also runs
     });
+
 </script>
 @endpush

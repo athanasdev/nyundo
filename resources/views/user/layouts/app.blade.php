@@ -720,6 +720,32 @@
             height: auto;
             margin-bottom: 15px;
         }
+
+        .alert-error {
+            color: #f6465d;
+            background-color: rgba(246, 70, 93, 0.1);
+            border: 1px solid rgba(246, 70, 93, 0.3);
+        }
+
+        .alert-error ul {
+            list-style-position: inside;
+            padding-left: 5px;
+            margin-bottom: 0;
+        }
+
+        .alert-error li {
+            margin-bottom: 5px;
+        }
+
+        .alert-error li:last-child {
+            margin-bottom: 0;
+        }
+
+        .alert-success {
+            color: #0ecb81;
+            background-color: rgba(14, 203, 129, 0.1);
+            border: 1px solid rgba(14, 203, 129, 0.3);
+        }
     </style>
     @stack('styles') {{-- For page-specific CSS --}}
 </head>
@@ -749,6 +775,7 @@
             </div>
         </div>
 
+      
         @yield('content')
 
     </div>

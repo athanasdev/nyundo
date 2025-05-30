@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,13 +33,15 @@
             border: 1px solid #2b3139;
             padding: 30px 35px;
             width: 100%;
-            max-width: 450px; /* Consistent width, can adjust if needed */
+            max-width: 450px;
+            /* Consistent width, can adjust if needed */
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
             position: relative;
             /* text-align: center; Centering is handled by .form-header for its content */
         }
 
-        .forgot-password-card-container::before { /* Accent border top */
+        .forgot-password-card-container::before {
+            /* Accent border top */
             content: '';
             position: absolute;
             top: 0;
@@ -49,16 +52,20 @@
             border-radius: 8px 8px 0 0;
         }
 
-        .form-header { /* Consistent header for logo, title, subtitle */
+        .form-header {
+            /* Consistent header for logo, title, subtitle */
             display: flex;
             flex-direction: column;
             align-items: center;
             margin-bottom: 25px;
         }
 
-        .form-header img.form-logo { /* Added class for consistency */
-            width: 65%; /* Can be a percentage of the container */
-            max-width: 180px; /* Or a fixed max for better control */
+        .form-header img.form-logo {
+            /* Added class for consistency */
+            width: 65%;
+            /* Can be a percentage of the container */
+            max-width: 180px;
+            /* Or a fixed max for better control */
             height: auto;
             margin-bottom: 15px;
         }
@@ -70,6 +77,7 @@
             text-align: center;
             margin-bottom: 8px;
         }
+
         .form-header h4 i {
             margin-right: 8px;
         }
@@ -90,7 +98,8 @@
 
         /* label.label-ip can be styled if visible text is used */
 
-        .box-input input[type="email"] { /* Specific to email, or use a general class */
+        .box-input input[type="email"] {
+            /* Specific to email, or use a general class */
             width: 100%;
             padding: 12px 15px;
             background: #0b0e11;
@@ -111,7 +120,8 @@
             color: #565f6b;
         }
 
-        button.tf-btn { /* Submit button */
+        button.tf-btn {
+            /* Submit button */
             width: 100%;
             padding: 12px 15px;
             background: #f0b90b;
@@ -124,20 +134,24 @@
             letter-spacing: 0.5px;
             cursor: pointer;
             transition: background-color 0.2s, transform 0.1s;
-            margin-top: 5px; /* Reduced margin from fieldset to button */
+            margin-top: 5px;
+            /* Reduced margin from fieldset to button */
         }
 
         button.tf-btn:hover {
             background: #d8a40a;
         }
+
         button.tf-btn:active {
             transform: scale(0.98);
         }
+
         button.tf-btn i {
             margin-right: 8px;
         }
 
-        .signin-link-container { /* "Remember password?" link section */
+        .signin-link-container {
+            /* "Remember password?" link section */
             margin-top: 25px;
             text-align: center;
             font-size: 0.9em;
@@ -149,6 +163,7 @@
             font-weight: 600;
             text-decoration: none;
         }
+
         .signin-link-container a:hover {
             text-decoration: underline;
         }
@@ -158,42 +173,85 @@
             .forgot-password-card-container {
                 padding: 25px 20px;
             }
+
             .form-header img.form-logo {
-                max-width: 150px; /* Adjust for smaller screens */
+                max-width: 150px;
+                /* Adjust for smaller screens */
             }
+
             .form-header h4 {
                 font-size: 1.4em;
             }
+
             .form-header .subtitle {
                 font-size: 0.9em;
             }
+
             .box-input input[type="email"] {
                 padding: 10px 12px;
             }
+
             button.tf-btn {
                 padding: 10px 12px;
             }
+
             .signin-link-container {
                 font-size: 0.85em;
             }
+
+            .alert-error {
+                color: #f6465d;
+                background-color: rgba(246, 70, 93, 0.1);
+                border: 1px solid rgba(246, 70, 93, 0.3);
+            }
+
+            .alert-error ul {
+                list-style-position: inside;
+                padding-left: 5px;
+                margin-bottom: 0;
+            }
+
+            .alert-error li {
+                margin-bottom: 5px;
+            }
+
+            .alert-error li:last-child {
+                margin-bottom: 0;
+            }
+
+            .alert-success {
+                color: #0ecb81;
+                background-color: rgba(14, 203, 129, 0.1);
+                border: 1px solid rgba(14, 203, 129, 0.3);
+            }
+
         }
     </style>
 </head>
+
 <body>
 
+
+
     <div class="forgot-password-card-container">
-        <form action="{{route('password.email')}}" method="POST"> <div class="form-header">
-               @csrf
+
+
+
+        <form action="{{ route('password.email') }}" method="POST">
+            <div class="form-header">
+                @csrf
                 <img src="{{ asset('images/logo/logo.png') }}" alt="TradePro Logo" class="form-logo">
                 <h4><i class="fas fa-lock-open"></i> Reset Password</h4>
                 <span class="subtitle">Enter your email address to receive a reset code.</span>
             </div>
 
+            @include('user.common.alert')
+
             <fieldset>
                 <label class="label-ip" for="email" style="display:none;">Email</label>
                 <div class="box-input">
-                    <input id="email" class="w-100" type="email" placeholder="Enter your email"
-                           name="email" value="{{ old('email') }}" required> {{-- value attribute for Laravel old input --}}
+                    <input id="email" class="w-100" type="email" placeholder="Enter your email" name="email"
+                        value="{{ old('email') }}" required> {{-- value attribute for Laravel old input --}}
                 </div>
             </fieldset>
 
@@ -203,7 +261,8 @@
 
             <p class="signin-link-container">
                 Remember your password?
-                <a href="{{route('login')}}">Sign In</a> </p>
+                <a href="{{ route('login') }}">Sign In</a>
+            </p>
         </form>
     </div>
 
@@ -230,4 +289,5 @@
     </script>
 
 </body>
+
 </html>

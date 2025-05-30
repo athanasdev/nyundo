@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,13 +33,15 @@
             border: 1px solid #2b3139;
             padding: 30px 35px;
             width: 100%;
-            max-width: 420px; /* Login card can be a bit narrower than signup */
+            max-width: 420px;
+            /* Login card can be a bit narrower than signup */
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
             position: relative;
             /* text-align: center; No longer needed here if header handles it */
         }
 
-        .login-card-container::before { /* Accent border top */
+        .login-card-container::before {
+            /* Accent border top */
             content: '';
             position: absolute;
             top: 0;
@@ -54,36 +57,45 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 25px; /* Space before form fields */
+            margin-bottom: 25px;
+            /* Space before form fields */
         }
 
-        .login-header .form-logo { /* Class for logo inside the form header */
-            max-width: 60%; /* Adjust as needed, slightly less than signup potentially */
+        .login-header .form-logo {
+            /* Class for logo inside the form header */
+            max-width: 60%;
+            /* Adjust as needed, slightly less than signup potentially */
             height: auto;
             margin-bottom: 15px;
         }
 
-        .login-header h2 { /* Title inside the login-header */
+        .login-header h2 {
+            /* Title inside the login-header */
             color: #f0b90b;
             /* margin-bottom: 25px; This margin is now on .login-header */
-            font-size: 1.8em; /* Kept from original login title */
+            font-size: 1.8em;
+            /* Kept from original login title */
             font-weight: 600;
             text-align: center;
         }
+
         .login-header h2 i {
             margin-right: 8px;
         }
 
-        fieldset { /* fieldset is used in login, form-group in signup */
+        fieldset {
+            /* fieldset is used in login, form-group in signup */
             border: none;
             padding: 0;
             margin-bottom: 18px;
         }
+
         fieldset.mb-12 {
-            margin-bottom: 12px!important;
+            margin-bottom: 12px !important;
         }
 
-        label.label-ip { /* Not used with visible text in login, but kept for structure */
+        label.label-ip {
+            /* Not used with visible text in login, but kept for structure */
             display: block;
         }
 
@@ -121,7 +133,9 @@
         .box-auth-pass {
             position: relative;
         }
-        .show-pass { /* Class for password toggle on login page */
+
+        .show-pass {
+            /* Class for password toggle on login page */
             position: absolute;
             right: 12px;
             top: 50%;
@@ -130,10 +144,13 @@
             color: #848e9c;
             font-size: 1.1em;
         }
+
         .show-pass:hover {
             color: #f0b90b;
         }
-        .show-pass .icon-view-hide { /* Initially hide the "hide" icon */
+
+        .show-pass .icon-view-hide {
+            /* Initially hide the "hide" icon */
             display: none;
         }
 
@@ -157,7 +174,8 @@
             text-decoration: underline;
         }
 
-        button.tf-btn { /* Login button */
+        button.tf-btn {
+            /* Login button */
             width: 100%;
             padding: 12px 15px;
             background: #f0b90b;
@@ -176,14 +194,17 @@
         button.tf-btn:hover {
             background: #d8a40a;
         }
+
         button.tf-btn:active {
             transform: scale(0.98);
         }
+
         button.tf-btn i {
             margin-right: 8px;
         }
 
-        .signup-link-container { /* "Don't have an account?" link section */
+        .signup-link-container {
+            /* "Don't have an account?" link section */
             margin-top: 25px;
             text-align: center;
             font-size: 0.9em;
@@ -195,49 +216,93 @@
             font-weight: 600;
             text-decoration: none;
         }
+
         .signup-link-container a:hover {
             text-decoration: underline;
         }
 
         @media (max-width: 480px) {
             .login-header .form-logo {
-                 max-width: 50%; /* Adjust logo size for small screens */
+                max-width: 50%;
+                /* Adjust logo size for small screens */
             }
+
             .login-header h2 {
                 font-size: 1.6em;
             }
+
             .login-card-container {
                 padding: 25px 20px;
             }
+
             .box-input input[type="text"],
             .box-input input[type="password"] {
                 padding: 10px 12px;
             }
+
             .box-auth-pass input[type="password"] {
                 padding-right: 35px;
             }
-            .show-pass { right: 10px; }
+
+            .show-pass {
+                right: 10px;
+            }
 
             button.tf-btn {
                 padding: 10px 12px;
             }
-            .forgot-password-container, .signup-link-container {
+
+            .forgot-password-container,
+            .signup-link-container {
                 font-size: 0.85em;
+            }
+
+            .alert-error {
+                color: #f6465d;
+                background-color: rgba(246, 70, 93, 0.1);
+                border: 1px solid rgba(246, 70, 93, 0.3);
+            }
+
+            .alert-error ul {
+                list-style-position: inside;
+                padding-left: 5px;
+                margin-bottom: 0;
+            }
+
+            .alert-error li {
+                margin-bottom: 5px;
+            }
+
+            .alert-error li:last-child {
+                margin-bottom: 0;
+            }
+
+            .alert-success {
+                color: #0ecb81;
+                background-color: rgba(14, 203, 129, 0.1);
+                border: 1px solid rgba(14, 203, 129, 0.3);
             }
 
 
         }
     </style>
 </head>
+
 <body>
 
+
+
     <div class="login-card-container">
-        <form action="{{route('login')}}" method="POST"> <div class="login-header">
-             @csrf
+        <form action="{{ route('login') }}" method="POST">
+            <div class="login-header">
+                @csrf
                 <img src="{{ asset('images/logo/logo.png') }}" alt="TradePro Logo" class="form-logo">
                 <h2><i class="fas fa-sign-in-alt"></i> Sign In</h2>
-            </div>
 
+
+            </div>
+            @include('user.common.alert')
+            
             <fieldset>
                 <div class="box-input">
                     <input type="text" name="username" placeholder="Username" required>
@@ -247,8 +312,8 @@
             <fieldset class="mb-12">
                 <div class="box-input">
                     <div class="box-auth-pass">
-                        <input type="password" name="password" required placeholder="Password"
-                               class="password-field" id="loginPassword">
+                        <input type="password" name="password" required placeholder="Password" class="password-field"
+                            id="loginPassword">
                         <span class="show-pass" data-target="loginPassword">
                             <i class="fas fa-eye icon-view"></i>
                             <i class="fas fa-eye-slash icon-view-hide"></i>
@@ -258,7 +323,8 @@
             </fieldset>
 
             <div class="forgot-password-container">
-                <a href="{{route('password.request')}}">Forgot Password?</a> </div>
+                <a href="{{ route('password.request') }}">Forgot Password?</a>
+            </div>
 
             <button class="tf-btn lg yl-btn" type="submit">
                 <i class="fas fa-paper-plane"></i> Login
@@ -266,16 +332,17 @@
 
             <p class="signup-link-container">
                 I don’t have an account?
-                <a href="{{route('home')}}">Sign Up</a> </p>
+                <a href="{{ route('home') }}">Sign Up</a>
+            </p>
         </form>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const passwordToggles = document.querySelectorAll('.show-pass');
 
             passwordToggles.forEach(toggle => {
-                toggle.addEventListener('click', function () {
+                toggle.addEventListener('click', function() {
                     const targetInputId = this.getAttribute('data-target');
                     const targetInput = document.getElementById(targetInputId);
                     const iconView = this.querySelector('.icon-view');
@@ -309,4 +376,5 @@
     </script>
 
 </body>
+
 </html>

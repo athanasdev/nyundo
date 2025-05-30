@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,12 +33,14 @@
             border: 1px solid #2b3139;
             padding: 30px 35px;
             width: 100%;
-            max-width: 480px; /* Slightly wider for more fields */
+            max-width: 480px;
+            /* Slightly wider for more fields */
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
             position: relative;
         }
 
-        .signup-card-container::before { /* Accent border top */
+        .signup-card-container::before {
+            /* Accent border top */
             content: '';
             position: absolute;
             top: 0;
@@ -56,27 +59,33 @@
         }
 
         .signup-header img {
-            max-width: 65%; /* Control logo size */
+            max-width: 65%;
+            /* Control logo size */
             height: auto;
             margin-bottom: 15px;
         }
 
         .signup-header h4 {
             color: #f0b90b;
-            font-size: 1.6em; /* Adjusted size */
+            font-size: 1.6em;
+            /* Adjusted size */
             font-weight: 600;
             text-align: center;
         }
+
         .signup-header h4 i {
             margin-right: 8px;
         }
 
-        .form-group { /* Replaces fieldset for styling */
-            margin-bottom: 18px; /* Consistent spacing */
+        .form-group {
+            /* Replaces fieldset for styling */
+            margin-bottom: 18px;
+            /* Consistent spacing */
             text-align: left;
         }
 
-        .form-group label.input-label { /* Explicit label text */
+        .form-group label.input-label {
+            /* Explicit label text */
             display: block;
             color: #848e9c;
             font-size: 0.9em;
@@ -86,7 +95,8 @@
 
         /* Styling for the div that directly wraps the input */
         .box-input {
-            position: relative; /* For password toggle positioning */
+            position: relative;
+            /* For password toggle positioning */
         }
 
         .form-group input[type="text"],
@@ -102,6 +112,7 @@
             font-size: 1em;
             transition: border-color 0.2s, box-shadow 0.2s;
         }
+
         /* Specific padding for password fields if icon is present */
         .box-auth-pass input[type="password"] {
             padding-right: 40px;
@@ -118,12 +129,14 @@
         }
 
         .form-group input::placeholder,
-        .form-group select { /* For "Choose currency" */
+        .form-group select {
+            /* For "Choose currency" */
             color: #565f6b;
         }
+
         .form-group select option {
-             background: #1e2329;
-             color: #eaecef;
+            background: #1e2329;
+            color: #eaecef;
         }
 
 
@@ -131,7 +144,9 @@
         .box-auth-pass {
             position: relative;
         }
-        .show-pass-toggle { /* Replaces .show-pass and .show-pass2 */
+
+        .show-pass-toggle {
+            /* Replaces .show-pass and .show-pass2 */
             position: absolute;
             right: 12px;
             top: 50%;
@@ -140,17 +155,21 @@
             color: #848e9c;
             font-size: 1.1em;
         }
+
         .show-pass-toggle:hover {
             color: #f0b90b;
         }
 
 
         /* Checkbox styling */
-        .terms-group { /* Replaces .group-cb */
+        .terms-group {
+            /* Replaces .group-cb */
             display: flex;
             align-items: center;
-            margin-top: 12px; /* from mt-12 */
-            padding: 10px 0;  /* from style="padding: 10px" - adjusted to remove side padding */
+            margin-top: 12px;
+            /* from mt-12 */
+            padding: 10px 0;
+            /* from style="padding: 10px" - adjusted to remove side padding */
         }
 
         .terms-group input[type="checkbox"].tf-checkbox {
@@ -164,7 +183,8 @@
             cursor: pointer;
             margin-right: 10px;
             position: relative;
-            flex-shrink: 0; /* Prevent shrinking */
+            flex-shrink: 0;
+            /* Prevent shrinking */
         }
 
         .terms-group input[type="checkbox"].tf-checkbox:checked {
@@ -173,33 +193,39 @@
         }
 
         .terms-group input[type="checkbox"].tf-checkbox:checked::before {
-            content: '\f00c'; /* Font Awesome check icon */
+            content: '\f00c';
+            /* Font Awesome check icon */
             font-family: 'Font Awesome 6 Free';
             font-weight: 900;
             font-size: 12px;
-            color: #1e2329; /* Dark check for contrast on yellow */
+            color: #1e2329;
+            /* Dark check for contrast on yellow */
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
         }
 
-        .terms-group label[for="cb-ip"] { /* Style for the "I agree..." label */
+        .terms-group label[for="cb-ip"] {
+            /* Style for the "I agree..." label */
             color: #c1c8d1;
             font-size: 0.9em;
             cursor: pointer;
             line-height: 1.3;
         }
+
         .terms-group label[for="cb-ip"] a {
             color: #f0b90b;
             text-decoration: none;
         }
+
         .terms-group label[for="cb-ip"] a:hover {
             text-decoration: underline;
         }
 
 
-        .signup-button { /* Replaces .tf-btn.lg.yl-btn */
+        .signup-button {
+            /* Replaces .tf-btn.lg.yl-btn */
             width: 100%;
             padding: 12px 15px;
             background: #f0b90b;
@@ -212,8 +238,10 @@
             letter-spacing: 0.5px;
             cursor: pointer;
             transition: background-color 0.2s, transform 0.1s;
-            margin-top: 25px; /* from mt-40, adjusted */
-            height: 46px; /* from style */
+            margin-top: 25px;
+            /* from mt-40, adjusted */
+            height: 46px;
+            /* from style */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -222,39 +250,65 @@
         .signup-button:hover {
             background: #d8a40a;
         }
+
         .signup-button:active {
             transform: scale(0.98);
         }
+
         .signup-button i {
             margin-right: 8px;
         }
 
 
-        .login-link-container { /* Replaces p.mt-20.text-center.text-small */
-            margin-top: 20px; /* from mt-20 */
+        .login-link-container {
+            /* Replaces p.mt-20.text-center.text-small */
+            margin-top: 20px;
+            /* from mt-20 */
             text-align: center;
-            font-size: 0.9em; /* from text-small */
+            font-size: 0.9em;
+            /* from text-small */
             color: #848e9c;
         }
 
         .login-link-container a {
-            color: #f0b90b; /* from style */
-            font-weight: 600; /* from style */
+            color: #f0b90b;
+            /* from style */
+            font-weight: 600;
+            /* from style */
             text-decoration: none;
-            font-size: 1em; /* to inherit from parent or be 14px effectively */
+            font-size: 1em;
+            /* to inherit from parent or be 14px effectively */
         }
+
         .login-link-container a:hover {
             text-decoration: underline;
         }
 
 
         /* Utility for margins (approximating mt- classes if needed elsewhere) */
-        .mt-12 { margin-top: 12px; }
-        .mt-16 { margin-top: 16px; }
-        .mt-20 { margin-top: 20px; }
-        .mt-32 { margin-top: 32px; }
-        .mt-40 { margin-top: 40px; }
-        .mb-16 { margin-bottom: 16px; }
+        .mt-12 {
+            margin-top: 12px;
+        }
+
+        .mt-16 {
+            margin-top: 16px;
+        }
+
+        .mt-20 {
+            margin-top: 20px;
+        }
+
+        .mt-32 {
+            margin-top: 32px;
+        }
+
+        .mt-40 {
+            margin-top: 40px;
+        }
+
+        .mb-16 {
+            margin-bottom: 16px;
+        }
 
 
         /* Responsive design */
@@ -262,45 +316,86 @@
             .signup-card-container {
                 padding: 25px 20px;
             }
+
             .signup-header h4 {
                 font-size: 1.4em;
             }
-            .form-group input, .form-group select {
+
+            .form-group input,
+            .form-group select {
                 padding: 10px 12px;
             }
-             .box-auth-pass input[type="password"] {
+
+            .box-auth-pass input[type="password"] {
                 padding-right: 35px;
             }
-            .show-pass-toggle { right: 10px; }
+
+            .show-pass-toggle {
+                right: 10px;
+            }
 
             .signup-button {
                 padding: 10px 12px;
             }
+
             .terms-group label[for="cb-ip"] {
                 font-size: 0.85em;
             }
+
+            .alert-error {
+                color: #f6465d;
+                background-color: rgba(246, 70, 93, 0.1);
+                border: 1px solid rgba(246, 70, 93, 0.3);
+            }
+
+            .alert-error ul {
+                list-style-position: inside;
+                padding-left: 5px;
+                margin-bottom: 0;
+            }
+
+            .alert-error li {
+                margin-bottom: 5px;
+            }
+
+            .alert-error li:last-child {
+                margin-bottom: 0;
+            }
+
+            .alert-success {
+                color: #0ecb81;
+                background-color: rgba(14, 203, 129, 0.1);
+                border: 1px solid rgba(14, 203, 129, 0.3);
+            }
+
         }
     </style>
 </head>
+
 <body>
 
     <div class="signup-card-container">
         <form action="{{ route('register') }}" method="POST"> @csrf
             <div class="signup-header">
-                <img src="{{ asset('images/logo/logo.png') }}" alt="cointradesLogo"> <h4><i class="fas fa-user-plus"></i> Create Your Account</h4>
+                <img src="{{ asset('images/logo/logo.png') }}" alt="cointradesLogo">
+                <h4><i class="fas fa-user-plus"></i> Create Your Account</h4>
             </div>
+
+             @include('user.common.alert')
 
             <div class="form-group">
                 <label class="input-label" for="username">Username</label>
                 <div class="box-input">
-                    <input type="text" id="username" name="username" placeholder="Choose a unique username" required>
+                    <input type="text" id="username" name="username" placeholder="Choose a unique username"
+                        required>
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="input-label" for="email">Email Address</label>
                 <div class="box-input">
-                    <input class="w-100" id="email" type="email" placeholder="Enter your email" name="email" required>
+                    <input class="w-100" id="email" type="email" placeholder="Enter your email" name="email"
+                        required>
                 </div>
             </div>
 
@@ -317,16 +412,16 @@
             <div class="form-group">
                 <label class="input-label" for="invitation_code">Invitation Code (Optional)</label>
                 <div class="box-input">
-                    <input type="text" id="invitation_code" name="invitation_code" placeholder="Enter invitation code"
-                           value="{{ $ref ?? old('invitation_code') }}">
+                    <input type="text" id="invitation_code" name="invitation_code"
+                        placeholder="Enter invitation code" value="{{ $ref ?? old('invitation_code') }}">
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="input-label" for="password">Password</label>
                 <div class="box-input box-auth-pass">
-                    <input type="password" required name="password" id="password" placeholder="8-20 characters, secure!"
-                           class="password-field">
+                    <input type="password" required name="password" id="password"
+                        placeholder="8-20 characters, secure!" class="password-field">
                     <span class="show-pass-toggle" data-target="password">
                         <i class="fas fa-eye"></i>
                     </span>
@@ -337,14 +432,15 @@
                 <label class="input-label" for="password_confirmation">Confirm Password</label>
                 <div class="box-input box-auth-pass">
                     <input type="password" required name="password_confirmation" id="password_confirmation"
-                           placeholder="Re-enter your password" class="password-field2">
+                        placeholder="Re-enter your password" class="password-field2">
                     <span class="show-pass-toggle" data-target="password_confirmation">
-                         <i class="fas fa-eye"></i>
+                        <i class="fas fa-eye"></i>
                     </span>
                 </div>
             </div>
 
-            <div class="terms-group"> <input type="checkbox" class="tf-checkbox" name="agree" value="1" id="cb-ip" checked required>
+            <div class="terms-group"> <input type="checkbox" class="tf-checkbox" name="agree" value="1"
+                    id="cb-ip" checked required>
                 <label for="cb-ip">I agree to the <a href="#terms">Terms and Conditions</a></label>
             </div>
 
@@ -360,11 +456,11 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const passwordToggles = document.querySelectorAll('.show-pass-toggle');
 
             passwordToggles.forEach(toggle => {
-                toggle.addEventListener('click', function () {
+                toggle.addEventListener('click', function() {
                     const targetInputId = this.getAttribute('data-target');
                     const targetInput = document.getElementById(targetInputId);
                     const icon = this.querySelector('i');
@@ -413,4 +509,5 @@
     </script>
 
 </body>
+
 </html>
