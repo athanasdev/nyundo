@@ -82,7 +82,7 @@ Route::middleware(['auth:web'])->group(function () {
     // Withdrawal
     Route::get('/payment-method', [WithdrawalController::class, 'index'])->name('payment-method');
     Route::get('/withdraw', [WithdrawalController::class, 'withdraw'])->name('withdraw');
-    Route::post('/withdraw', [WithdrawalController::class, 'store'])->name('withdraw.store');
+    Route::post('/withdraw', [WithdrawalController::class, 'store'])->name('withdraw.request');
 
     // Team
     Route::get('/team', [TeamController::class, 'team'])->name('team');

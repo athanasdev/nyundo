@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class WithdrawalController extends Controller
 {
@@ -15,7 +16,8 @@ class WithdrawalController extends Controller
 
     public function withdraw()
     {
-        return view('user.withdraw');
+        $user = Auth::user();
+        return view('user.layouts.withdraw', compact('user'));
     }
 
 

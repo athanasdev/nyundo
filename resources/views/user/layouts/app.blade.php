@@ -757,7 +757,7 @@
         <div class="nav-container">
             <a href="{{ route('dashboard') }}" class="nav-item {{ Request::is('dashboard*') ? 'active' : '' }}"
                 data-section="dashboard">
-                <i class="fas fa-coins"></i>
+                <i class="fas fa-home"></i>
                 <span class="nav-text">Home</span>
             </a>
             <a href="{{ route('my-account') }}" class="nav-item {{ Request::is('accounts*') ? 'active' : '' }}"
