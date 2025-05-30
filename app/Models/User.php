@@ -62,35 +62,6 @@ class User extends Authenticatable
         ];
     }
 
-
-    /**
-     * Set the user's withdrawal PIN (hashed).
-     *
-     * @param  string  $rawPin
-     * @return void
-     */
-    public function setWithdrawalPin(string $rawPin): void
-    {
-        $this->attributes['withdrawal_pin_hash'] = Hash::make($rawPin);
-        $this->attributes['withdrawal_pin_set_at'] = Carbon::now();
-        // No need to call $this->save() here if you call it in the controller after this method.
-        // Or, you can call $this->save() if this method is the sole point of update for these.
-    }
-
-    /**
-     * Check if the given raw PIN matches the user's hashed withdrawal PIN.
-     *
-     * @param  string  $rawPin
-     * @return bool
-     */
-    public function checkWithdrawalPin(string $rawPin): bool
-    {
-        if (empty($this->attributes['withdrawal_pin_hash'])) {
-            return false; // No PIN set
-        }
-        return Hash::check($rawPin, $this->attributes['withdrawal_pin_hash']);
-    }
-
     // Model relationships
 
     public function investments()

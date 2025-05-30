@@ -198,13 +198,13 @@
         {{-- Assume user has one primary withdrawal address for a given currency, e.g., USDT TRC20 --}}
         {{-- In a real app, you might fetch this from user's profile or a dedicated addresses table --}}
         @php
-            $userWithdrawalAddress = Auth::user()->withdrawal_address_usdt_trc20 ?? 'YOUR_USDT_TRC20_ADDRESS_NOT_SET';
+            $userWithdrawalAddress = Auth::user()->withdrawal_address ?? 'YOUR_USDT_TRC20_ADDRESS_NOT_SET';
             // $withdrawalCurrency = 'USDT (TRC20)'; // Example
         @endphp
         <div class="form-group">
             <label for="withdrawal_address">Your Withdrawal Address (USDT TRC20):</label>
             <div class="address-display-group">
-                <input type="text" id="withdrawal_address_display" value="{{ $userWithdrawalAddress }}" readonly>
+                <input type="text" name="withdrawal_address" id="withdrawal_address_display" value="{{ $userWithdrawalAddress }}" readonly>
                 <button type="button" class="copy-btn-sm" id="copyWithdrawalAddressBtn" onclick="copyWithdrawalAddr()">
                     <i class="fas fa-copy"></i> Copy
                 </button>
