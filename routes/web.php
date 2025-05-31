@@ -162,12 +162,6 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
 });
 
 
-// Route::get('/payment/initiate', [CoinPaymentsController::class, 'showPaymentForm'])->name('coinpayments.form');
-// Route::get('/payment/success', [CoinPaymentsController::class, 'paymentSuccess'])->name('payment.success');
-// Route::get('/payment/cancel', [CoinPaymentsController::class, 'paymentCancel'])->name('payment.cancel');
-// Route::post('/payment/create', [CoinPaymentsController::class, 'createTransaction'])->name('coinpayments.create');
-// Route::post('/ipn/coinpayments', [CoinPaymentsController::class, 'handleIpn'])->name('coinpayments.ipn');
-
 
 Route::get('/nowpayments/form', [NowPaymentController::class, 'paymentForm']);
 Route::post('/payments/create', [NowPaymentcontroller::class, 'createPayment'])->name('payments.create');

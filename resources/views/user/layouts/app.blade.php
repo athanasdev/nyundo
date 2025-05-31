@@ -416,7 +416,7 @@
         </div>
         <div class="header-actions">
             {{-- Deposit Button - No route, for JS handling --}}
-            <a href="{{route('payments.create')}}" id="depositButton" class="header-action-btn">
+            <a href="{{route('payments.create')}}"  class="header-action-btn">
                 <i class="fas fa-arrow-alt-circle-down"></i> Deposit
             </a>
             {{-- Withdraw Button - No route, for JS handling --}}
@@ -484,29 +484,7 @@
             }
         }
         // Add event listeners for Deposit/Withdraw buttons if they trigger modals/JS actions
-        document.addEventListener('DOMContentLoaded', function() {
-            const depositBtn = document.getElementById('depositButton');
-            const withdrawBtn = document.getElementById('withdrawButton');
 
-            if(depositBtn) {
-                depositBtn.addEventListener('click', function(e) {
-                    e.preventDefault(); // Prevent default anchor action
-                    // Add your JavaScript logic for deposit here (e.g., open modal, or navigate if you define the route)
-                    // For now, just an alert. If you want to navigate to a page, you'd use:
-                    // window.location.href = '{{-- {{ route("deposit.form") }} --}}'; // Uncomment and define route if needed
-                    alert('Deposit action triggered!');
-                });
-            }
-
-            if(withdrawBtn) {
-                withdrawBtn.addEventListener('click', function(e) {
-                    e.preventDefault(); // Prevent default anchor action
-                    // Add your JavaScript logic for withdraw here
-                    alert('Withdraw action triggered!');
-                    // Example: window.location.href = '{{-- {{ route("withdraw.form") }} --}}'; // Uncomment and define route if needed
-                });
-            }
-        });
     </script>
 
     @stack('scripts')
