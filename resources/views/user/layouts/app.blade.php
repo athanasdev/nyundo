@@ -407,7 +407,7 @@
             </a>
             <div class="user-balance-display">
                 <div class="balance-item">
-                    <div class="balance-amount positive" id="userBalanceDisplay">
+                    <div class="balance-amount positive" id="userBalanceDisplay2">
                         ${{ number_format(Auth::user()->balance ?? 0, 2) }}
                     </div>
                     <div class="balance-label">Total Balance</div>

@@ -15,15 +15,19 @@ class UserInvestment extends Model
         'investment_date',
         'amount',
         'daily_profit_amount',
-        'status',
-        'next_payout_eligible_date',
+        'investment_result',   // enum lose/gain
+        'type',                // enum buy/sell
+        'crypto_category',     // enum for crypto categories
         'total_profit_paid_out',
         'principal_returned',
+        'game_start_time',    // rename to actual DB column
+        'game_end_time',      // rename to actual DB column
     ];
 
     protected $casts = [
         'investment_date' => 'date',
-        'next_payout_eligible_date' => 'date', // Casts to Carbon instance
+        'game_start_time' => 'datetime',   // actual DB column
+        'game_end_time' => 'datetime',     // actual DB column
         'amount' => 'decimal:6',
         'daily_profit_amount' => 'decimal:6',
         'total_profit_paid_out' => 'decimal:6',
@@ -35,11 +39,5 @@ class UserInvestment extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function gameSetting()
-    {
-        return $this->belongsTo(GameSetting::class, 'game_setting_id');
-    }
-
-
+    
 }
-

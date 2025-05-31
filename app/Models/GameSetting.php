@@ -16,6 +16,8 @@ class GameSetting extends Model
         'earning_percentage',
         'is_active',
         'payout_enabled',
+        'type',
+        'crypto_category',
     ];
 
     protected $casts = [
@@ -37,10 +39,5 @@ class GameSetting extends Model
     {
         // Fetch the timezone from the environment variable (or a default if not set)
         return env('ADMIN_TIMEZONE', config('app.timezone', 'UTC'));
-    }
-
-    public function investments()
-    {
-        return $this->hasMany(UserInvestment::class, 'game_setting_id');
     }
 }

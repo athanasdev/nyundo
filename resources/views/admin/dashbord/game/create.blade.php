@@ -1,4 +1,4 @@
-@extends('admin.dashbord.pages.layout') {{-- Ensure this path is correct for your main layout --}}
+@extends('admin.dashbord.pages.layout') {{-- Confirm this path matches your actual layout --}}
 
 @section('content')
 <div class="main-container">
@@ -21,63 +21,69 @@
             </div>
 
             <div class="pd-20 bg-white border-radius-4 box-shadow mb-30">
-                {{-- Display success/error messages --}}
+
+                {{-- Success and error messages --}}
                 @if (session('success'))
-                    <div class="alert alert-success" role="alert">
-                        {{ session('success') }}
-                    </div>
+                    <div class="alert alert-success" role="alert">{{ session('success') }}</div>
                 @endif
+
                 @if (session('error'))
-                    <div class="alert alert-danger" role="alert">
-                        {{ session('error') }}
-                    </div>
+                    <div class="alert alert-danger" role="alert">{{ session('error') }}</div>
                 @endif
 
                 <form method="POST" action="{{ route('admin.game_settings.store') }}">
                     @csrf
 
-                    {{-- If you have a 'name' field for the game setting --}}
-                    {{--
                     <div class="mb-3">
-                        <label for="name" class="form-label">Game Name / Description</label>
-                        <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}" required>
-                        @error('name')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-                    --}}
-
-                    <div class="mb-3">
-                        {{-- Clarified label for timezone --}}
                         <label for="start_time" class="form-label">Start Time (HH:MM - Your Local Time)</label>
                         <input type="time" class="form-control @error('start_time') is-invalid @enderror" id="start_time" name="start_time" value="{{ old('start_time') }}" required>
                         @error('start_time')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                            <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                         @enderror
                     </div>
 
                     <div class="mb-3">
-                        {{-- Clarified label for timezone --}}
                         <label for="end_time" class="form-label">End Time (HH:MM - Your Local Time)</label>
                         <input type="time" class="form-control @error('end_time') is-invalid @enderror" id="end_time" name="end_time" value="{{ old('end_time') }}" required>
                         @error('end_time')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                            <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                         @enderror
                     </div>
 
                     <div class="mb-3">
                         <label for="earning_percentage" class="form-label">Earning Percentage (%)</label>
-                        <input type="number" step="0.01" class="form-control @error('earning_percentage') is-invalid @enderror" id="earning_percentage" name="earning_percentage" value="{{ old('earning_percentage') }}" required min="0" max="100">
+                        <input type="number" step="0.01" min="0" max="100" class="form-control @error('earning_percentage') is-invalid @enderror" id="earning_percentage" name="earning_percentage" value="{{ old('earning_percentage') }}" required>
                         @error('earning_percentage')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                            <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+                        @enderror
+                    </div>
+
+                    {{-- New field: type --}}
+                    <div class="mb-3">
+                        <label for="type" class="form-label">Type</label>
+                        <select id="type" name="type" class="form-control @error('type') is-invalid @enderror" required>
+                            <option value="" disabled {{ old('type') ? '' : 'selected' }}>-- Select Type --</option>
+                            <option value="buy" {{ old('type') == 'buy' ? 'selected' : '' }}>Buy</option>
+                            <option value="sell" {{ old('type') == 'sell' ? 'selected' : '' }}>Sell</option>
+                        </select>
+                        @error('type')
+                            <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+                        @enderror
+                    </div>
+
+                    {{-- New field: crypto_category --}}
+                    <div class="mb-3">
+                        <label for="crypto_category" class="form-label">Crypto Category</label>
+                        <select id="crypto_category" name="crypto_category" class="form-control @error('crypto_category') is-invalid @enderror" required>
+                            <option value="" disabled {{ old('crypto_category') ? '' : 'selected' }}>-- Select Crypto Category --</option>
+                            <option value="XRP" {{ old('crypto_category') == 'XRP' ? 'selected' : '' }}>XRP</option>
+                            <option value="BTC" {{ old('crypto_category') == 'BTC' ? 'selected' : '' }}>BTC</option>
+                            <option value="ETH" {{ old('crypto_category') == 'ETH' ? 'selected' : '' }}>ETH</option>
+                            <option value="SOLANA" {{ old('crypto_category') == 'SOLANA' ? 'selected' : '' }}>SOLANA</option>
+                            <option value="PI" {{ old('crypto_category') == 'PI' ? 'selected' : '' }}>PI</option>
+                        </select>
+                        @error('crypto_category')
+                            <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                         @enderror
                     </div>
 
@@ -85,9 +91,7 @@
                         <input type="checkbox" class="form-check-input @error('is_active') is-invalid @enderror" id="is_active" name="is_active" value="1" {{ old('is_active') ? 'checked' : '' }}>
                         <label class="form-check-label" for="is_active">Is Active?</label>
                         @error('is_active')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                            <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                         @enderror
                     </div>
 
@@ -95,15 +99,14 @@
                         <input type="checkbox" class="form-check-input @error('payout_enabled') is-invalid @enderror" id="payout_enabled" name="payout_enabled" value="1" {{ old('payout_enabled') ? 'checked' : '' }}>
                         <label class="form-check-label" for="payout_enabled">Payout Enabled?</label>
                         @error('payout_enabled')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                            <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                         @enderror
                     </div>
 
                     <button type="submit" class="btn btn-primary">Create Game Setting</button>
                     <a href="{{ route('admin.game_settings.index') }}" class="btn btn-secondary">Cancel</a>
                 </form>
+
             </div>
         </div>
     </div>

@@ -6,60 +6,43 @@ use App\Http\Controllers\Controller;
 use App\Models\GameSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Carbon\Carbon; // Import Carbon
+use Carbon\Carbon;
 
 class GameSettingsController extends Controller
 {
-    /**
-     * Display a listing of the game settings.
-     * The times are displayed in the admin's local timezone in the view.
-     */
     public function index()
     {
         $settings = GameSetting::latest()->paginate(10);
         return view('admin.dashbord.game.game_settings', compact('settings'));
     }
 
-    /**
-     * Show the form for creating a new game setting.
-     */
     public function create()
     {
         return view('admin.dashbord.game.create');
     }
 
-    /**
-     * Store a newly created game setting in storage.
-     * Converts start_time and end_time from admin's local timezone to UTC before saving.
-     */
     public function store(Request $request)
     {
-        // Get the admin's configured timezone from the GameSetting model
-        // This is crucial: Ensure getAdminTimezone() returns a valid PHP timezone string (e.g., 'America/New_York', 'Europe/Bucharest')
         $adminTimezone = GameSetting::getAdminTimezone();
 
-        // Validate the incoming request data
         $validatedData = $request->validate([
-            'start_time' => 'required|date_format:H:i', // Time only, e.g., '09:00'
-            'end_time' => 'required|date_format:H:i',   // Time only, e.g., '17:00'
+            'start_time' => 'required|date_format:H:i',
+            'end_time' => 'required|date_format:H:i',
             'earning_percentage' => 'required|numeric|min:0|max:100',
-            'is_active' => 'nullable|boolean', // Added for clarity on boolean
-            'payout_enabled' => 'nullable|boolean', // Added for clarity on boolean
+            'is_active' => 'nullable|boolean',
+            'payout_enabled' => 'nullable|boolean',
+            'type' => 'required|in:buy,sell',
+            'crypto_category' => 'required|in:XRP,BTC,ETH,SOLANA,PI',
         ]);
 
-        // Get the current date in the admin's timezone
-        // This makes sure the date part of the datetime is always 'today' relative to the admin.
+
         $todayInAdminTimezone = Carbon::now($adminTimezone);
 
-        // Create Carbon objects for start and end times, applying the current date
-        // and setting them in the admin's timezone.
         $startTime = $todayInAdminTimezone->copy()->setTimeFromTimeString($validatedData['start_time']);
         $endTime = $todayInAdminTimezone->copy()->setTimeFromTimeString($validatedData['end_time']);
 
-        // Custom validation for end_time after start_time, considering the timezone
-        // If end time is earlier than start time, it likely spans into the next day.
         if ($endTime->lt($startTime)) {
-            $endTime->addDay(); // Add a day to end time to make the comparison valid for cross-midnight spans
+            $endTime->addDay();
         }
 
         if ($endTime->lte($startTime)) {
@@ -67,56 +50,43 @@ class GameSettingsController extends Controller
         }
 
         try {
-            // Explicitly handle checkbox values as they might not be present if unchecked
-            $validatedData['is_active'] = $request->has('is_active');
-            $validatedData['payout_enabled'] = $request->has('payout_enabled');
+            // Convert checkbox values properly
+            $validatedData['is_active'] = $request->boolean('is_active');
+            $validatedData['payout_enabled'] = $request->boolean('payout_enabled');
 
-            // --- CRITICAL CHANGE HERE ---
-            // Convert the Carbon objects (which now contain the correct date + time in admin's timezone)
-            // to UTC and let Laravel's Eloquent handle the DATETIME formatting.
-            // Eloquent automatically converts Carbon instances to the correct database format.
-            $validatedData['start_time'] = $startTime->setTimezone('EAT');
-            $validatedData['end_time'] = $endTime->setTimezone('EAT');
-            // --- END CRITICAL CHANGE ---
+            // Convert to UTC for storage
+            $validatedData['start_time'] = $startTime->copy()->setTimezone('UTC');
+            $validatedData['end_time'] = $endTime->copy()->setTimezone('UTC');
 
-            // Create the new GameSetting record in the database
             GameSetting::create($validatedData);
 
-            // Redirect with a success message
             return redirect()->route('admin.game_settings.index')->with('success', 'Game setting created successfully.');
         } catch (\Exception $e) {
-            // Log any unexpected errors and redirect back with an error message
             Log::error("Error creating game setting: " . $e->getMessage());
             return back()->withInput()->with('error', 'Failed to create game setting. Please try again.');
         }
     }
 
-    /**
-     * Show the form for editing the specified game setting.
-     * The times are passed to the view as Carbon instances, which will then be formatted in the view.
-     */
     public function edit(GameSetting $gameSetting)
     {
         return view('admin.dashbord.game.edit', compact('gameSetting'));
     }
 
-    /**
-     * Update the specified game setting in storage.
-     * Converts start_time and end_time from admin's local timezone to UTC before saving.
-     */
     public function update(Request $request, GameSetting $gameSetting)
     {
-        // Get the admin's configured timezone from the GameSetting model
         $adminTimezone = GameSetting::getAdminTimezone();
 
         $validatedData = $request->validate([
-            // 'name' => 'nullable|string|max:255', // Add this if you introduce a name field
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i',
             'earning_percentage' => 'required|numeric|min:0|max:100',
+            'is_active' => 'nullable|boolean',
+            'payout_enabled' => 'nullable|boolean',
+            'type' => 'required|in:buy,sell',
+            'crypto_category' => 'required|in:XRP,BTC,ETH,SOLANA,PI',
         ]);
 
-        // Custom validation for end_time after start_time, considering the timezone
+
         $startTime = Carbon::createFromFormat('H:i', $validatedData['start_time'], $adminTimezone);
         $endTime = Carbon::createFromFormat('H:i', $validatedData['end_time'], $adminTimezone);
 
@@ -128,15 +98,12 @@ class GameSettingsController extends Controller
             return back()->withInput()->withErrors(['end_time' => 'The end time must be after the start time.']);
         }
 
-
         try {
-            // Explicitly handle checkbox values for update as well
-            $validatedData['is_active'] = $request->has('is_active');
-            $validatedData['payout_enabled'] = $request->has('payout_enabled');
+            $validatedData['is_active'] = $request->boolean('is_active');
+            $validatedData['payout_enabled'] = $request->boolean('payout_enabled');
 
-            // Convert local times to UTC for storage
-            $validatedData['start_time'] = $startTime->setTimezone('UTC')->format('H:i:s');
-            $validatedData['end_time'] = $endTime->setTimezone('UTC')->format('H:i:s');
+            $validatedData['start_time'] = $startTime->copy()->setTimezone('UTC');
+            $validatedData['end_time'] = $endTime->copy()->setTimezone('UTC');
 
             $gameSetting->update($validatedData);
 
@@ -147,9 +114,6 @@ class GameSettingsController extends Controller
         }
     }
 
-    /**
-     * Remove the specified game setting from storage.
-     */
     public function destroy(GameSetting $gameSetting)
     {
         try {
@@ -161,9 +125,6 @@ class GameSettingsController extends Controller
         }
     }
 
-    /**
-     * Toggle the investment status for the specified game setting.
-     */
     public function toggleInvestmentStatus(GameSetting $gameSetting)
     {
         try {
@@ -175,9 +136,6 @@ class GameSettingsController extends Controller
         }
     }
 
-    /**
-     * Toggle the payout status for the specified game setting.
-     */
     public function togglePayoutStatus(GameSetting $gameSetting)
     {
         try {

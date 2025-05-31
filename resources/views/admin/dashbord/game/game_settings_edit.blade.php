@@ -1,4 +1,4 @@
-@extends('admin.dashbord.pages.layout') {{-- Ensure this path is correct for your main layout --}}
+@extends('admin.dashbord.pages.layout') {{-- Ensure this path is correct --}}
 
 @section('content')
 <div class="main-container">
@@ -10,7 +10,7 @@
                         <div class="title">
                             <h4>Edit Game Setting</h4>
                         </div>
-                        <nav aria-label="breadcrumb" role="navigation">
+                        <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('admin.game_settings.index') }}">Game Settings List</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">Edit Game Setting</li>
@@ -21,98 +21,166 @@
             </div>
 
             <div class="pd-20 bg-white border-radius-4 box-shadow mb-30">
-                {{-- Display success/error messages --}}
+
+                {{-- Success/Error Messages --}}
                 @if (session('success'))
-                    <div class="alert alert-success" role="alert">
-                        {{ session('success') }}
-                    </div>
+                    <div class="alert alert-success">{{ session('success') }}</div>
                 @endif
                 @if (session('error'))
-                    <div class="alert alert-danger" role="alert">
-                        {{ session('error') }}
-                    </div>
+                    <div class="alert alert-danger">{{ session('error') }}</div>
                 @endif
 
                 <form method="POST" action="{{ route('admin.game_settings.update', $gameSetting->id) }}">
                     @csrf
-                    @method('PUT') {{-- IMPORTANT: This tells Laravel it's an UPDATE request --}}
-
-                    {{-- If you have a 'name' field for the game setting --}}
-                    {{--
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Game Name / Description</label>
-                        <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', $gameSetting->name) }}">
-                        @error('name')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-                    --}}
+                    @method('PUT')
 
                     @php
-                        // Get the admin's timezone for display from the GameSetting model
-                        // This will be 'Africa/Nairobi' as defined in your model
                         $adminTimezone = \App\Models\GameSetting::getAdminTimezone();
                     @endphp
 
                     <div class="mb-3">
-                        {{-- Label clarifies that the time is in the admin's local timezone --}}
-                        <label for="start_time" class="form-label">Start Time (HH:MM - Your Local Time)</label>
-                        <input type="time" class="form-control @error('start_time') is-invalid @enderror" id="start_time" name="start_time"
-                               value="{{ old('start_time', $gameSetting->start_time->setTimezone($adminTimezone)->format('H:i')) }}" required>
+                        <label for="start_time">Start Time (Local Time)</label>
+                        <input
+                            type="time"
+                            class="form-control @error('start_time') is-invalid @enderror"
+                            name="start_time"
+                            value="{{ old('start_time', optional($gameSetting->start_time)->setTimezone($adminTimezone)->format('H:i')) }}"
+                            required
+                        >
                         @error('start_time')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                            <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="mb-3">
-                        {{-- Label clarifies that the time is in the admin's local timezone --}}
-                        <label for="end_time" class="form-label">End Time (HH:MM - Your Local Time)</label>
-                        <input type="time" class="form-control @error('end_time') is-invalid @enderror" id="end_time" name="end_time"
-                               value="{{ old('end_time', $gameSetting->end_time->setTimezone($adminTimezone)->format('H:i')) }}" required>
+                        <label for="end_time">End Time (Local Time)</label>
+                        <input
+                            type="time"
+                            class="form-control @error('end_time') is-invalid @enderror"
+                            name="end_time"
+                            value="{{ old('end_time', optional($gameSetting->end_time)->setTimezone($adminTimezone)->format('H:i')) }}"
+                            required
+                        >
                         @error('end_time')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                            <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="mb-3">
-                        <label for="earning_percentage" class="form-label">Earning Percentage (%)</label>
-                        <input type="number" step="0.01" class="form-control @error('earning_percentage') is-invalid @enderror" id="earning_percentage" name="earning_percentage" value="{{ old('earning_percentage', $gameSetting->earning_percentage) }}" required min="0" max="100">
+                        <label for="earning_percentage">Earning Percentage (%)</label>
+                        <input
+                            type="number"
+                            step="0.01"
+                            class="form-control @error('earning_percentage') is-invalid @enderror"
+                            name="earning_percentage"
+                            value="{{ old('earning_percentage', $gameSetting->earning_percentage) }}"
+                            required
+                            min="0"
+                            max="100"
+                        >
                         @error('earning_percentage')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                            <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
+                    {{-- Type Field --}}
+                    <div class="mb-3">
+                        <label for="type">Type</label>
+                        <select class="form-control @error('type') is-invalid @enderror" name="type" required>
+                            <option value="">Select Type</option>
+                            <option value="daily" {{ old('type', $gameSetting->type) === 'daily' ? 'selected' : '' }}>Daily</option>
+                            <option value="weekly" {{ old('type', $gameSetting->type) === 'weekly' ? 'selected' : '' }}>Weekly</option>
+                            <option value="monthly" {{ old('type', $gameSetting->type) === 'monthly' ? 'selected' : '' }}>Monthly</option>
+                        </select>
+                        @error('type')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    {{-- Crypto Category Field --}}
+                    <div class="mb-3">
+                        <label for="crypto_category">Crypto Category</label>
+                        <select class="form-control @error('crypto_category') is-invalid @enderror" name="crypto_category" required>
+                            <option value="">Select Category</option>
+                            <option value="BTC" {{ old('crypto_category', $gameSetting->crypto_category) === 'BTC' ? 'selected' : '' }}>Bitcoin (BTC)</option>
+                            <option value="ETH" {{ old('crypto_category', $gameSetting->crypto_category) === 'ETH' ? 'selected' : '' }}>Ethereum (ETH)</option>
+                            <option value="BNB" {{ old('crypto_category', $gameSetting->crypto_category) === 'BNB' ? 'selected' : '' }}>BNB</option>
+                            <!-- Add more if needed -->
+                        </select>
+                        @error('crypto_category')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    {{-- Game Duration --}}
+                    <div class="mb-3">
+                        <label for="game_duration">Game Duration (Minutes)</label>
+                        <input
+                            type="number"
+                            class="form-control @error('game_duration') is-invalid @enderror"
+                            name="game_duration"
+                            value="{{ old('game_duration', $gameSetting->game_duration) }}"
+                            required
+                            min="1"
+                        >
+                        @error('game_duration')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    {{-- Minimum Payout --}}
+                    <div class="mb-3">
+                        <label for="minimum_payout">Minimum Payout (in {{ $gameSetting->currency ?? 'TZS' }})</label>
+                        <input
+                            type="number"
+                            step="0.01"
+                            class="form-control @error('minimum_payout') is-invalid @enderror"
+                            name="minimum_payout"
+                            value="{{ old('minimum_payout', $gameSetting->minimum_payout) }}"
+                            required
+                            min="0"
+                        >
+                        @error('minimum_payout')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    {{-- Is Active --}}
                     <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input @error('is_active') is-invalid @enderror" id="is_active" name="is_active" value="1" {{ old('is_active', $gameSetting->is_active) ? 'checked' : '' }}>
+                        <input
+                            type="checkbox"
+                            class="form-check-input @error('is_active') is-invalid @enderror"
+                            name="is_active"
+                            id="is_active"
+                            value="1"
+                            {{ old('is_active', $gameSetting->is_active) ? 'checked' : '' }}
+                        >
                         <label class="form-check-label" for="is_active">Is Active?</label>
                         @error('is_active')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
                         @enderror
                     </div>
 
+                    {{-- Payout Enabled --}}
                     <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input @error('payout_enabled') is-invalid @enderror" id="payout_enabled" name="payout_enabled" value="1" {{ old('payout_enabled', $gameSetting->payout_enabled) ? 'checked' : '' }}>
+                        <input
+                            type="checkbox"
+                            class="form-check-input @error('payout_enabled') is-invalid @enderror"
+                            name="payout_enabled"
+                            id="payout_enabled"
+                            value="1"
+                            {{ old('payout_enabled', $gameSetting->payout_enabled) ? 'checked' : '' }}
+                        >
                         <label class="form-check-label" for="payout_enabled">Payout Enabled?</label>
                         @error('payout_enabled')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <button type="submit" class="btn btn-primary">Update Game Setting</button>
                     <a href="{{ route('admin.game_settings.index') }}" class="btn btn-secondary">Cancel</a>
                 </form>
+
             </div>
         </div>
     </div>
