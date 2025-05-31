@@ -18,7 +18,7 @@ class UserInvestmentsController extends Controller
         return view('admin.dashbord.game.investments', compact('investments'));
     }
 
-    
+
     public function completeInvestment(UserInvestment $userInvestment)
     {
         DB::beginTransaction();
@@ -29,9 +29,7 @@ class UserInvestmentsController extends Controller
                 return back()->with('error', 'Payouts are currently disabled by the admin.');
             }
 
-            if ($userInvestment->status !== 'active' || $userInvestment->principal_returned) {
-                return back()->with('info', 'This investment is either not active or already completed.');
-            }
+         
 
             $user = $userInvestment->user;
             if (!$user) {
@@ -61,6 +59,8 @@ class UserInvestmentsController extends Controller
                 ]);
 
                 $profitPayoutHappened = true;
+
+
             }
 
             $balanceBeforePrincipal = $user->balance;
@@ -70,7 +70,6 @@ class UserInvestmentsController extends Controller
             $user->save();
 
             $userInvestment->principal_returned = true;
-            $userInvestment->status = 'completed';
             $userInvestment->save();
 
             Transaction::create([
@@ -109,9 +108,7 @@ class UserInvestmentsController extends Controller
                 return back()->with('error', 'Daily profit payouts are currently disabled.');
             }
 
-            if ($userInvestment->status !== 'active') {
-                return back()->with('error', 'Investment is not active for payouts.');
-            }
+
 
             $today = now()->toDateString();
             if ($userInvestment->next_payout_eligible_date && $userInvestment->next_payout_eligible_date->gt($today)) {
@@ -162,9 +159,6 @@ class UserInvestmentsController extends Controller
                 return back()->with('error', 'Payouts are currently disabled by the admin.');
             }
 
-            if ($userInvestment->status !== 'active' || $userInvestment->principal_returned) {
-                return back()->with('info', 'Principal has already been returned or investment is not active.');
-            }
 
             $user = $userInvestment->user;
             if (!$user) {
@@ -178,7 +172,7 @@ class UserInvestmentsController extends Controller
             $user->save();
 
             $userInvestment->principal_returned = true;
-            $userInvestment->status = 'completed';
+
             $userInvestment->save();
 
             Transaction::create([
@@ -204,23 +198,5 @@ class UserInvestmentsController extends Controller
     {
         DB::beginTransaction();
 
-        try {
-            if ($userInvestment->status !== 'active') {
-                return back()->with('error', 'Investment is not active for cancellation.');
-            }
-
-            $userInvestment->status = 'cancelled';
-            $userInvestment->save();
-
-            Log::info("Investment ID {$userInvestment->id} manually cancelled by admin.");
-
-            DB::commit();
-            return back()->with('success', 'Investment cancelled successfully!');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error("Error cancelling investment ID {$userInvestment->id}: " . $e->getMessage());
-            return back()->with('error', 'Failed to cancel investment: ' . $e->getMessage());
-        }
     }
 }

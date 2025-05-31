@@ -7,8 +7,11 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Referral;
-use App\Models\GameSetting; // Assuming you have a GameSetting model // Import the Auth facade
+ // Assuming you have a GameSetting model // Import the Auth facade
 use Carbon\Carbon;
+use App\Models\GameSetting; // Your GameSetting model
+use App\Models\UserInvestment; // Your UserInvestment model
+
 
 class TeamController extends Controller
 {
@@ -299,34 +302,55 @@ class TeamController extends Controller
 
 
 
-    public function aitrading()
+ public function aitrading()
     {
-
-        $activeGameSetting = GameSetting::where('is_active', true)->first();
-
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        // Check if a user is authenticated
         if (!$user) {
-            return redirect()->route('login')->with('error', 'Please log in to view your investments.');
+            return redirect()->route('login')->with('error', 'Please log in to view this page.');
         }
 
+        // Fetch the currently active game setting
+        // An active game is one where is_active is true AND current time is within start_time and end_time
+        $now = Carbon::now();
+        $activeGameSetting = GameSetting::where('is_active', true)
+                                ->where('start_time', '<=', $now)
+                                ->where('end_time', '>=', $now)
+                                ->orderBy('start_time', 'desc') // Optional: if multiple could be active, pick the latest started one
+                                ->first();
 
-        $userTimezone = 'Africa/Dar_es_Salaam'; // You might fetch this from $user->timezone_preference;
-
+        $activeUserInvestment = null;
         if ($activeGameSetting) {
-            // Convert start_time and end_time from UTC (database) to the user's local timezone
-            $activeGameSetting->start_time_local = Carbon::parse($activeGameSetting->start_time)->timezone($userTimezone);
-            $activeGameSetting->end_time_local = Carbon::parse($activeGameSetting->end_time)->timezone($userTimezone);
+            // Fetch the user's active investment for THIS specific active game
+            $activeUserInvestment = UserInvestment::where('user_id', $user->id)
+                                        ->where('game_setting_id', $activeGameSetting->id)
+                                        // Add a condition if your user_investments table has a status
+                                        // to indicate it's still "open" or "active"
+                                        // For example: ->where('status', 'active')
+                                        ->first();
         }
-        // --- End Timezone Conversion ---
 
-        // Fetch user's active investments
-        $userInvestments = $user->investments()->where('status', 'active')->get();
+        // Placeholder data for bot stats - you should fetch/calculate these
+        $bot_profit_24h = 0.00;         // Example: Fetch from a bot performance log or calculation
+        $bot_trades_24h = 0;            // Example
+        $bot_success_rate = 0.0;        // Example
+        $bot_uptime_seconds = 0;        // Example
+        $is_bot_globally_active = true; // Example: Fetch from a global application setting
 
-        // Pass the activeGameSetting (now with local time properties) and userInvestments to the view
-        return view('user.layouts.bot', compact('activeGameSetting', 'userInvestments', 'user'));
+        // $userInvestments = $user->investments()->get(); // You were fetching all, might not be needed if only active one is displayed
+
+        return view('user.layouts.bot', compact(
+            'user',
+            'activeGameSetting',      // Now passing this
+            'activeUserInvestment',   // Now passing this
+            // 'userInvestments',     // Pass this if your view still needs the full list
+            'bot_profit_24h',
+            'bot_trades_24h',
+            'bot_success_rate',
+            'bot_uptime_seconds',
+            'is_bot_globally_active'
+        ));
     }
 
 
