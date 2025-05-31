@@ -18,8 +18,7 @@ return new class extends Migration
 
             // Removed 'status' and 'next_payout_eligible_date'
 
-            $table->enum('investment_result', ['lose', 'gain'])->default('gain')->comment('Investment result outcome');
-            $table->enum('type', ['buy', 'sell'])->comment('Type of investment action');
+            $table->enum('investment_result', ['lose', 'gain', 'pending'])->default('pending')->comment('Investment result outcome');
             $table->enum('crypto_category', ['XRP', 'BTC', 'ETH', 'SOLANA', 'PI'])->comment('Cryptocurrency category');
 
             $table->decimal('total_profit_paid_out', 20, 6)->default(0.00)->comment('Total profit paid out for this investment');

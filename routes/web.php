@@ -88,12 +88,18 @@ Route::middleware(['auth:web'])->group(function () {
 
     // Team
     Route::get('/team', [TeamController::class, 'team'])->name('team');
-    Route::get('/ai-trading', [TeamController::class, 'aitrading'])->name('ai-trading');
+
+    //  BOLT CONTROLLERS
+
+    Route::get('/ai-trading', [GameController::class, 'aitrading'])->name('ai-trading');
+    Route::post('/bot/place-trade', [GameController::class, 'placeTrade'])->name('bot.place_trade');
+    Route::post('/bot/close-trade', [GameController::class, 'closeTrade'])->name('bot.close_trade');
+
     Route::get('/bonuses', [TeamController::class, 'bonuses'])->name('bonuses');
 
-    // User Game Investment
-    Route::get('/game', [GameController::class, 'showInvestmentForm'])->name('user.game.invest_form');
-    Route::post('/game/invest', [GameController::class, 'invest'])->name('user.game.invest');
+    // // User Game Investment
+    // Route::get('/game', [GameController::class, 'showInvestmentForm'])->name('user.game.invest_form');
+    // Route::post('/game/invest', [GameController::class, 'invest'])->name('user.game.invest');
 
     // It is important that this route is under 'auth:web' because the user is currently authenticated via 'web' guard
     Route::get('/impersonate/leave', [ImpersonateController::class, 'leave'])->name('impersonate.leave');
@@ -164,7 +170,7 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
 
 
 Route::get('/nowpayments/form', [NowPaymentController::class, 'paymentForm']);
-Route::post('/nowpayments/create', [NowPaymentcontroller::class, 'createPayment'])->name('nowpayment.create');
+Route::post('/payments/create', [NowPaymentcontroller::class, 'createPayment'])->name('payments.create');
 Route::post('/ipn-callback', [IPNController::class, 'handle'])->name('ipn.callback');
 Route::get('/nowpayments/balance', [NowPaymentController::class, 'checkBalance']);
 Route::post('/nowpayments/validate-address', [NowPaymentController::class, 'validateAddress']);

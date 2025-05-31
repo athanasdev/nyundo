@@ -416,7 +416,7 @@
         </div>
         <div class="header-actions">
             {{-- Deposit Button - No route, for JS handling --}}
-            <a href="#" id="depositButton" class="header-action-btn">
+            <a href="{{route('payments.create')}}" id="depositButton" class="header-action-btn">
                 <i class="fas fa-arrow-alt-circle-down"></i> Deposit
             </a>
             {{-- Withdraw Button - No route, for JS handling --}}

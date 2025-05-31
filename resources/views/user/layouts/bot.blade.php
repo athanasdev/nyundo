@@ -285,7 +285,7 @@
                     <div class="card-title"><i class="fas fa-exchange-alt"></i> Place Your Trade</div>
                 </div>
                 <div class="card-body">
-                    <form id="placeTradeForm" method="POST" action="#" class="trading-form">
+                    <form id="placeTradeForm" method="POST" action="{{ route('bot.place_trade') }}" class="trading-form">
                         @csrf
 
                         {{-- Trade Direction Selection --}}
@@ -309,16 +309,14 @@
                             <label for="crypto_category">Select Cryptocurrency:</label>
                             <select name="crypto_category" id="crypto_category" required>
                                 <option value="">Choose a cryptocurrency...</option>
-                                <option value="btc">Bitcoin (BTC)</option>
-                                <option value="eth">Ethereum (ETH)</option>
-                                <option value="xrp">Ripple (XRP)</option>
-                                <option value="sol">Solana (SOL)</option>
-                                <option value="ada">Cardano (ADA)</option>
-                                <option value="dot">Polkadot (DOT)</option>
-                                <option value="matic">Polygon (MATIC)</option>
-                                <option value="link">Chainlink (LINK)</option>
-                                <option value="doge">Dogecoin (DOGE)</option>
-                                <option value="pi">Pi Network (PI)</option>
+                                <option value="BTC">Bitcoin (BTC)</option>
+                                <option value="ETH">Ethereum (ETH)</option>
+                                <option value="XRP">Ripple (XRP)</option>
+                                <option value="SOL">Solana (SOL)</option>
+                                <option value="ADA">Cardano (ADA)</option>
+                                <option value="DOT">Polkadot (DOT)</option>
+                                <option value="DOGE">Dogecoin (DOGE)</option>
+                                <option value="PI">Pi Network (PI)</option>
                             </select>
                         </div>
 
@@ -335,7 +333,7 @@
                         <div class="form-group">
                             <label for="trade_amount">Amount to Trade (USD):</label>
                             <input type="number" id="trade_amount" name="amount" step="0.01" min="10"
-                                   placeholder="e.g., 100" required oninput="updateAvailableBalanceWarning(this.value)">
+                                placeholder="e.g., 100" required oninput="updateAvailableBalanceWarning(this.value)">
                             <div class="form-note">Available Balance: ${{ number_format(Auth::user()->balance, 2) }}</div>
                             <div id="balanceWarning" class="balance-warning">Amount exceeds available balance.</div>
                         </div>
@@ -352,8 +350,8 @@
             </div>
 
             {{-- Display Active User Investments --}}
-            @if ($activeUserInvestment && count($activeUserInvestment) > 0)
-                @foreach($activeUserInvestment as $investment)
+            @if ($activeUserInvestment && $activeUserInvestment->count() > 0)
+                @foreach ($activeUserInvestment as $investment)
                     <div class="card active-trade-card">
                         <div class="card-header">
                             <div class="card-title">
@@ -380,7 +378,7 @@
                                 <span id="activeTradePnl_{{ $investment->id }}" class="pnl-positive">Calculating...</span>
                             </p>
 
-                            <form method="POST" action="#">
+                            <form method="POST" action="{{ route('bot.close_trade') }}">
                                 @csrf
                                 <input type="hidden" name="user_investment_id" value="{{ $investment->id }}">
                                 <button type="submit" class="action-btn sell close-trade-btn">
@@ -395,7 +393,7 @@
             <div class="card">
                 <div class="card-body no-active-game">
                     <p><i class="fas fa-hourglass-half fa-2x mb-2"></i></p>
-                    <p>There are no active trading games at the moment. Please check back later.</p>
+                    <p>There are no active trading siginal at the moment. Please check back later.</p>
                 </div>
             </div>
         @endif
@@ -505,7 +503,8 @@
 
                     executeTradeBtn.disabled = false;
                     executeTradeBtn.className = `action-btn ${selectedDirection}`;
-                    executeBtnText.innerHTML = `<i class="fas fa-${selectedDirection === 'buy' ? 'shopping-cart' : 'hand-holding-usd'}"></i> Execute ${selectedDirection.toUpperCase()}`;
+                    executeBtnText.innerHTML =
+                        `<i class="fas fa-${selectedDirection === 'buy' ? 'shopping-cart' : 'hand-holding-usd'}"></i> Execute ${selectedDirection.toUpperCase()}`;
                 } else {
                     tradePreview.style.display = 'none';
                     executeTradeBtn.disabled = true;
@@ -568,13 +567,16 @@
             const botUptimeElPage = document.getElementById('botUptimePageDisplay');
 
             if (botProfitElPage) {
-                botProfitElPage.textContent = `${botStatsInitialData.profit24h >= 0 ? '+' : ''}${formatCurrency(botStatsInitialData.profit24h)}`;
-                botProfitElPage.className = `stat-value ${botStatsInitialData.profit24h >= 0 ? 'positive' : 'negative'}`;
+                botProfitElPage.textContent =
+                    `${botStatsInitialData.profit24h >= 0 ? '+' : ''}${formatCurrency(botStatsInitialData.profit24h)}`;
+                botProfitElPage.className =
+                    `stat-value ${botStatsInitialData.profit24h >= 0 ? 'positive' : 'negative'}`;
             }
             if (botTradesElPage) botTradesElPage.textContent = botStatsInitialData.trades24h.toString();
             if (botSuccessRateElPage) {
                 botSuccessRateElPage.textContent = `${botStatsInitialData.successRate.toFixed(1)}%`;
-                botSuccessRateElPage.className = `stat-value ${botStatsInitialData.successRate >= 90 ? 'positive' : ''}`;
+                botSuccessRateElPage.className =
+                    `stat-value ${botStatsInitialData.successRate >= 90 ? 'positive' : ''}`;
             }
             if (botUptimeElPage) {
                 const h = Math.floor(botStatsInitialData.uptimeSeconds / 3600);

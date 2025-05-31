@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Referral;
- // Assuming you have a GameSetting model // Import the Auth facade
+// Assuming you have a GameSetting model // Import the Auth facade
 use Carbon\Carbon;
 use App\Models\GameSetting; // Your GameSetting model
 use App\Models\UserInvestment; // Your UserInvestment model
@@ -63,78 +63,6 @@ class TeamController extends Controller
         return back()->withNotify($notify);
     }
 
-
-
-
-
-    // public function team()
-    // {
-    //     $user = Auth::user();
-
-    //     if (!$user) {
-    //         return redirect()->route('login');
-    //     }
-
-    //     // Level 1 referrals (direct referrals)
-    //     $level1_members = User::where('referrer_id', $user->id)->get();
-    //     $level1_count = $level1_members->count();
-
-    //     // Level 2 referrals
-    //     $level2_members = collect(); // Initialize as an empty collection
-    //     if ($level1_members->isNotEmpty()) { // Check if there are level 1 members to iterate
-    //         foreach ($level1_members as $level1_member) {
-    //             $level2_members = $level2_members->merge(User::where('referrer_id', $level1_member->id)->get());
-    //         }
-    //     }
-    //     $level2_count = $level2_members->count();
-
-    //     // Level 3 referrals
-    //     $level3_members = collect(); // Initialize as an empty collection
-    //     if ($level2_members->isNotEmpty()) { // Check if there are level 2 members to iterate
-    //         foreach ($level2_members as $level2_member) {
-    //             $level3_members = $level3_members->merge(User::where('referrer_id', $level2_member->id)->get());
-    //         }
-    //     }
-    //     $level3_count = $level3_members->count();
-
-    //     $total_registered_users = $level1_count + $level2_count + $level3_count;
-    //     $active_users = 0; // You'll need to implement logic to determine active users
-
-    //     // Placeholder for deposit and commission calculations
-    //     $level1_deposit = 0.00;
-    //     $level1_commissions = 0.00;
-    //     $level2_deposit = 0.00;
-    //     $level2_commissions = 0.00;
-    //     $level3_deposit = 0.00;
-    //     $level3_commissions = 0.00;
-    //     $total_deposits = 0.00;
-    //     $total_commissions = 0.00;
-
-    //     // Implement logic to calculate actual deposits and commissions for each level
-    //     // Example for level 1 deposits (assuming 'balance' field on user represents their total deposit for simplicity):
-    //     // $level1_deposit = $level1_members->sum('balance');
-    //     // You'd need a proper transactions or deposits table for accurate sums.
-
-    //     return view('user.layouts.team', compact(
-    //         'user',
-    //         'total_registered_users',
-    //         'active_users',
-    //         'level1_count',
-    //         'level2_count',
-    //         'level3_count',
-    //         'level1_deposit',
-    //         'level1_commissions',
-    //         'level2_deposit',
-    //         'level2_commissions',
-    //         'level3_deposit',
-    //         'level3_commissions',
-    //         'total_deposits',
-    //         'total_commissions',
-    //         'level1_members',     // <-- ADD THIS
-    //         'level2_members',     // <-- ADD THIS
-    //         'level3_members'      // <-- ADD THIS
-    //     ));
-    // }
 
 
     // public function team()
@@ -302,60 +230,10 @@ class TeamController extends Controller
 
 
 
- public function aitrading()
-    {
-        /** @var \App\Models\User $user */
-        $user = Auth::user();
-
-        if (!$user) {
-            return redirect()->route('login')->with('error', 'Please log in to view this page.');
-        }
-
-        // Fetch the currently active game setting
-        // An active game is one where is_active is true AND current time is within start_time and end_time
-        $now = Carbon::now();
-        $activeGameSetting = GameSetting::where('is_active', true)
-                                ->where('start_time', '<=', $now)
-                                ->where('end_time', '>=', $now)
-                                ->orderBy('start_time', 'desc') // Optional: if multiple could be active, pick the latest started one
-                                ->first();
-
-        $activeUserInvestment = null;
-        if ($activeGameSetting) {
-            // Fetch the user's active investment for THIS specific active game
-            $activeUserInvestment = UserInvestment::where('user_id', $user->id)
-                                        ->where('game_setting_id', $activeGameSetting->id)
-                                        // Add a condition if your user_investments table has a status
-                                        // to indicate it's still "open" or "active"
-                                        // For example: ->where('status', 'active')
-                                        ->first();
-        }
-
-        // Placeholder data for bot stats - you should fetch/calculate these
-        $bot_profit_24h = 0.00;         // Example: Fetch from a bot performance log or calculation
-        $bot_trades_24h = 0;            // Example
-        $bot_success_rate = 0.0;        // Example
-        $bot_uptime_seconds = 0;        // Example
-        $is_bot_globally_active = true; // Example: Fetch from a global application setting
-
-        // $userInvestments = $user->investments()->get(); // You were fetching all, might not be needed if only active one is displayed
-
-        return view('user.layouts.bot', compact(
-            'user',
-            'activeGameSetting',      // Now passing this
-            'activeUserInvestment',   // Now passing this
-            // 'userInvestments',     // Pass this if your view still needs the full list
-            'bot_profit_24h',
-            'bot_trades_24h',
-            'bot_success_rate',
-            'bot_uptime_seconds',
-            'is_bot_globally_active'
-        ));
-    }
-
-
     public function bonuses()
     {
         return view('user.bonuses');
     }
+
+
 }
