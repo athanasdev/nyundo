@@ -136,8 +136,7 @@ class IPNController extends Controller
 
     public function handle(Request $request)
     {
-        Log::error('TEST IPN ', ["IPN DATA" => $request->all()]);
-
+        
         $ipnSecret = env('NOWPAYMENTS_IPN_SECRET');
         $receivedHmac = $request->header('x-nowpayments-sig');
 

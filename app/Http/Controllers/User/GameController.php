@@ -98,7 +98,7 @@ class GameController extends Controller
             ->where('end_time', '>=', $now)
             ->orderBy('start_time', 'desc')
             ->first();
-        Log::info("Game setting result", ['gameSetting' => $gameSetting]);
+
 
         if (!$gameSetting || !$gameSetting->is_active || $now->lt($gameSetting->start_time) || $now->gt($gameSetting->end_time)) {
             return redirect()->back()->with('error', 'The selected siginal is not currently active or has expired.')->withInput();
@@ -159,17 +159,22 @@ class GameController extends Controller
         ]);
 
 
-        $investment = UserInvestment::with('gameSetting')
-            ->where('id', $validatedData['user_investment_id'])
+        $investment = UserInvestment::where('id', $validatedData['user_investment_id'])
             ->where('user_id', $user->id)
-            ->where('investment_result','pending')
+            ->where('investment_result', 'pending')
             ->first();
 
-        if (!$investment) {
-            return redirect()->back()->with('error', 'Active trade not found or already closed.');
+        $gameSetting = \App\Models\GameSetting::where('is_active', true)
+            ->where('start_time', '<=', $now)
+            ->where('end_time', '>=', $now)
+            ->orderBy('start_time', 'desc')
+            ->first();
+
+        if (!$gameSetting || !$gameSetting->is_active || $now->lt($gameSetting->start_time) || $now->gt($gameSetting->end_time)) {
+            return redirect()->back()->with('error', 'Out of  siginal closing.')->withInput();
         }
 
-        $gameSetting = $investment->gameSetting;
+
 
         if (!$gameSetting) {
             // Handle missing game setting, perhaps return principal
@@ -185,7 +190,6 @@ class GameController extends Controller
                 $user->save();
                 // Transaction::create([... 'type' => 'trade_refund_no_game', ...]);
                 DB::commit();
-                Log::error('Error closing trade: Associated game_setting_id ' . $investment->game_setting_id . ' not found for investment ID ' . $investment->id);
                 return redirect()->route('bot.control')->with('error', 'Associated siginal data not found. Your investment principal has been returned.');
             } catch (\Exception $e) {
                 DB::rollBack();
