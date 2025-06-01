@@ -13,7 +13,7 @@ class IPNController extends Controller
     public function handle(Request $request)
     {
 
-        Log::error('TEST IPN SENT SUCCESS FULLY ..................');
+        Log::error('TEST IPN ', ["IPN DATA"=>$request->all()]);
 
         $ipnSecret = env('NOWPAYMENTS_IPN_SECRET');
 
@@ -45,7 +45,7 @@ class IPNController extends Controller
             Log::info('Valid IPN received:', $requestData);
 
             return response()->json(['message' => 'IPN verified'], 200);
-            
+
         } else {
             Log::error('HMAC signature does not match.');
             return response()->json(['error' => 'HMAC signature does not match.'], 403);
