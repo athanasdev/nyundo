@@ -167,7 +167,7 @@
 
             <div class="form-group">
                 <label for="order_id">Order Reference:</label>
-                <input type="text" id="order_id" name="order_id" value="{{ uniqid() }}" placeholder="order ID (optional)" readonly>
+                <input type="text" id="order_id" name="order_id" value="{{ $user->id }}" placeholder="order ID (optional)" readonly>
 
             </div>
 

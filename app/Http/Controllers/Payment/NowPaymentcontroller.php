@@ -29,7 +29,7 @@ class NowPaymentcontroller extends Controller
             'price_amount' => 'required|numeric',
             'price_currency' => 'required|string',
             'pay_currency' => 'required|string',
-            'order_id' => 'required|string',
+            'order_id' => 'required',
             'order_description' => 'required|string',
             'ipn_callback_url' => 'required|url',
             'customer_email' => 'nullable|email',
