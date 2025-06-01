@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Payment;
 
 use App\Http\Controllers\Controller;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Auth;
@@ -17,9 +18,9 @@ class NowPaymentcontroller extends Controller
 
     public function paymentForm()
     {
-        return view('user.layouts.deposit');
+        $user = Auth::user();
+        return view('user.layouts.deposit', compact('user'));
     }
-
 
 
     public function createPayment(Request $request)
@@ -50,10 +51,24 @@ class NowPaymentcontroller extends Controller
 
             $data = json_decode($response->getBody(), true);
 
-            Log::info(['Deposted Data:'=>$data]);
+            Payment::create([
+                'user_id'            => Auth::id(),
+                'payment_id'         => $data['payment_id'],
+                'purchase_id'        => $data['purchase_id'] ?? null,
+                'order_id'           => $data['order_id'],
+                'payment_status'     => $data['payment_status'],
+                'price_amount'       => $data['price_amount'],
+                'price_currency'     => $data['price_currency'],
+                'pay_amount'         => $data['pay_amount'],
+                'pay_currency'       => $data['pay_currency'],
+                'amount_received'    => $data['amount_received'],
+                'pay_address'        => $data['pay_address'],
+                'network'            => $data['network'] ?? null,
+                'payment_created_at' => $data['created_at'] ?? null,
+                'payment_updated_at' => $data['updated_at'] ?? null,
+            ]);
 
-            // return response()->json($data);
-            // Return the Blade view and pass the $data to it
+
             return view('user.layouts.confirm-deposit', ['paymentData' => $data], [
                 'user' => Auth::user(),
             ]);
