@@ -71,12 +71,12 @@ Route::middleware(['auth:web'])->group(function () {
     Route::get('/language', [DashboardController::class, 'language'])->name('language');
 
     // Deposit
-    Route::get('/deposit', [DepositController::class, 'index'])->name('deposit');
-    Route::get('/buy-crypto', [DepositController::class, 'buyCrypto'])->name('buy-crypto');
-    Route::get('transfer', [DepositController::class, 'transfer'])->name('transfer');
-    Route::post('funds-transfer', [DepositController::class, 'fundsTransfer'])->name('funds-transfer');
-    Route::get('view-deposit/{id}', [DepositController::class, 'viewDeposit'])->name('view-deposit');
-    Route::post('/deposit', [DepositController::class, 'store'])->name('deposit.store');
+    // Route::get('/deposit', [DepositController::class, 'index'])->name('deposit');
+    // Route::get('/buy-crypto', [DepositController::class, 'buyCrypto'])->name('buy-crypto');
+    // Route::get('transfer', [DepositController::class, 'transfer'])->name('transfer');
+    // Route::post('funds-transfer', [DepositController::class, 'fundsTransfer'])->name('funds-transfer');
+    // Route::get('view-deposit/{id}', [DepositController::class, 'viewDeposit'])->name('view-deposit');
+    // Route::post('/deposit', [DepositController::class, 'store'])->name('deposit.store');
 
 
     // Withdrawal
@@ -163,7 +163,7 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
 
 
 
-Route::get('/nowpayments/form', [NowPaymentController::class, 'paymentForm']);
+Route::get('/deposit/form', [NowPaymentController::class, 'paymentForm'])->name("deposit.form");
 Route::post('/payments/create', [NowPaymentcontroller::class, 'createPayment'])->name('payments.create');
 Route::post('/ipn-callback', [IPNController::class, 'handle'])->name('ipn.callback');
 Route::get('/nowpayments/balance', [NowPaymentController::class, 'checkBalance']);

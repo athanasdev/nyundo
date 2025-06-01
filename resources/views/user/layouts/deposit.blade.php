@@ -148,7 +148,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('nowpayment.create') }}">
+        <form method="POST" action="{{ route('payments.create') }}">
             @csrf
             <div class="form-group">
                 <label for="price_amount">Amount (USD):</label>

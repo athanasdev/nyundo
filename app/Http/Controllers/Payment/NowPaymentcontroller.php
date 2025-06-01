@@ -17,7 +17,7 @@ class NowPaymentcontroller extends Controller
 
     public function paymentForm()
     {
-        return view('payment');
+        return view('user.layouts.deposit');
     }
 
 
