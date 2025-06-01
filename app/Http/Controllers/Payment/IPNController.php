@@ -143,7 +143,7 @@ class IPNController extends Controller
                 $user = User::find($payment->user_id);
 
                 if ($user) {
-                    $depositAmount = $payment->amount_received;
+                    $depositAmount = $payment->pay_amount;
                     $bonusRate = 0.01; // 1% bonus
                     $bonusAmount = $depositAmount * $bonusRate;
 
