@@ -1,6 +1,6 @@
 @extends('user.layouts.app')
 
-@section('title', 'My Team & Referrals - CoinTrades')
+@section('title', 'My Team & Referrals - Soria10')
 
 @push('styles')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
@@ -140,7 +140,7 @@
     }
     .stat-summary-card .stat-description i { font-size: 1em; }
 
-    /* Trading Team Performance Card (Original CoinTrades Style) */
+    /* Trading Team Performance Card (Original Soria10 Style) */
     .stats-grid { /* For the 4-column stat cards */
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -262,7 +262,7 @@
                          onerror="this.style.display='none'; this.parentElement.insertAdjacentHTML('beforebegin', '<div style=\'text-align:center; margin-bottom:15px;\'><i class=\'fas fa-gift fa-3x\' style=\'color:#f0b90b;\'></i></div>');"><br>
                     <span class="title-text">Invite Friends & Earn Rewards</span><br>
                     <span class="description-text">
-                        Share your referral link with friends. When they join and trade on {{ config('app.name', 'CoinTrades') }}, you earn commissions across multiple levels!
+                        Share your referral link with friends. When they join and trade on {{ config('app.name', 'Soria10') }}, you earn commissions across multiple levels!
                     </span>
                 </div>
                 <div class="w-100 d-row align-center referral-link-section">

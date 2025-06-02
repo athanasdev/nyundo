@@ -1,6 +1,6 @@
 @extends('user.layouts.app') {{-- Assuming this is your correct layout path --}}
 
-@section('title', 'Setup Withdrawal Details - CoinTrades')
+@section('title', 'Setup Withdrawal Details - Soria10')
 
 @push('styles')
 <style>

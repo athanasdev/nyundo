@@ -1,6 +1,6 @@
 @extends('user.layouts.app')
 
-@section('title', 'Withdraw Funds - CoinTrades')
+@section('title', 'Withdraw Funds - Soria10')
 
 @push('styles')
     <style>

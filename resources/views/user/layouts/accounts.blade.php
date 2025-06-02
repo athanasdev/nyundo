@@ -1,6 +1,6 @@
 @extends('user.layouts.app')
 
-@section('title', 'Account - CoinTrades')
+@section('title', 'Account - Soria10')
 
 @section('content')
 <div id="accounts" class="content-section active"> {{-- 'active' class not needed for MPA --}}
@@ -62,7 +62,7 @@
         { type: 'Deposit', coin: 'USD', amountCoin: 1000, amountUSD: 1000, date: '2025-05-27 15:00', status: 'Confirmed' },
         { type: 'Withdrawal', coin: 'USD', amountCoin: 500, amountUSD: 500, date: '2025-05-26 12:00', status: 'Pending' }
     ];
-    
+
     let accountOverviewData = { // Example data
         totalValue: 12456.78,
         availableFunds: 3245.67,

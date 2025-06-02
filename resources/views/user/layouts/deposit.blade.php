@@ -1,6 +1,6 @@
 @extends('user.layouts.app')
 
-@section('title', 'Initiate Deposit - CoinTrades')
+@section('title', 'Initiate Deposit - Soria10')
 
 @push('styles')
 <style>

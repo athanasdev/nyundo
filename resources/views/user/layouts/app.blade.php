@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'CoinTrades - Advanced Trading Platform')</title>
+    <title>@yield('title', 'Soria10 - Advanced Trading Platform')</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     {{-- In a real Laravel app, this CSS would likely be in public/css/app.css and linked via asset() --}}
     <style>
@@ -1072,10 +1072,10 @@
     <header class="header">
         <div class="header-left">
             <a href="{{ route('dashboard') }}" class="logo-link">
-                <img src="{{ asset('images/logo/logo.png') }}" alt="CoinTrades Logo" class="header-logo-img"
+                <img src="{{ asset('images/logo/logo.png') }}" alt="Soria10 Logo" class="header-logo-img"
                     onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';">
                 <span class="logo-text" style="display:none;"><i class="fas fa-chart-line icon-fallback"></i>
-                    CoinTrades</span>
+                    Soria10</span>
             </a>
             <div class="user-balance-display">
                 <div class="balance-item">

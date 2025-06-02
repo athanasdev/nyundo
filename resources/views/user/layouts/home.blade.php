@@ -1,6 +1,6 @@
 @extends('user.layouts.app')
 
-@section('title', 'Assets Dashboard - CoinTrades')
+@section('title', 'Assets Dashboard - Soria10')
 
 @push('styles')
     <style>
