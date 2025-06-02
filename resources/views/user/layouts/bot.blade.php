@@ -705,7 +705,7 @@
         @endif
 
         {{-- Existing Bot Signals and Activity Log Cards --}}
-        <div class="card" style="margin-top: 16px;">
+        {{-- <div class="card" style="margin-top: 16px;">
             <div class="card-header">
                 <div class="card-title"><i class="fas fa-bullseye"></i> Active Trading Signals</div>
             </div>
@@ -714,9 +714,9 @@
                     <p class="text-muted text-center p-3">No active signals currently.</p>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
-        <div class="card" style="margin-top: 16px;">
+        {{-- <div class="card" style="margin-top: 16px;">
             <div class="card-header">
                 <div class="card-title"><i class="fas fa-clipboard-list"></i> Bot Activity Log</div>
             </div>
@@ -725,7 +725,7 @@
                     <p class="text-muted text-center p-3">No recent bot activity.</p>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 @endsection
 
