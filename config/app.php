@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'Fx'),
 
     /*
     |--------------------------------------------------------------------------
@@ -65,7 +65,9 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    // 'timezone' => 'UTC',
+     'timezone' => env('APP_TIMEZONE', 'UTC'),
+
 
     /*
     |--------------------------------------------------------------------------
@@ -105,6 +107,7 @@ return [
         ),
     ],
 
+
     /*
     |--------------------------------------------------------------------------
     | Maintenance Mode Driver
@@ -118,9 +121,12 @@ return [
     |
     */
 
+
+
     'maintenance' => [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
+
 
 ];
