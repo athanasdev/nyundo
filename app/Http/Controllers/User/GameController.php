@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User; // Assuming this is the correct namespace f
 
 use App\Http\Controllers\Controller;
 use App\Models\GameSetting;
+use App\Models\Referral;
 use App\Models\ReferralSetting; // Make sure this model exists if used in distributeReferralCommissions
 use App\Models\UserInvestment;
 use App\Models\Transaction; // Uncomment if you implement Transaction logging
@@ -189,7 +190,7 @@ class GameController extends Controller
                 $user->balance += $investment->amount;
                 $user->save();
                 // Transaction::create([... 'type' => 'trade_refund_no_game', ...]);
-                 // Record the deposit bonus transaction
+                // Record the deposit bonus transaction
                 // Transaction::create([
                 //     'user_id'        => $user->id,
                 //     'type'           => 'debit', // Bonus is also a credit
@@ -230,11 +231,12 @@ class GameController extends Controller
                     'type'           => 'credit', // Bonus is also a credit
                     'amount'         => $profitAmount, // Balance after deposit, before bonus
                     'balance_after'  => $user->balance,
-                    'status'=>'gain', // Final balance after bonus
+                    'status' => 'gain', // Final balance after bonus
                     'description'    => 'trade gain',
                 ]);
 
                 $this->distributeReferralCommissions($user, $profitAmount, $investment->id);
+
             } else {
                 $investment->investment_result = 'lose';
                 $investment->daily_profit_amount = 0;
@@ -247,10 +249,9 @@ class GameController extends Controller
                     'type'           => 'debit', // Bonus is also a credit
                     'amount'         => $investment->amount, // Balance after deposit, before bonus
                     'balance_after'  => $user->balance,
-                    'status'=>'lose', // Final balance after bonus
+                    'status' => 'lose', // Final balance after bonus
                     'description'    => 'trading lose',
                 ]);
-
             }
 
             $investment->game_end_time = $now; // Mark actual close time
@@ -268,44 +269,48 @@ class GameController extends Controller
     /**
      * Distribute referral commissions based on a user's profit from a specific investment.
      */
-    protected function distributeReferralCommissions(User $referredUser, float $profitAmount, int $investmentId)
+
+    public function distributeReferralCommissions(User $referredUser, float $qualifyingAmount)
     {
-        if ($profitAmount <= 0) {
-            return;
-        }
+        // Fetch all active referral levels and their percentages, ordered by level
+        $referralLevels = Referral::where('status', 1)->orderBy('level')->get();
 
+        // Get the initial referrer (Level 1 referrer)
+        // Ensure you have a 'referrer' relationship defined in your User model
+        // e.g., public function referrer() { return $this->belongsTo(User::class, 'referred_by'); }
         $currentReferrer = $referredUser->referrer;
+
         $level = 1;
-        $maxLevels = 3;
 
-        while ($currentReferrer && $level <= $maxLevels) {
-            $referralSetting = ReferralSetting::where('level', $level)->first();
+        // Loop through the referral chain and distribute commissions
+        while ($currentReferrer && $level <= $referralLevels->count()) {
+            // Find the commission percentage for the current level
+            $referralSetting = $referralLevels->where('level', $level)->first();
 
-            if ($referralSetting && $referralSetting->commission_percentage > 0) {
-                $commission = $profitAmount * ($referralSetting->commission_percentage / 100);
+            if ($referralSetting && $referralSetting->percent > 0) {
+                $commissionAmount = ($qualifyingAmount * $referralSetting->percent) / 100;
 
-                if ($commission > 0) {
-                    DB::beginTransaction(); // Start a new transaction for each commission
-                    try {
-                        $currentReferrer->balance += $commission;
-                        $currentReferrer->save();
+                // Ensure balance update and transaction logging for commission are atomic
+                DB::transaction(function () use ($currentReferrer, $commissionAmount, $level, $referredUser) {
+                    $referrerBalanceBefore = $currentReferrer->balance;
+                    $currentReferrer->balance += $commissionAmount;
+                    $currentReferrer->save();
 
-                        // Transaction::create([...]); // Log commission
-                        DB::commit();
-                        Log::info("Awarded Level {$level} commission of {$commission} to user {$currentReferrer->username} from profit of user {$referredUser->username} (Inv: {$investmentId})");
-                    } catch (\Exception $e) {
-                        DB::rollBack();
-                        Log::error("Failed to award Level {$level} commission to user {$currentReferrer->username}: " . $e->getMessage());
-                        // Potentially stop or continue to next level referrer
-                    }
-                }
+                    // Record the commission transaction for the referrer
+                    Transaction::create([
+                        'user_id'        => $currentReferrer->id,
+                        'type'           => 'credit',
+                        'amount'         => $commissionAmount,
+                        'balance_before' => $referrerBalanceBefore,
+                        'balance_after'  => $currentReferrer->balance,
+                        'description'    => "Referral Commission (Level {$level}) from {$referredUser->username}'s activity",
+                    ]);
+                });
             }
 
-            if (!$currentReferrer->referrer_id) break; // No more upline referrers
-            $currentReferrer = User::find($currentReferrer->referrer_id); // Fetch the next referrer model
+            // Move up to the next level in the referral chain
+            $currentReferrer = $currentReferrer->referrer; // Go to the current referrer's referrer
             $level++;
         }
     }
-
-
 }
