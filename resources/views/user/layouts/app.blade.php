@@ -7,6 +7,43 @@
     <title>@yield('title', __('messages.trading_platform') . ' - Soria10')</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
+        /* --- PRELOADER STYLES --- */
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0b0e11; /* Match body background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999; /* Ensure it's on top */
+            opacity: 1;
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+            visibility: visible;
+        }
+
+        .preloader.loaded {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .preloader .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #2b3139; /* Spinner track color */
+            border-top-color: #f0b90b; /* Spinner color - your accent yellow */
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* --- END PRELOADER STYLES --- */
+
         * {
             margin: 0;
             padding: 0;
@@ -22,6 +59,17 @@
             line-height: 1.5;
             direction: {{ $isRTL ? 'rtl' : 'ltr' }}; /* Dynamic direction */
         }
+
+        /* Initially hide main content if you want a more controlled reveal,
+           otherwise, preloader will just overlay it.
+        .main-wrapper {
+            opacity: 0;
+            transition: opacity 0.5s ease-in;
+        }
+        .main-wrapper.loaded {
+            opacity: 1;
+        }
+        */
 
         .container-main {
             max-width: 1400px;
@@ -148,7 +196,6 @@
             padding: 0;
         }
 
-        /* Language Selector Styles - NEW */
         .language-selector {
             position: relative;
             display: inline-block;
@@ -177,7 +224,7 @@
         .language-dropdown {
             position: absolute;
             top: 100%;
-            {{ $isRTL ? 'left: 0;' : 'right: 0;' }} /* Dynamic positioning for RTL/LTR */
+            {{ $isRTL ? 'left: 0;' : 'right: 0;' }}
             background: #1e2329;
             border: 1px solid #2b3139;
             border-radius: 4px;
@@ -224,8 +271,6 @@
         .language-name {
             font-size: 13px;
         }
-        /* End Language Selector Styles */
-
 
         .user-profile-card {
             background: #1e2329;
@@ -290,7 +335,6 @@
             color: #f6465d;
         }
 
-        /* Copied from your "original UI" CSS */
         .dashboard-grid {
             display: grid;
             grid-template-columns: 1fr 320px;
@@ -315,7 +359,7 @@
             border-radius: 4px;
             border: 1px solid #2b3139;
             overflow: hidden;
-            margin-bottom: 16px; /* Original had this, user-profile-card also has margin-bottom */
+            margin-bottom: 16px;
         }
 
         .card-header {
@@ -503,7 +547,7 @@
             transform: translateY(-1px);
         }
 
-        .portfolio-item, .activity-item { /* Combined from original */
+        .portfolio-item, .activity-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -575,9 +619,7 @@
         .activity-details span { color: #848e9c; font-size: 12px; }
         .activity-result { text-align: right; }
         .activity-result strong { font-weight: 500; }
-        /* End of Copied Original CSS */
 
-        /* Bottom Navigation */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -635,44 +677,38 @@
             font-weight: 500;
         }
 
-        /* RTL Support - NEW / From Updated UI */
         [dir="rtl"] .header-left {
             flex-direction: row-reverse;
         }
-        [dir="rtl"] .header-actions { /* Ensure language selector also flips if it's part of actions */
+        [dir="rtl"] .header-actions {
             flex-direction: row-reverse;
         }
-        [dir="rtl"] .nav-container { /* For bottom nav items */
+        [dir="rtl"] .nav-container {
             flex-direction: row-reverse;
         }
-        [dir="rtl"] .user-profile-card { /* If text alignment needs to be different, add text-align: right; here or to children */
-            /* flex-direction: row-reverse; /* This might be needed if image should be on the right */
+        [dir="rtl"] .user-profile-card {
+            /* flex-direction: row-reverse; */
         }
-        /* Add more specific RTL rules as needed for your components */
         [dir="rtl"] .balance-item {
-             text-align: left; /* If balance numbers should stay left, but label on right of number */
+             text-align: left;
         }
         [dir="rtl"] .logo-text {
             margin-left: 0;
-            margin-right: 8px; /* If logo text is to the right of icon in LTR */
+            margin-right: 8px;
         }
         [dir="rtl"] .language-btn {
-            /* If icon needs to flip position within button */
             /* flex-direction: row-reverse; */
         }
         [dir="rtl"] .language-option {
-            /* If flag and name order needs to flip */
             /* flex-direction: row-reverse; */
         }
 
-
-        /* Responsive Design Merged (from original + new elements consideration) */
         @media (max-width: 1024px) {
             .dashboard-grid {
                 grid-template-columns: 1fr;
             }
             .sidebar {
-                order: -1; /* Sidebar first on smaller screens if desired */
+                order: -1;
             }
             .header-left {
                 flex-grow: 1;
@@ -685,7 +721,7 @@
         @media (max-width: 768px) {
             .container-main {
                 padding: 10px;
-                padding-top: 135px; /* Header might stack and take more height */
+                padding-top: 135px;
                 padding-bottom: 75px;
             }
             .header {
@@ -710,7 +746,7 @@
                 justify-content: space-around;
             }
             .user-profile-card {
-                margin-top: 5px; /* Reduce space if header grows */
+                margin-top: 5px;
                 flex-direction: column;
                 text-align: center;
             }
@@ -729,7 +765,7 @@
 
         @media (max-width: 480px) {
             .container-main {
-                padding-top: 150px; /* Adjust if stacked header + profile card is taller */
+                padding-top: 150px;
             }
             .quick-actions {
                 grid-template-columns: 1fr;
@@ -744,11 +780,11 @@
                 gap: 8px;
             }
             .coin-price {
-                text-align: left; /* Or right, depending on desired RTL/LTR behavior */
+                text-align: left;
                 width: 100%;
             }
             [dir="rtl"] .coin-price {
-                /* text-align: right; /* Example: if you want price to stay on one side */
+                /* text-align: right; */
             }
             .signal-item {
                 padding: 12px;
@@ -757,7 +793,7 @@
                 gap: 8px;
             }
             .countdown-timer {
-                text-align: left; /* Or right */
+                text-align: left;
                 width: 100%;
             }
             .nav-container {
@@ -770,15 +806,14 @@
                 justify-content: center;
                 gap: 8px;
             }
-            .header-action-btn, .language-btn { /* Ensure language button is also responsive */
-                padding: 6px 10px; /* Slightly smaller padding */
-                font-size: 11px; /* Slightly smaller font */
+            .header-action-btn, .language-btn {
+                padding: 6px 10px;
+                font-size: 11px;
             }
             .logo-text { font-size: 18px; }
             .header-logo-img { height: 28px; }
         }
 
-        /* Alert styles (from original) */
         .alert {
             padding: 12px 15px;
             margin-bottom: 20px;
@@ -799,6 +834,10 @@
 </head>
 
 <body>
+    <div class="preloader">
+        <div class="spinner"></div>
+    </div>
+
     <header class="header">
         <div class="header-left">
             <a href="{{ route('dashboard') }}" class="logo-link">
@@ -808,7 +847,7 @@
             </a>
             <div class="user-balance-display">
                 <div class="balance-item">
-                    <div class="balance-amount positive" id="userBalanceDisplay2"> {{-- ID corrected for JS --}}
+                    <div class="balance-amount positive" id="balalnce">
                         ${{ number_format(Auth::user()->balance ?? 0, 2) }}
                     </div>
                     <div class="balance-label">{{ __('messages.total_balance') }}</div>
@@ -835,7 +874,7 @@
                 </div>
             </div>
 
-            <a href="#" class="header-action-btn"> {{-- Consider making this route dynamic if support page exists --}}
+            <a href="#" class="header-action-btn">
                 <i class="fas fa-comment"></i> {{ __('messages.support') }}
             </a>
             <a href="{{ route('deposit.form') }}" class="header-action-btn">
@@ -844,7 +883,6 @@
 
             @php
                 $user = Auth::user();
-                // Ensure $user is not null before accessing properties
                 $needsSetup = $user ? (is_null($user->withdrawal_address) || is_null($user->withdrawal_pin_hash)) : true;
             @endphp
 
@@ -876,7 +914,7 @@
             </div>
         @endauth
 
-        @yield('content') {{-- This is where your page-specific content will be injected --}}
+        @yield('content')
     </div>
 
     <nav class="bottom-nav">
@@ -902,10 +940,23 @@
     </nav>
 
     <script>
+        // Preloader JavaScript
+        window.addEventListener('load', function() {
+            const preloader = document.querySelector('.preloader');
+            if (preloader) {
+                preloader.classList.add('loaded');
+                // Optional: if you added a main-wrapper for content fade-in
+                // const mainWrapper = document.querySelector('.main-wrapper');
+                // if (mainWrapper) {
+                //    mainWrapper.classList.add('loaded');
+                // }
+            }
+        });
+
         // Language dropdown functionality
         function toggleLanguageDropdown() {
             const dropdown = document.getElementById('languageDropdown');
-            if (dropdown) { // Add null check
+            if (dropdown) {
                 dropdown.classList.toggle('show');
             }
         }
@@ -915,14 +966,14 @@
             const selector = document.querySelector('.language-selector');
             const dropdown = document.getElementById('languageDropdown');
 
-            if (selector && dropdown && !selector.contains(event.target)) { // Add null checks
+            if (selector && dropdown && !selector.contains(event.target)) {
                 dropdown.classList.remove('show');
             }
         });
 
         // Function to format currency
         const formatCurrency = (value, minDigits = 2, maxDigits = 2) => {
-            const locale = '{{ app()->getLocale() }}'.split('_')[0] || 'en'; // Fallback to 'en' and take base lang
+            const locale = '{{ app()->getLocale() }}'.split('_')[0] || 'en';
             return `$${Number(value).toLocaleString(locale, { minimumFractionDigits: minDigits, maximumFractionDigits: maxDigits })}`;
         }
 
@@ -931,20 +982,18 @@
 
         // Function to update the global header display
         function updateGlobalHeaderDisplay(totalBalance, pnlToday) {
-            const userBalanceEl = document.getElementById('userBalanceDisplay2'); // Corrected ID
+            const userBalanceEl = document.getElementById('userBalanceDisplay2');
             if (userBalanceEl) {
                 userBalanceEl.textContent = formatCurrency(totalBalance);
                 userBalanceEl.className = `balance-amount ${Number(totalBalance) >= 0 ? 'positive' : 'negative'}`;
             }
         }
 
-        // Prevent Ctrl key combinations (like Ctrl + C, Ctrl + V, Ctrl + X, etc.)
+        // Prevent Ctrl key combinations (already commented out by user)
         // document.addEventListener('keydown', function(e) {
         //     if (e.ctrlKey || e.metaKey) {
-        //         if (['c', 'v', 'x', 'a', 'z', 'u', 's', 'p'].includes(e.key.toLowerCase())) { // Added common ones
+        //         if (['c', 'v', 'x', 'a', 'z', 'u', 's', 'p'].includes(e.key.toLowerCase())) {
         //             e.preventDefault();
-        //             // Optionally alert the user:
-        //             // console.warn(`Action for Ctrl/Cmd + ${e.key} has been prevented.`);
         //         }
         //     }
         // });
