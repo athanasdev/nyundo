@@ -87,7 +87,7 @@
                                         <td>{{ $deposit->id }}</td>
                                         <td>{{ $deposit->user->username ?? 'N/A' }}</td>
                                         <td>${{ number_format($deposit->amount, 2) }}</td>
-                                        <td>{{ $deposit->payment_address }}</td>
+                                        <td>{{ $deposit->type }}</td>
                                         <td>
                                             <span
                                                 class="badge {{ $deposit->status == 'pending' ? 'badge-warning' : 'badge-success' }}">
