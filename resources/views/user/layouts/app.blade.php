@@ -1066,6 +1066,8 @@
         }
     </style>
     @stack('styles')
+   <script src="//code.jivosite.com/widget/ohg15eo48L" async></script>
+
 </head>
 
 <body>
@@ -1088,7 +1090,7 @@
         </div>
         <div class="header-actions">
             {{-- Deposit Button - No route, for JS handling --}}
-            <a href="http://" class="header-action-btn">
+            <a href="#" class="header-action-btn">
                 <i class="fas fa-comment"></i> support
             </a>
             <a href="{{ route('deposit.form') }}" class="header-action-btn">
@@ -1114,7 +1116,7 @@
                 </form>
             @endauth
         </div>
-        <script src="//code.jivosite.com/widget/ohg15eo48L" async></script>
+
     </header>
 
     <div class="container-main">
