@@ -267,9 +267,9 @@
                 <div class="address-display-group">
                     <input type="text" name="withdrawal_address" id="withdrawal_address_display"
                         value="{{ $userWithdrawalAddress }}" readonly>
-                    <button type="button" class="copy-btn-sm" id="copyWithdrawalAddressBtn" onclick="copyWithdrawalAddr()">
-                        <i class="fas fa-copy"></i> Copy
-                    </button>
+                    <a href="{{route('withdrawal.address.edit')}}" class="copy-btn-sm" id="copyWithdrawalAddressBtn" onclick="copyWithdrawalAddr()">
+                        <i class="fas fa-exchange-alt"></i> Change
+                    </a>
                 </div>
                 <small id="copyWithdrawalFeedback" class="note" style="height: 1em;"></small>
             </div>

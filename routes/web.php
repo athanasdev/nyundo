@@ -70,13 +70,12 @@ Route::middleware(['auth:web'])->group(function () {
     Route::get('/my-account', [DashboardController::class, 'myaccount'])->name('my-account');
     Route::get('/language', [DashboardController::class, 'language'])->name('language');
 
-    // Deposit
-    // Route::get('/deposit', [DepositController::class, 'index'])->name('deposit');
-    // Route::get('/buy-crypto', [DepositController::class, 'buyCrypto'])->name('buy-crypto');
-    // Route::get('transfer', [DepositController::class, 'transfer'])->name('transfer');
-    // Route::post('funds-transfer', [DepositController::class, 'fundsTransfer'])->name('funds-transfer');
-    // Route::get('view-deposit/{id}', [DepositController::class, 'viewDeposit'])->name('view-deposit');
-    // Route::post('/deposit', [DepositController::class, 'store'])->name('deposit.store');
+
+    Route::get('/deposit/form', [NowPaymentController::class, 'paymentForm'])->name("deposit.form");
+    Route::post('/payments/create', [NowPaymentcontroller::class, 'createPayment'])->name('payments.create');
+    Route::post('/ipn-callback', [IPNController::class, 'handle'])->name('ipn.callback');
+    Route::get('/nowpayments/balance', [NowPaymentController::class, 'checkBalance']);
+    Route::post('/nowpayments/validate-address', [NowPaymentController::class, 'validateAddress']);
 
 
     // Withdrawal
@@ -97,9 +96,13 @@ Route::middleware(['auth:web'])->group(function () {
 
     Route::get('/bonuses', [TeamController::class, 'bonuses'])->name('bonuses');
 
+    Route::get('/withdrawal-address/edit', [WithdrawalController::class, 'showChangeWithdrawalAddressForm'])
+        ->name('withdrawal.address.edit');
+
+    // Route to handle the update of the withdrawal address
+    Route::patch('/profile/withdrawal-address', [WithdrawalController::class, 'updateWithdrawalAddress'])
+        ->name('withdrawal.address.update');
     // // User Game Investment
-    // Route::get('/game', [GameController::class, 'showInvestmentForm'])->name('user.game.invest_form');
-    // Route::post('/game/invest', [GameController::class, 'invest'])->name('user.game.invest');
 
     // It is important that this route is under 'auth:web' because the user is currently authenticated via 'web' guard
     Route::get('/impersonate/leave', [ImpersonateController::class, 'leave'])->name('impersonate.leave');
@@ -163,8 +166,8 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
 
 
 
-Route::get('/deposit/form', [NowPaymentController::class, 'paymentForm'])->name("deposit.form");
-Route::post('/payments/create', [NowPaymentcontroller::class, 'createPayment'])->name('payments.create');
-Route::post('/ipn-callback', [IPNController::class, 'handle'])->name('ipn.callback');
-Route::get('/nowpayments/balance', [NowPaymentController::class, 'checkBalance']);
-Route::post('/nowpayments/validate-address', [NowPaymentController::class, 'validateAddress']);
+
+
+
+Route::get('/language/{language}', [App\Http\Controllers\LanguageController::class, 'changeLanguage'])
+    ->name('language.change');

@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class WithdrawalController extends Controller
 {
@@ -121,5 +122,73 @@ class WithdrawalController extends Controller
         $user->save();
 
         return redirect()->route('withdraw')->with('success', 'Withdrawal settings saved successfully.');
+    }
+
+
+    public function showChangeWithdrawalAddressForm()
+    {
+        // Assuming your Blade file is in resources/views/user/profile/change-withdrawal-address.blade.php
+        // You might need to pass some data if the view expects it, but for a simple form display, this is often enough.
+        // Make sure the 'messages' for localization are available or pass them if needed.
+        return view('user.layouts.change-withdraw-address');
+    }
+
+    /**
+     * Update the user's withdrawal address.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function updateWithdrawalAddress(Request $request)
+    {
+        $user = Auth::user();
+
+        // 1. Check if the user has a withdrawal PIN set
+        if (is_null($user->withdrawal_pin_hash)) {
+            // You might want to redirect them to a page to set up their PIN first.
+            // For now, we'll return an error.
+            return back()->with('error', __('messages.withdrawal_pin_not_set_error', ['fallback' => 'Your withdrawal PIN is not set. Please set it up first.']));
+            // Example for localization file:
+            // 'withdrawal_pin_not_set_error' => 'Your withdrawal PIN is not set. Please set it up first. You can do so <a href=":url">here</a>.',
+            // You would then pass the URL: ->with('error', __('messages.withdrawal_pin_not_set_error', ['url' => route('user.pin.setup')]))
+        }
+
+        // 2. Validate the request data
+        $request->validate([
+            'new_withdrawal_address' => [
+                'required',
+                'string',
+                'max:255',
+                // Basic regex for TRC20 address (starts with 'T', 34 chars, alphanumeric)
+                // More robust validation might involve a checksum or library if available
+                'regex:/^T[1-9A-HJ-NP-Za-km-z]{33}$/',
+            ],
+            'withdrawal_pin' => ['required', 'string'],
+        ], [
+            'new_withdrawal_address.regex' => __('messages.invalid_trc20_address_format', ['fallback' => 'The new withdrawal address format is invalid for TRC20.']),
+            // Example for localization file:
+            // 'invalid_trc20_address_format' => 'The new withdrawal address format is invalid for TRC20.',
+        ]);
+
+        // 3. Verify the withdrawal PIN
+        if (!Hash::check($request->withdrawal_pin, $user->withdrawal_pin_hash)) {
+            // Option 1: Redirect back with a general error
+            // return back()->with('error', __('messages.incorrect_withdrawal_pin_error', ['fallback' => 'The withdrawal PIN you entered is incorrect.']));
+
+            // Option 2: Throw a ValidationException to show error next to the field (often better UX)
+            throw ValidationException::withMessages([
+                'withdrawal_pin' => __('messages.incorrect_withdrawal_pin_field_error', ['fallback' => 'The provided withdrawal PIN is incorrect.']),
+            ]);
+            // Example for localization file:
+            // 'incorrect_withdrawal_pin_field_error' => 'The provided withdrawal PIN is incorrect.',
+        }
+
+        // 4. Update the withdrawal address
+        $user->withdrawal_address = $request->new_withdrawal_address;
+        $user->save();
+
+        return back()->with('success', __('messages.withdrawal_address_updated_success', ['fallback' => 'Your withdrawal address has been updated successfully.']));
+        // Example for localization file:
+        // 'withdrawal_address_updated_success' => 'Your withdrawal address has been updated successfully.',
     }
 }

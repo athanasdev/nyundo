@@ -65,9 +65,7 @@ return [
     |
     */
 
-    // 'timezone' => 'UTC',
-     'timezone' => env('APP_TIMEZONE', 'UTC'),
-
+    'timezone' => env('APP_TIMEZONE', 'UTC'),
 
     /*
     |--------------------------------------------------------------------------
@@ -85,6 +83,17 @@ return [
     'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
 
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
+
+    // Add supported locales
+    'available_locales' => [
+        'en' => 'English',
+        'es' => 'Español',
+        'fr' => 'Français',
+        'de' => 'Deutsch',
+        'sw' => 'Kiswahili',
+        'ar' => 'العربية',
+        'zh' => '中文',
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -107,7 +116,6 @@ return [
         ),
     ],
 
-
     /*
     |--------------------------------------------------------------------------
     | Maintenance Mode Driver
@@ -121,12 +129,9 @@ return [
     |
     */
 
-
-
     'maintenance' => [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
-
 
 ];
