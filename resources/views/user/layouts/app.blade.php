@@ -1159,8 +1159,6 @@
     </nav>
 
 
-    <script src="//code.jivosite.com/widget/s41XTslUgI" async></script>
-
     <script>
         // Function to format currency
         const formatCurrency = (value, minDigits = 2, maxDigits = 2) =>
