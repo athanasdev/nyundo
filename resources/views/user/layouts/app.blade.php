@@ -1098,8 +1098,8 @@
                 $needsSetup = is_null($user->withdrawal_address) || is_null($user->withdrawal_pin_hash);
             @endphp
 
-            <a href="{{ $needsSetup ? route('withdraw.setup') : route('withdraw') }}"
-                id="withdrawButton" class="header-action-btn">
+            <a href="{{ $needsSetup ? route('withdraw.setup') : route('withdraw') }}" id="withdrawButton"
+                class="header-action-btn">
                 <i class="fas fa-arrow-alt-circle-up"></i> Withdraw
             </a>
             @auth
@@ -1153,10 +1153,14 @@
     </nav>
 
     <script>
+        // Function to format currency
         const formatCurrency = (value, minDigits = 2, maxDigits = 2) =>
-            `$${Number(value).toLocaleString('en-US', {minimumFractionDigits: minDigits, maximumFractionDigits: maxDigits})}`;
+            `$${Number(value).toLocaleString('en-US', { minimumFractionDigits: minDigits, maximumFractionDigits: maxDigits })}`;
+
+        // Function to format percentage
         const formatPercentage = (value) => `${Number(value) >= 0 ? '+' : ''}${Number(value).toFixed(2)}%`;
 
+        // Function to update the global header display
         function updateGlobalHeaderDisplay(totalBalance, pnlToday) {
             const userBalanceEl = document.getElementById('userBalanceDisplay');
             if (userBalanceEl) {
@@ -1164,6 +1168,19 @@
                 userBalanceEl.className = `balance-amount ${Number(totalBalance) >= 0 ? 'positive' : 'negative'}`;
             }
         }
+
+        // Prevent Ctrl key combinations (like Ctrl + C, Ctrl + V, Ctrl + X, etc.)
+        document.addEventListener('keydown', function(e) {
+            // Check if Ctrl key (or Command key on Mac) is pressed
+            if (e.ctrlKey || e.metaKey) {
+                // Prevent common Ctrl key combinations
+                if (['c', 'v', 'x', 'a', 'z'].includes(e.key.toLowerCase())) {
+                    e.preventDefault(); // Prevent the default action (e.g., copying, pasting)
+                   // alert(`The '${e.key.toUpperCase()}' shortcut is disabled for security reasons.`);
+                }
+            }
+        });
+
         // Add event listeners for Deposit/Withdraw buttons if they trigger modals/JS actions
     </script>
 
