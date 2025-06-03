@@ -189,6 +189,16 @@ class GameController extends Controller
                 $user->balance += $investment->amount;
                 $user->save();
                 // Transaction::create([... 'type' => 'trade_refund_no_game', ...]);
+                 // Record the deposit bonus transaction
+                // Transaction::create([
+                //     'user_id'        => $user->id,
+                //     'type'           => 'debit', // Bonus is also a credit
+                //     'amount'         => $investment->amount,
+                //     'balance_before' => $user->balalnce, // Balance after deposit, before bonus
+                //     'status'=>'lose', // Final balance after bonus
+                //     'description'    => 'siginal lose',
+                // ]);
+
                 DB::commit();
                 return redirect()->route('bot.control')->with('error', 'Associated siginal data not found. Your investment principal has been returned.');
             } catch (\Exception $e) {
@@ -215,6 +225,14 @@ class GameController extends Controller
 
                 // Transaction::create([... 'type' => 'trade_profit', ...]);
                 // Transaction::create([... 'type' => 'principal_return', ...]);
+                Transaction::create([
+                    'user_id'        => $user->id,
+                    'type'           => 'credit', // Bonus is also a credit
+                    'amount'         => $profitAmount, // Balance after deposit, before bonus
+                    'balance_after'  => $user->balance,
+                    'status'=>'gain', // Final balance after bonus
+                    'description'    => 'trade gain',
+                ]);
 
                 $this->distributeReferralCommissions($user, $profitAmount, $investment->id);
             } else {
@@ -224,6 +242,15 @@ class GameController extends Controller
                 $investment->principal_returned = false; // Principal is lost
                 // Balance was already debited. No change for loss of principal itself.
                 // Transaction::create([... 'type' => 'trade_loss', ...]);
+                Transaction::create([
+                    'user_id'        => $user->id,
+                    'type'           => 'debit', // Bonus is also a credit
+                    'amount'         => $investment->amount, // Balance after deposit, before bonus
+                    'balance_after'  => $user->balance,
+                    'status'=>'lose', // Final balance after bonus
+                    'description'    => 'trading lose',
+                ]);
+
             }
 
             $investment->game_end_time = $now; // Mark actual close time
@@ -279,4 +306,6 @@ class GameController extends Controller
             $level++;
         }
     }
+
+
 }
