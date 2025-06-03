@@ -1088,6 +1088,9 @@
         </div>
         <div class="header-actions">
             {{-- Deposit Button - No route, for JS handling --}}
+            <a href="http://" class="header-action-btn">
+                <i class="fas fa-comment"></i> support
+            </a>
             <a href="{{ route('deposit.form') }}" class="header-action-btn">
                 <i class="fas fa-arrow-alt-circle-down"></i> Deposit
             </a>
@@ -1111,6 +1114,7 @@
                 </form>
             @endauth
         </div>
+        <script src="//code.jivosite.com/widget/ohg15eo48L" async></script>
     </header>
 
     <div class="container-main">
@@ -1151,6 +1155,8 @@
             </a>
         </div>
     </nav>
+
+
 
     <script>
         // Function to format currency
