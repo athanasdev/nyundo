@@ -185,6 +185,7 @@ class WithdrawalController extends Controller
 
         // 4. Update the withdrawal address
         $user->withdrawal_address = $request->new_withdrawal_address;
+       /** @var \App\Models\User $user */
         $user->save();
 
         return back()->with('success', __('messages.withdrawal_address_updated_success', ['fallback' => 'Your withdrawal address has been updated successfully.']));

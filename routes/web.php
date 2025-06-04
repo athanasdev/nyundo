@@ -73,6 +73,9 @@ Route::middleware(['auth:web'])->group(function () {
 
     Route::get('/deposit/form', [NowPaymentController::class, 'paymentForm'])->name("deposit.form");
     Route::post('/payments/create', [NowPaymentcontroller::class, 'createPayment'])->name('payments.create');
+   
+Route::get('/deposit/confirm/{id}', [NowPaymentController::class, 'showConfirmDepositPage'])
+     ->name('payment.confirm.show');
     Route::post('/ipn-callback', [IPNController::class, 'handle'])->name('ipn.callback');
     Route::get('/nowpayments/balance', [NowPaymentController::class, 'checkBalance']);
     Route::post('/nowpayments/validate-address', [NowPaymentController::class, 'validateAddress']);

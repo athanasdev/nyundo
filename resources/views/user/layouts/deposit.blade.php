@@ -167,7 +167,8 @@
 
             <div class="form-group">
                 <label for="order_id">Order Reference:</label>
-                <input type="text" id="order_id" name="order_id" value="{{ Auth::user()->id }}" placeholder="order ID (optional)" readonly>
+                <input type="text"   value="{{ uniqid() }}"  placeholder="order ID (optional)" readonly>
+                <input type="hidden" id="order_id" name="order_id" value="{{ Auth::user()->id }}" readonly>
 
             </div>
 

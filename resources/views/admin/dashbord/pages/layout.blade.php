@@ -276,6 +276,8 @@
         </script>
     @endif
 
+    @push('scripts')
+
 </body>
 
 </html>

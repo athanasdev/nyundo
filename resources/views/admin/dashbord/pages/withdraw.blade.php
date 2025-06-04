@@ -36,13 +36,19 @@
                                         <td>{{ $withdraw->id }}</td>
                                         <td>{{ $withdraw->user->username ?? 'N/A' }}</td>
                                         <td>${{ number_format($withdraw->amount, 2) }}</td>
+                                        {{-- <td>
+                                            <span id="paymentAddressInput2">{{ $withdraw->payment_address }}</span>
+                                            <button id="copyAddressButton1" class="btn btn-sm btn-outline-primary copy-btn ml-2">
+                                                Copy
+                                            </button>
+                                        </td> --}}
                                         <td>
-                                            <span id="address-{{ $withdraw->id }}">{{ $withdraw->payment_address }}</span>
-                                            <button class="btn btn-sm btn-outline-primary copy-btn ml-2"
-                                                data-clipboard-target="#address-{{ $withdraw->id }}">
+                                            <span class="payment-address">{{ $withdraw->payment_address }}</span>
+                                            <button class="btn btn-sm btn-outline-primary copy-btn ml-2">
                                                 Copy
                                             </button>
                                         </td>
+
                                         <td>
                                             <span
                                                 class="badge {{ $withdraw->status == 'pending' ? 'badge-warning' : 'badge-success' }}">
@@ -74,49 +80,59 @@
         </div>
     </div>
 @endsection
-
+{{-- 
 @section('scripts')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js"></script>
+   
 
     <script>
-        $(function() {
-            console.log('Document ready. Attempting to initialize ClipboardJS...');
+        
+        document.addEventListener('DOMContentLoaded', function() {
+        // Copy Button Logic
+        const copyBtn = document.getElementById("copyAddressButton1");
+        const addressInput = document.getElementById("paymentAddressInput2");
+        const feedback = document.getElementById("copyFeedbackDisplay");
 
-            if (typeof ClipboardJS === 'function') {
-                console.log('ClipboardJS library is loaded.');
+        copyBtn?.addEventListener("click", function() {
+            console.log("the button clicked")
+            addressInput.select();
+            addressInput.setSelectionRange(0, 99999); // for mobile
+            navigator.clipboard.writeText(addressInput.value).then(() => {
+                copyBtn.classList.add("copied");
+                feedback.textContent = "Address copied!";
+                setTimeout(() => {
+                    copyBtn.classList.remove("copied");
+                    feedback.textContent = "";
+                }, 2000);
+            });
+        });
 
-                if ($('.copy-btn').length > 0) {
-                    console.log('Found ' + $('.copy-btn').length +
-                        ' elements with class .copy-btn. Initializing ClipboardJS...');
-                    const clipboard = new ClipboardJS('.copy-btn');
+    });
+    </script>
+@endsection --}}
 
-                    clipboard.on('success', function(e) {
-                        console.log('Copy successful! Text:', e.text);
-                        alert('Address "' + e.text + '" copied to clipboard!');
+@section('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const copyButtons = document.querySelectorAll('.copy-btn');
 
-                        const originalText = e.trigger.innerText;
-                        e.trigger.innerText = 'Copied!';
-                        e.clearSelection();
+            copyButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    const addressSpan = this.previousElementSibling;
+                    const textToCopy = addressSpan.innerText;
 
-                        setTimeout(function() {
-                            e.trigger.innerText = originalText;
+                    navigator.clipboard.writeText(textToCopy).then(() => {
+                        this.innerText = 'Copied!';
+                        this.classList.add('btn-success');
+
+                        setTimeout(() => {
+                            this.innerText = 'Copy';
+                            this.classList.remove('btn-success');
                         }, 2000);
+                    }).catch(err => {
+                        console.error('Copy failed', err);
                     });
-
-                    clipboard.on('error', function(e) {
-                        console.error('ClipboardJS Error:', e);
-                        alert('Failed to copy address. Please try manually.');
-                        e.clearSelection();
-                    });
-
-                } else {
-                    console.warn('ClipboardJS: No elements with class .copy-btn found.');
-                }
-
-            } else {
-                console.error('CRITICAL: ClipboardJS library NOT FOUND.');
-                alert('Error: Clipboard functionality cannot be initialized.');
-            }
+                });
+            });
         });
     </script>
 @endsection
