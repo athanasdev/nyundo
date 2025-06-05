@@ -305,7 +305,7 @@
 
             <fieldset>
                 <div class="box-input">
-                    <input type="text" name="username" placeholder="Username" required>
+                    <input type="text" name="username" placeholder="Username" required tabindex="-1">
                 </div>
             </fieldset>
 
@@ -313,7 +313,7 @@
                 <div class="box-input">
                     <div class="box-auth-pass">
                         <input type="password" name="password" required placeholder="Password" class="password-field"
-                            id="loginPassword">
+                            id="loginPassword" tabindex="-1">
                         <span class="show-pass" data-target="loginPassword">
                             <i class="fas fa-eye icon-view"></i>
                             <i class="fas fa-eye-slash icon-view-hide"></i>
