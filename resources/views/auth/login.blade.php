@@ -332,7 +332,7 @@
 
             <p class="signup-link-container">
                 I don’t have an account?
-                <a href="{{ route('home') }}">Sign Up</a>
+                <a href="{{ route('register') }}">Sign Up</a>
             </p>
         </form>
     </div>
