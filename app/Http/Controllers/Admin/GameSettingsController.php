@@ -23,7 +23,7 @@ class GameSettingsController extends Controller
 
     public function store(Request $request)
     {
-        $adminTimezone = GameSetting::getAdminTimezone();
+        // $adminTimezone = GameSetting::getAdminTimezone();
 
         $validatedData = $request->validate([
             'start_time' => 'required|date_format:H:i',
@@ -36,7 +36,7 @@ class GameSettingsController extends Controller
         ]);
 
 
-        $todayInAdminTimezone = Carbon::now($adminTimezone);
+        $todayInAdminTimezone = Carbon::now();
 
         $startTime = $todayInAdminTimezone->copy()->setTimeFromTimeString($validatedData['start_time']);
         $endTime = $todayInAdminTimezone->copy()->setTimeFromTimeString($validatedData['end_time']);
@@ -74,7 +74,7 @@ class GameSettingsController extends Controller
 
     public function update(Request $request, GameSetting $gameSetting)
     {
-        $adminTimezone = GameSetting::getAdminTimezone();
+        // $adminTimezone = GameSetting::getAdminTimezone();
 
         $validatedData = $request->validate([
             'start_time' => 'required|date_format:H:i',
@@ -87,8 +87,8 @@ class GameSettingsController extends Controller
         ]);
 
 
-        $startTime = Carbon::createFromFormat('H:i', $validatedData['start_time'], $adminTimezone);
-        $endTime = Carbon::createFromFormat('H:i', $validatedData['end_time'], $adminTimezone);
+        $startTime = Carbon::createFromFormat('H:i', $validatedData['start_time']);
+        $endTime = Carbon::createFromFormat('H:i', $validatedData['end_time']);
 
         if ($endTime->lt($startTime)) {
             $endTime->addDay();

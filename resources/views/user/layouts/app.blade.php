@@ -991,7 +991,7 @@
                 flex-direction: column;
                 height: auto;
                 gap: 10px;
-                padding: 10px;
+                padding: 6px;
             }
 
             .header-left {
@@ -1042,6 +1042,7 @@
         @media (max-width: 480px) {
             .container-main {
                 padding-top: 150px;
+
             }
 
             .quick-actions {

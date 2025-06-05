@@ -20,45 +20,107 @@ class GameController extends Controller
 {
 
 
+    // public function aitrading()
+    // {
+    //     /** @var \App\Models\User $user */
+    //     $user = Auth::user();
+
+    //     if (!$user) {
+    //         // This check might be redundant if your middleware('auth') handles it,
+    //         // but doesn't hurt as a safeguard.
+    //         return redirect()->route('login')->with('error', 'Please log in to view this page.');
+    //     }
+
+    //     $now = Carbon::now();
+    //     $activeGameSetting = GameSetting::where('is_active', true)
+    //         ->where('start_time', '<=', $now)
+    //         ->where('end_time', '>=', $now)
+    //         ->orderBy('start_time', 'desc')
+    //         ->first();
+
+
+    //     $activeUserInvestment = null;
+    //     if ($activeGameSetting && $user) { // Ensure user is available
+    //         $activeUserInvestment = UserInvestment::where('user_id', $user->id)
+    //             ->where('game_setting_id', $activeGameSetting->id)
+    //             ->where('investment_result', 'pending')
+    //             ->get();
+    //     }
+
+    //     // Placeholder data for bot stats - you should fetch/calculate these
+    //     // These should ideally come from a service or another model, not hardcoded.
+    //     $bot_profit_24h = 0.00;
+    //     $bot_trades_24h = 0;
+    //     $bot_success_rate = 0.0;
+    //     $bot_uptime_seconds = 0;
+    //     $is_bot_globally_active = true; // This should be a system setting
+
+    //     return view('user.layouts.bot', compact( // Ensure this view path is correct
+    //         'user',
+    //         'activeGameSetting',
+    //         'activeUserInvestment',
+    //         'bot_profit_24h',
+    //         'bot_trades_24h',
+    //         'bot_success_rate',
+    //         'bot_uptime_seconds',
+    //         'is_bot_globally_active'
+    //     ));
+    // }
+
     public function aitrading()
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
         if (!$user) {
-            // This check might be redundant if your middleware('auth') handles it,
-            // but doesn't hurt as a safeguard.
             return redirect()->route('login')->with('error', 'Please log in to view this page.');
         }
 
-        $now = Carbon::now();
+        // Use Carbon::now('UTC') for correct comparison with UTC database timestamps
+        $nowUTC = Carbon::now('UTC');
+
+        // Fetches a game setting that is currently active (start_time <= nowUTC < end_time)
+        // Using '>' for end_time is generally preferred to mean "active until, but not including, the end_time"
         $activeGameSetting = GameSetting::where('is_active', true)
-            ->where('start_time', '<=', $now)
-            ->where('end_time', '>=', $now)
-            ->orderBy('start_time', 'desc')
+            ->where('start_time', '<=', $nowUTC)
+            ->where('end_time', '>', $nowUTC) // Changed from '>=' to '>'
+            ->orderBy('start_time', 'desc') // Gets the most recently started game if multiple overlap
             ->first();
 
+        // Optional: If you want to show a countdown for the *next* upcoming game if none is active:
+        if (!$activeGameSetting) {
+            $activeGameSetting = GameSetting::where('is_active', true)
+                ->where('start_time', '>', $nowUTC) // Game starts in the future
+                ->orderBy('start_time', 'asc')     // Get the soonest upcoming game
+                ->first();
+        }
 
-        $activeUserInvestment = null;
-        if ($activeGameSetting && $user) { // Ensure user is available
+        $activeUserInvestment = collect(); // Initialize as empty Laravel collection
+        if ($activeGameSetting && $user) {
             $activeUserInvestment = UserInvestment::where('user_id', $user->id)
-                ->where('game_setting_id', $activeGameSetting->id)
-                ->where('investment_result', 'pending')
+                // Assuming game_setting_id links UserInvestment to GameSetting
+                // Add this if you have such a link and want trades for *this specific* game
+                // ->where('game_setting_id', $activeGameSetting->id)
+                ->where('investment_result', 'pending') // Or your equivalent for active/ongoing trades
+                // Ensure UserInvestment also has a concept of its own end_time if not strictly tied to game_setting_id
+                // For example, if UserInvestment has its own 'ends_at' field:
+                // ->where('ends_at', '>', $nowUTC)
                 ->get();
         }
 
-        // Placeholder data for bot stats - you should fetch/calculate these
-        // These should ideally come from a service or another model, not hardcoded.
-        $bot_profit_24h = 0.00;
-        $bot_trades_24h = 0;
-        $bot_success_rate = 0.0;
-        $bot_uptime_seconds = 0;
-        $is_bot_globally_active = true; // This should be a system setting
+        // Bot statistics (replace with your actual data retrieval logic)
+        $bot_profit_24h = 0.00; // Example: $user->getBotProfit24h();
+        $bot_trades_24h = 0;    // Example: $user->getBotTrades24h();
+        $bot_success_rate = 0.0; // Example: $user->getBotSuccessRate();
+        $bot_uptime_seconds = 0; // Example: $user->getBotUptimeSeconds();
 
-        return view('user.layouts.bot', compact( // Ensure this view path is correct
-            'user',
+        // This was hardcoded to true. Fetch from a reliable source (e.g., user setting or global app setting)
+        $is_bot_globally_active = $user->is_trading_bot_enabled ?? true; // Example from user model
+
+        return view('user.layouts.bot', compact( // Ensure 'user.layouts.bot' is the correct path to your Blade file
+            'user', // The authenticated user model
             'activeGameSetting',
-            'activeUserInvestment',
+            'activeUserInvestment', // Pass the collection with this name as per your original compact
             'bot_profit_24h',
             'bot_trades_24h',
             'bot_success_rate',
@@ -230,14 +292,13 @@ class GameController extends Controller
                     'user_id'        => $user->id,
                     'type'           => 'credit', // Bonus is also a credit
                     'amount'         => $profitAmount,
-                    'balance_before'=> $user->balance, // Balance after deposit, before bonus
+                    'balance_before' => $user->balance, // Balance after deposit, before bonus
                     'balance_after'  => $user->balance,
                     'status' => 'gain', // Final balance after bonus
                     'description'    => 'trade gain',
                 ]);
 
                 $this->distributeReferralCommissions($user, $profitAmount, $investment->id);
-
             } else {
                 $investment->investment_result = 'lose';
                 $investment->daily_profit_amount = 0;
@@ -249,7 +310,7 @@ class GameController extends Controller
                     'user_id'        => $user->id,
                     'type'           => 'debit', // Bonus is also a credit
                     'amount'         => $investment->amount,
-                    'balance_before'=> $user->balance, // Balance after deposit, before bonus
+                    'balance_before' => $user->balance, // Balance after deposit, before bonus
                     'balance_after'  => $user->balance,
                     'status' => 'lose', // Final balance after bonus
                     'description'    => 'trading lose',
@@ -266,7 +327,6 @@ class GameController extends Controller
             Log::error('Error closing trade: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Could not close trade. Please try again.');
         }
-
     }
 
 
@@ -339,13 +399,13 @@ class GameController extends Controller
                     $currentReferrer->balance += $commission;
                     $currentReferrer->save();
 
-                    
+
                     Transaction::create([
                         'user_id' => $currentReferrer->id,
                         'type' => 'credit',
                         'amount' => $commission,
                         'balance_before' => $currentReferrer->balance,
-                        'balance_after'=>$currentReferrer->balance + $commission,
+                        'balance_after' => $currentReferrer->balance + $commission,
                         'status' => 'gain',
                         'description' => "Level {$level} commission from user {$referredUser->username}'s trade profit.",
 
@@ -360,8 +420,4 @@ class GameController extends Controller
             $level++;
         }
     }
-
-
-
-
 }

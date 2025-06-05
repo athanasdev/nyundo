@@ -322,16 +322,16 @@
     .transactions-table {
         font-size: 12px;
     }
-    
+
     .table-header-cell,
     .table-cell {
         padding: 8px 12px;
     }
-    
+
     .table-header-cell {
         font-size: 10px;
     }
-    
+
     .description-cell {
         max-width: 150px;
     }
@@ -347,12 +347,12 @@
     .transactions-table {
         font-size: 11px;
     }
-    
+
     .table-header-cell,
     .table-cell {
         padding: 6px 8px;
     }
-    
+
     .description-cell {
         max-width: 120px;
     }
@@ -447,7 +447,7 @@
                                     <td class="table-cell">
                                         @php
                                             $statusClass = 'status-default';
-                                            $statusText = $txn->status ?? 'Pending';
+                                            $statusText = $txn->status ?? 'trx ';
                                             switch (strtolower($statusText)) {
                                                 case 'completed': case 'confirmed':
                                                     $statusClass = 'status-success'; break;
@@ -478,16 +478,16 @@
                         </tbody>
                     </table>
                 </div>
-                
+
                 {{-- Pagination Section --}}
                 @if(isset($transactions) && method_exists($transactions, 'hasPages') && $transactions->hasPages())
                     <div class="pagination-wrapper">
                         {{ $transactions->appends(request()->query())->links() }}
                     </div>
-                    
+
                     {{-- Pagination Info --}}
                     <div class="pagination-info">
-                        Showing {{ $transactions->firstItem() ?? 0 }} to {{ $transactions->lastItem() ?? 0 }} 
+                        Showing {{ $transactions->firstItem() ?? 0 }} to {{ $transactions->lastItem() ?? 0 }}
                         of {{ $transactions->total() }} transactions
                     </div>
                 @endif
@@ -502,7 +502,7 @@
     // Optional: Add loading state for pagination
     document.addEventListener('DOMContentLoaded', function() {
         const paginationLinks = document.querySelectorAll('.pagination a');
-        
+
         paginationLinks.forEach(link => {
             link.addEventListener('click', function() {
                 // Add loading state

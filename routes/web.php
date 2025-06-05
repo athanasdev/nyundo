@@ -111,6 +111,7 @@ Route::get('/deposit/confirm/{id}', [NowPaymentController::class, 'showConfirmDe
     // It is important that this route is under 'auth:web' because the user is currently authenticated via 'web' guard
     Route::get('/impersonate/leave', [ImpersonateController::class, 'leave'])->name('impersonate.leave');
     Route::post('/logout', [UserAuthController::class, 'logout'])->name('user.logout');
+    
 });
 
 
