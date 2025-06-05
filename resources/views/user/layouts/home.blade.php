@@ -135,7 +135,7 @@
                 </div>
             </div>
 
-            <div class="sidebar">
+            {{-- <div class="sidebar">
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">
@@ -143,7 +143,7 @@
                             Quick Actions
                         </div>
                     </div>
-                    {{-- <div class="card-body">
+                    <div class="card-body">
                         <div class="quick-actions">
                             <a href="{{ route('deposit.form') }}" class="action-btn buy">
                                 <i class="fas fa-arrow-down"></i>
@@ -161,7 +161,7 @@
                             </a>
 
                         </div>
-                    </div> --}}
+                    </div>
                 </div>
 
                 <div class="card">
@@ -177,7 +177,8 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
+            
         </div>
     </div>
 @endsection

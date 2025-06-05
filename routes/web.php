@@ -64,16 +64,17 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 Route::middleware(['auth:web'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'home'])->name('dashboard');
-    Route::get('/my-account', [DashboardController::class, 'myaccount'])->name('my-account');
     Route::get('/assets', [DashboardController::class, 'assets'])->name('assets');
     Route::get('/order', [DashboardController::class, 'order'])->name('order');
     Route::get('/my-account', [DashboardController::class, 'myaccount'])->name('my-account');
+    // New route for fetching transactions as JSON for the "my-account" page
+    //Route::get('/my-account/transactions', [DashboardController::class, 'getTransactionsJson'])->name('my-account.transactions.json');
     Route::get('/language', [DashboardController::class, 'language'])->name('language');
 
 
     Route::get('/deposit/form', [NowPaymentController::class, 'paymentForm'])->name("deposit.form");
     Route::post('/payments/create', [NowPaymentcontroller::class, 'createPayment'])->name('payments.create');
-   
+
 Route::get('/deposit/confirm/{id}', [NowPaymentController::class, 'showConfirmDepositPage'])
      ->name('payment.confirm.show');
     Route::post('/ipn-callback', [IPNController::class, 'handle'])->name('ipn.callback');
