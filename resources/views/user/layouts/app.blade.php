@@ -14,11 +14,13 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #0b0e11; /* Match body background */
+            background-color: #0b0e11;
+            /* Match body background */
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 9999; /* Ensure it's on top */
+            z-index: 9999;
+            /* Ensure it's on top */
             opacity: 1;
             transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
             visibility: visible;
@@ -32,16 +34,24 @@
         .preloader .spinner {
             width: 50px;
             height: 50px;
-            border: 5px solid #2b3139; /* Spinner track color */
-            border-top-color: #f0b90b; /* Spinner color - your accent yellow */
+            border: 5px solid #2b3139;
+            /* Spinner track color */
+            border-top-color: #f0b90b;
+            /* Spinner color - your accent yellow */
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
+
         /* --- END PRELOADER STYLES --- */
 
         * {
@@ -57,7 +67,8 @@
             min-height: 100vh;
             font-size: 14px;
             line-height: 1.5;
-            direction: {{ $isRTL ? 'rtl' : 'ltr' }}; /* Dynamic direction */
+            direction: {{ $isRTL ? 'rtl' : 'ltr' }};
+            /* Dynamic direction */
         }
 
         /* Initially hide main content if you want a more controlled reveal,
@@ -75,8 +86,10 @@
             max-width: 1400px;
             margin: 0 auto;
             padding: 16px;
-            padding-top: 150px; /* Account for fixed header AND profile card */
-            padding-bottom: 90px; /* Space for bottom nav */
+            padding-top: 150px;
+            /* Account for fixed header AND profile card */
+            padding-bottom: 90px;
+            /* Space for bottom nav */
         }
 
         .header {
@@ -120,7 +133,8 @@
             margin-left: 8px;
         }
 
-        .logo-link .fas.fa-chart-line { /* Fallback icon */
+        .logo-link .fas.fa-chart-line {
+            /* Fallback icon */
             font-size: 24px;
             color: #f0b90b;
         }
@@ -224,8 +238,7 @@
         .language-dropdown {
             position: absolute;
             top: 100%;
-            {{ $isRTL ? 'left: 0;' : 'right: 0;' }}
-            background: #1e2329;
+            {{ $isRTL ? 'left: 0;' : 'right: 0;' }} background: #1e2329;
             border: 1px solid #2b3139;
             border-radius: 4px;
             min-width: 180px;
@@ -433,25 +446,81 @@
             color: white;
         }
 
-        .btc { background: #f7931a; }
-        .eth { background: #627eea; }
-        .bnb { background: #f0b90b; }
-        .ada { background: #0033ad; }
-        .sol { background: #9945ff; }
-        .dot { background: #e6007a; }
-        .xrp { background: #0077c8; }
-        .doge { background: #c3a634; }
-        .avax { background: #e84142; }
-        .link { background: #2a5ada; }
-        .ltc { background: #bebebe; }
-        .trx { background: #eb0029; }
-        .shib { background: #ffc107; }
-        .uni { background: #ff007a; }
-        .bch { background: #8dc351; }
-        .icp { background: #29abe2; }
-        .xlm { background: #000000; }
-        .atom { background: #5064fb; }
-        .etc { background: #328332; }
+        .btc {
+            background: #f7931a;
+        }
+
+        .eth {
+            background: #627eea;
+        }
+
+        .bnb {
+            background: #f0b90b;
+        }
+
+        .ada {
+            background: #0033ad;
+        }
+
+        .sol {
+            background: #9945ff;
+        }
+
+        .dot {
+            background: #e6007a;
+        }
+
+        .xrp {
+            background: #0077c8;
+        }
+
+        .doge {
+            background: #c3a634;
+        }
+
+        .avax {
+            background: #e84142;
+        }
+
+        .link {
+            background: #2a5ada;
+        }
+
+        .ltc {
+            background: #bebebe;
+        }
+
+        .trx {
+            background: #eb0029;
+        }
+
+        .shib {
+            background: #ffc107;
+        }
+
+        .uni {
+            background: #ff007a;
+        }
+
+        .bch {
+            background: #8dc351;
+        }
+
+        .icp {
+            background: #29abe2;
+        }
+
+        .xlm {
+            background: #000000;
+        }
+
+        .atom {
+            background: #5064fb;
+        }
+
+        .etc {
+            background: #328332;
+        }
 
 
         .coin-details {
@@ -547,7 +616,8 @@
             transform: translateY(-1px);
         }
 
-        .portfolio-item, .activity-item {
+        .portfolio-item,
+        .activity-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -555,7 +625,8 @@
             border-bottom: 1px solid #2b3139;
         }
 
-        .portfolio-item:last-child, .activity-item:last-child {
+        .portfolio-item:last-child,
+        .activity-item:last-child {
             border-bottom: none;
         }
 
@@ -569,56 +640,237 @@
             margin-bottom: 16px;
             border: 1px solid rgba(14, 203, 129, 0.2);
         }
+
         .bot-status.inactive {
             background: rgba(132, 142, 156, 0.1);
             border-color: rgba(132, 142, 156, 0.2);
         }
+
         .bot-status.inactive .status-indicator {
             background: #848e9c;
             animation: none;
         }
-        .bot-status.inactive #botStatusText { color: #848e9c; }
-        .bot-info { display: flex; align-items: center; gap: 12px; }
-        .bot-info i { color: #f0b90b; }
-        #botStatusText { color: #0ecb81; font-weight: 500; }
 
-        .bot-toggle { width: 48px; height: 24px; background: #848e9c; border-radius: 12px; position: relative; cursor: pointer; transition: all 0.3s ease; }
-        .bot-toggle.active { background: #0ecb81; }
-        .bot-toggle::after { content: ''; position: absolute; width: 20px; height: 20px; background: white; border-radius: 50%; top: 2px; left: 2px; transition: all 0.3s ease; }
-        .bot-toggle.active::after { left: 26px; }
+        .bot-status.inactive #botStatusText {
+            color: #848e9c;
+        }
 
-        .status-indicator { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #0ecb81; animation: pulse 2s infinite; }
-        .status-indicator.inactive { background: #848e9c; animation: none; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        .bot-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 16px; }
-        .stat-card { background: #2b3139; padding: 16px; border-radius: 4px; text-align: center; }
-        .stat-value { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
-        .stat-label { font-size: 12px; color: #848e9c; }
+        .bot-info i {
+            color: #f0b90b;
+        }
 
-        .trading-signals { margin-bottom: 16px; }
-        .signal-item { display: flex; align-items: center; justify-content: space-between; padding: 16px; background: #2b3139; border-radius: 4px; margin-bottom: 12px; border-left: 4px solid; }
-        .signal-item.buy { border-left-color: #0ecb81; }
-        .signal-item.buy .signal-type i { color: #0ecb81; }
-        .signal-item.sell { border-left-color: #f6465d; }
-        .signal-item.sell .signal-type i { color: #f6465d; }
-        .signal-info { flex: 1; }
-        .signal-type { font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
-        .signal-details { color: #848e9c; font-size: 12px; }
-        .countdown-timer { text-align: right; min-width: 90px; }
-        .countdown-time { font-size: 18px; font-weight: 600; color: #f0b90b; }
-        .countdown-label { font-size: 11px; color: #848e9c; }
+        #botStatusText {
+            color: #0ecb81;
+            font-weight: 500;
+        }
 
-        .activity-info { display: flex; align-items: center; gap: 12px; }
-        .activity-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; }
-        .activity-icon.buy { background: rgba(14, 203, 129, 0.2); color: #0ecb81; }
-        .activity-icon.sell { background: rgba(246, 70, 93, 0.2); color: #f6465d; }
-        .activity-icon.bot { background: rgba(240, 185, 11, 0.2); color: #f0b90b; }
-        .activity-icon.system { background: rgba(132, 142, 156, 0.2); color: #848e9c; }
-        .activity-details h4 { font-weight: 500; margin-bottom: 2px; color: #eaecef; }
-        .activity-details span { color: #848e9c; font-size: 12px; }
-        .activity-result { text-align: right; }
-        .activity-result strong { font-weight: 500; }
+        .bot-toggle {
+            width: 48px;
+            height: 24px;
+            background: #848e9c;
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .bot-toggle.active {
+            background: #0ecb81;
+        }
+
+        .bot-toggle::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .bot-toggle.active::after {
+            left: 26px;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #0ecb81;
+            animation: pulse 2s infinite;
+        }
+
+        .status-indicator.inactive {
+            background: #848e9c;
+            animation: none;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .stat-card {
+            background: #2b3139;
+            padding: 16px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #848e9c;
+        }
+
+        .trading-signals {
+            margin-bottom: 16px;
+        }
+
+        .signal-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            background: #2b3139;
+            border-radius: 4px;
+            margin-bottom: 12px;
+            border-left: 4px solid;
+        }
+
+        .signal-item.buy {
+            border-left-color: #0ecb81;
+        }
+
+        .signal-item.buy .signal-type i {
+            color: #0ecb81;
+        }
+
+        .signal-item.sell {
+            border-left-color: #f6465d;
+        }
+
+        .signal-item.sell .signal-type i {
+            color: #f6465d;
+        }
+
+        .signal-info {
+            flex: 1;
+        }
+
+        .signal-type {
+            font-weight: 600;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .signal-details {
+            color: #848e9c;
+            font-size: 12px;
+        }
+
+        .countdown-timer {
+            text-align: right;
+            min-width: 90px;
+        }
+
+        .countdown-time {
+            font-size: 18px;
+            font-weight: 600;
+            color: #f0b90b;
+        }
+
+        .countdown-label {
+            font-size: 11px;
+            color: #848e9c;
+        }
+
+        .activity-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .activity-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .activity-icon.buy {
+            background: rgba(14, 203, 129, 0.2);
+            color: #0ecb81;
+        }
+
+        .activity-icon.sell {
+            background: rgba(246, 70, 93, 0.2);
+            color: #f6465d;
+        }
+
+        .activity-icon.bot {
+            background: rgba(240, 185, 11, 0.2);
+            color: #f0b90b;
+        }
+
+        .activity-icon.system {
+            background: rgba(132, 142, 156, 0.2);
+            color: #848e9c;
+        }
+
+        .activity-details h4 {
+            font-weight: 500;
+            margin-bottom: 2px;
+            color: #eaecef;
+        }
+
+        .activity-details span {
+            color: #848e9c;
+            font-size: 12px;
+        }
+
+        .activity-result {
+            text-align: right;
+        }
+
+        .activity-result strong {
+            font-weight: 500;
+        }
 
         .bottom-nav {
             position: fixed;
@@ -680,25 +932,32 @@
         [dir="rtl"] .header-left {
             flex-direction: row-reverse;
         }
+
         [dir="rtl"] .header-actions {
             flex-direction: row-reverse;
         }
+
         [dir="rtl"] .nav-container {
             flex-direction: row-reverse;
         }
+
         [dir="rtl"] .user-profile-card {
             /* flex-direction: row-reverse; */
         }
+
         [dir="rtl"] .balance-item {
-             text-align: left;
+            text-align: left;
         }
+
         [dir="rtl"] .logo-text {
             margin-left: 0;
             margin-right: 8px;
         }
+
         [dir="rtl"] .language-btn {
             /* flex-direction: row-reverse; */
         }
+
         [dir="rtl"] .language-option {
             /* flex-direction: row-reverse; */
         }
@@ -707,12 +966,15 @@
             .dashboard-grid {
                 grid-template-columns: 1fr;
             }
+
             .sidebar {
                 order: -1;
             }
+
             .header-left {
                 flex-grow: 1;
             }
+
             .header-actions {
                 flex-shrink: 0;
             }
@@ -724,94 +986,132 @@
                 padding-top: 135px;
                 padding-bottom: 75px;
             }
+
             .header {
                 flex-direction: column;
                 height: auto;
                 gap: 10px;
                 padding: 10px;
             }
+
             .header-left {
                 flex-direction: column;
                 gap: 10px;
                 width: 100%;
             }
+
             .user-balance-display {
                 justify-content: space-around;
                 width: 100%;
                 margin-top: 10px;
             }
+
             .header-actions {
                 margin-top: 10px;
                 width: 100%;
                 justify-content: space-around;
             }
+
             .user-profile-card {
                 margin-top: 5px;
                 flex-direction: column;
                 text-align: center;
             }
+
             .profile-details {
                 align-items: center;
             }
+
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
+
             .chart-container {
                 height: 250px;
             }
-            .nav-item i { font-size: 16px; }
-            .nav-text { font-size: 10px; }
+
+            .nav-item i {
+                font-size: 16px;
+            }
+
+            .nav-text {
+                font-size: 10px;
+            }
         }
 
         @media (max-width: 480px) {
             .container-main {
                 padding-top: 150px;
             }
+
             .quick-actions {
                 grid-template-columns: 1fr;
             }
+
             .stats-grid {
                 grid-template-columns: 1fr;
             }
+
             .coin-item {
                 padding: 10px 16px;
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 8px;
             }
+
             .coin-price {
                 text-align: left;
                 width: 100%;
             }
+
             [dir="rtl"] .coin-price {
                 /* text-align: right; */
             }
+
             .signal-item {
                 padding: 12px;
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 8px;
             }
+
             .countdown-timer {
                 text-align: left;
                 width: 100%;
             }
+
             .nav-container {
                 justify-content: space-between;
             }
-            .nav-item { padding: 6px 8px; gap: 2px; }
-            .nav-item i { font-size: 14px; }
+
+            .nav-item {
+                padding: 6px 8px;
+                gap: 2px;
+            }
+
+            .nav-item i {
+                font-size: 14px;
+            }
+
             .header-actions {
                 flex-wrap: wrap;
                 justify-content: center;
                 gap: 8px;
             }
-            .header-action-btn, .language-btn {
+
+            .header-action-btn,
+            .language-btn {
                 padding: 6px 10px;
                 font-size: 11px;
             }
-            .logo-text { font-size: 18px; }
-            .header-logo-img { height: 28px; }
+
+            .logo-text {
+                font-size: 18px;
+            }
+
+            .header-logo-img {
+                height: 28px;
+            }
         }
 
         .alert {
@@ -821,16 +1121,41 @@
             font-size: 0.9em;
             border: 1px solid transparent;
         }
-        .alert-error { color: #f6465d; background-color: rgba(246, 70, 93, 0.1); border-color: rgba(246, 70, 93, 0.3); }
-        .alert-error ul { list-style-position: inside; padding-left: 5px; margin-bottom: 0; }
-        .alert-error li { margin-bottom: 5px; }
-        .alert-error li:last-child { margin-bottom: 0; }
-        .alert-success { color: #0ecb81; background-color: rgba(14, 203, 129, 0.1); border-color: rgba(14, 203, 129, 0.3); }
-        .alert-info { color: #f0b90b; background-color: rgba(240, 185, 11, 0.1); border-color: rgba(240, 185, 11, 0.3); }
 
+        .alert-error {
+            color: #f6465d;
+            background-color: rgba(246, 70, 93, 0.1);
+            border-color: rgba(246, 70, 93, 0.3);
+        }
+
+        .alert-error ul {
+            list-style-position: inside;
+            padding-left: 5px;
+            margin-bottom: 0;
+        }
+
+        .alert-error li {
+            margin-bottom: 5px;
+        }
+
+        .alert-error li:last-child {
+            margin-bottom: 0;
+        }
+
+        .alert-success {
+            color: #0ecb81;
+            background-color: rgba(14, 203, 129, 0.1);
+            border-color: rgba(14, 203, 129, 0.3);
+        }
+
+        .alert-info {
+            color: #f0b90b;
+            background-color: rgba(240, 185, 11, 0.1);
+            border-color: rgba(240, 185, 11, 0.3);
+        }
     </style>
     @stack('styles')
-    <script src="//code.jivosite.com/widget/ohg15eo48L" async></script>
+    {{-- <script src="//code.jivosite.com/widget/ohg15eo48L" async></script> --}}
 </head>
 
 <body>
@@ -843,7 +1168,8 @@
             <a href="{{ route('dashboard') }}" class="logo-link">
                 <img src="{{ asset('images/logo/logo.png') }}" alt="Soria10 Logo" class="header-logo-img"
                     onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';">
-                <span class="logo-text" style="display:none;"><i class="fas fa-chart-line icon-fallback"></i> Soria10</span>
+                <span class="logo-text" style="display:none;"><i class="fas fa-chart-line icon-fallback"></i>
+                    Soria10</span>
             </a>
             <div class="user-balance-display">
                 <div class="balance-item">
@@ -862,10 +1188,10 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="language-dropdown" id="languageDropdown">
-                    @if(isset($availableLanguages) && is_array($availableLanguages))
-                        @foreach($availableLanguages as $code => $language)
+                    @if (isset($availableLanguages) && is_array($availableLanguages))
+                        @foreach ($availableLanguages as $code => $language)
                             <a href="{{ route('language.change', $code) }}"
-                               class="language-option {{ $code == $currentLanguage ? 'active' : '' }}">
+                                class="language-option {{ $code == $currentLanguage ? 'active' : '' }}">
                                 <span class="language-flag">{{ $language['flag'] }}</span>
                                 <span class="language-name">{{ $language['name'] }}</span>
                             </a>
@@ -883,11 +1209,11 @@
 
             @php
                 $user = Auth::user();
-                $needsSetup = $user ? (is_null($user->withdrawal_address) || is_null($user->withdrawal_pin_hash)) : true;
+                $needsSetup = $user ? is_null($user->withdrawal_address) || is_null($user->withdrawal_pin_hash) : true;
             @endphp
 
             <a href="{{ $needsSetup ? route('withdraw.setup') : route('withdraw') }}" id="withdrawButton"
-               class="header-action-btn">
+                class="header-action-btn">
                 <i class="fas fa-arrow-alt-circle-up"></i> {{ __('messages.withdraw') }}
             </a>
             @auth
@@ -920,7 +1246,7 @@
     <nav class="bottom-nav">
         <div class="nav-container">
             <a href="{{ route('dashboard') }}"
-               class="nav-item {{ Request::is('dashboard') || Request::is('/') ? 'active' : '' }}">
+                class="nav-item {{ Request::is('dashboard') || Request::is('/') ? 'active' : '' }}">
                 <i class="fas fa-home"></i>
                 <span class="nav-text">{{ __('messages.home') }}</span>
             </a>
@@ -1000,5 +1326,21 @@
     </script>
 
     @stack('scripts')
+    <!--Start of Tawk.to Script-->
+    <script type="text/javascript">
+        var Tawk_API = Tawk_API || {},
+            Tawk_LoadStart = new Date();
+        (function() {
+            var s1 = document.createElement("script"),
+                s0 = document.getElementsByTagName("script")[0];
+            s1.async = true;
+            s1.src = 'https://embed.tawk.to/684180efa46165190e5866cf/1isvtvaan';
+            s1.charset = 'UTF-8';
+            s1.setAttribute('crossorigin', '*');
+            s0.parentNode.insertBefore(s1, s0);
+        })();
+    </script>
+    <!--End of Tawk.to Script-->
 </body>
+
 </html>
