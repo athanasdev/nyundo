@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Log;
 
 Route::middleware('guest')->group(function () {
     Route::get('/', [UserAuthController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [UserAuthController::class, 'login']);
+    Route::post('/login', [UserAuthController::class, 'login'])->name('user.login');
 });
 
 Route::get('/register', [UserAuthController::class, 'showRegisterForm'])->name('register');

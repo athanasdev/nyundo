@@ -293,7 +293,7 @@
 
 
     <div class="login-card-container">
-        <form action="{{ route('login') }}" method="POST">
+        <form action="{{ route('user.login') }}" method="POST">
             <div class="login-header">
                 @csrf
                 <img src="{{ asset('images/logo/logo.png') }}" alt="TradePro Logo" class="form-logo">
