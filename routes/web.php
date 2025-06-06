@@ -35,9 +35,8 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::get('/register', [UserAuthController::class, 'showRegisterForm'])->name('register');
-Route::post('/register', [UserAuthController::class, 'register'])->name('register');
-// Route::get('/login', [UserAuthController::class, 'showLoginForm'])->name('login');
-// Route::post('/login', [UserAuthController::class, 'login']);
+Route::post('/register', [UserAuthController::class, 'register'])->name('user.register');
+
 
 
 Route::get('/password/reset', [CustomPasswordResetController::class, 'showRequestForm'])->name('password.request');
@@ -75,8 +74,7 @@ Route::middleware(['auth:web'])->group(function () {
     Route::get('/deposit/form', [NowPaymentController::class, 'paymentForm'])->name("deposit.form");
     Route::post('/payments/create', [NowPaymentcontroller::class, 'createPayment'])->name('payments.create');
 
-Route::get('/deposit/confirm/{id}', [NowPaymentController::class, 'showConfirmDepositPage'])
-     ->name('payment.confirm.show');
+    Route::get('/deposit/confirm/{id}', [NowPaymentController::class, 'showConfirmDepositPage'])->name('payment.confirm.show');
     Route::post('/ipn-callback', [IPNController::class, 'handle'])->name('ipn.callback');
     Route::get('/nowpayments/balance', [NowPaymentController::class, 'checkBalance']);
     Route::post('/nowpayments/validate-address', [NowPaymentController::class, 'validateAddress']);
@@ -111,7 +109,7 @@ Route::get('/deposit/confirm/{id}', [NowPaymentController::class, 'showConfirmDe
     // It is important that this route is under 'auth:web' because the user is currently authenticated via 'web' guard
     Route::get('/impersonate/leave', [ImpersonateController::class, 'leave'])->name('impersonate.leave');
     Route::post('/logout', [UserAuthController::class, 'logout'])->name('user.logout');
-    
+
 });
 
 
@@ -176,3 +174,12 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
 
 Route::get('/language/{language}', [App\Http\Controllers\LanguageController::class, 'changeLanguage'])
     ->name('language.change');
+
+
+Route::get('/check-time', function () {
+    return [
+        'App timezone' => config('app.timezone'),
+        'Carbon::now()' => Carbon\Carbon::now()->toDateTimeString(),
+        'Carbon::now(UTC)' => Carbon\Carbon::now('UTC')->toDateTimeString(),
+    ];
+});

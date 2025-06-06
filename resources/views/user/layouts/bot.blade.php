@@ -561,6 +561,31 @@
                 </div>
             </div>
 
+            <div class="section">
+                @if (session('success'))
+                    <div class="alert alert-success" role="alert">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                @if (session('error'))
+                    <div class="alert alert-danger" role="alert">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
+                {{-- This handles validation errors, like 'amount' being too high --}}
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+            </div>
             {{-- Trading Form - Show if bot is active and user can place trades --}}
             <div id="tradingFormCard" class="card trading-form-card" style="display: none;">
                 <div class="card-header">
@@ -681,7 +706,8 @@
                                 </span>
                             </p>
                             <p><strong>Current PNL (Est.):</strong>
-                                <span id="activeTradePnl_{{ $investment->id }}" class="pnl-positive">Calculating...</span>
+                                <span id="activeTradePnl_{{ $investment->id }}"
+                                    class="pnl-positive">Calculating...</span>
                             </p>
 
                             <form method="POST" action="{{ route('bot.close_trade') }}">
@@ -865,7 +891,10 @@
                 for (let i = 0; i < 50; i++) {
                     const time = new Date();
                     time.setMinutes(time.getMinutes() - (49 - i));
-                    labels.push(time.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
+                    labels.push(time.toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    }));
 
                     // Generate realistic price movement
                     const change = (Math.random() - 0.5) * 200;
@@ -873,7 +902,10 @@
                     prices.push(currentPrice);
                 }
 
-                return { labels, prices };
+                return {
+                    labels,
+                    prices
+                };
             }
 
             function updateChartData() {
@@ -886,7 +918,10 @@
 
                 // Add new data point
                 const now = new Date();
-                candlestickChart.data.labels.push(now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
+                candlestickChart.data.labels.push(now.toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }));
                 candlestickChart.data.datasets[0].data.push(newPrice);
 
                 // Remove old data points (keep last 50)
@@ -938,7 +973,8 @@
 
                         signalStatus.textContent = 'Waiting';
                         signalStatus.className = 'signal-status waiting';
-                        countdownDisplay.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                        countdownDisplay.textContent =
+                            `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
                         countdownLabel.textContent = 'Time until signal opens';
                     } else if (now >= startTime && now < endTime) {
                         // Signal is active
@@ -949,7 +985,8 @@
 
                         signalStatus.textContent = 'Active';
                         signalStatus.className = 'signal-status active';
-                        countdownDisplay.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                        countdownDisplay.textContent =
+                            `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
                         countdownLabel.textContent = 'Time remaining to trade';
                     } else {
                         // Signal has expired

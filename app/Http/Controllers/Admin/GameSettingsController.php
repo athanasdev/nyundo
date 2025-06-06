@@ -23,8 +23,6 @@ class GameSettingsController extends Controller
 
     public function store(Request $request)
     {
-        // $adminTimezone = GameSetting::getAdminTimezone();
-
         $validatedData = $request->validate([
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i',
@@ -35,30 +33,31 @@ class GameSettingsController extends Controller
             'crypto_category' => 'required|in:XRP,BTC,ETH,SOLANA,PI',
         ]);
 
+        // Get the application's configured timezone (e.g., 'Africa/Nairobi')
+        $appTimezone = config('app.timezone');
 
-        $todayInAdminTimezone = Carbon::now();
+        // Create Carbon instances from the time string, specifying they are in the app's timezone
+        $startTime = Carbon::createFromFormat('H:i', $validatedData['start_time'], $appTimezone);
+        $endTime = Carbon::createFromFormat('H:i', $validatedData['end_time'], $appTimezone);
 
-        $startTime = $todayInAdminTimezone->copy()->setTimeFromTimeString($validatedData['start_time']);
-        $endTime = $todayInAdminTimezone->copy()->setTimeFromTimeString($validatedData['end_time']);
-
+        // If the end time is on the next day (e.g., starts at 23:00, ends at 01:00)
         if ($endTime->lt($startTime)) {
             $endTime->addDay();
         }
 
-        if ($endTime->lte($startTime)) {
-            return back()->withInput()->withErrors(['end_time' => 'The end time must be after the start time.']);
-        }
-
         try {
+            // Prepare data for creation
+            $dataToCreate = $validatedData;
+
             // Convert checkbox values properly
-            $validatedData['is_active'] = $request->boolean('is_active');
-            $validatedData['payout_enabled'] = $request->boolean('payout_enabled');
+            $dataToCreate['is_active'] = $request->boolean('is_active');
+            $dataToCreate['payout_enabled'] = $request->boolean('payout_enabled');
 
-            // Convert to UTC for storage
-            $validatedData['start_time'] = $startTime->copy()->setTimezone('UTC');
-            $validatedData['end_time'] = $endTime->copy()->setTimezone('UTC');
+            // The Carbon instances are already timezone-aware, so setTimezone converts them to UTC for storage
+            $dataToCreate['start_time'] = $startTime;
+            $dataToCreate['end_time'] = $endTime;
 
-            GameSetting::create($validatedData);
+            GameSetting::create($dataToCreate);
 
             return redirect()->route('admin.game_settings.index')->with('success', 'Game setting created successfully.');
         } catch (\Exception $e) {
@@ -67,52 +66,57 @@ class GameSettingsController extends Controller
         }
     }
 
+
     public function edit(GameSetting $gameSetting)
     {
         return view('admin.dashbord.game.edit', compact('gameSetting'));
     }
 
-    public function update(Request $request, GameSetting $gameSetting)
-    {
-        // $adminTimezone = GameSetting::getAdminTimezone();
 
-        $validatedData = $request->validate([
-            'start_time' => 'required|date_format:H:i',
-            'end_time' => 'required|date_format:H:i',
-            'earning_percentage' => 'required|numeric|min:0|max:100',
-            'is_active' => 'nullable|boolean',
-            'payout_enabled' => 'nullable|boolean',
-            'type' => 'required|in:buy,sell',
-            'crypto_category' => 'required|in:XRP,BTC,ETH,SOLANA,PI',
-        ]);
+public function update(Request $request, GameSetting $gameSetting)
+{
+    $validatedData = $request->validate([
+        'start_time' => 'required|date_format:H:i',
+        'end_time' => 'required|date_format:H:i',
+        'earning_percentage' => 'required|numeric|min:0|max:100',
+        'is_active' => 'nullable|boolean',
+        'payout_enabled' => 'nullable|boolean',
+        'type' => 'required|in:buy,sell',
+        'crypto_category' => 'required|in:XRP,BTC,ETH,SOLANA,PI',
+    ]);
 
+    // Get the application's configured timezone
+    $appTimezone = config('app.timezone');
 
-        $startTime = Carbon::createFromFormat('H:i', $validatedData['start_time']);
-        $endTime = Carbon::createFromFormat('H:i', $validatedData['end_time']);
+    // Create Carbon instances from the time string in the correct timezone
+    $startTime = Carbon::createFromFormat('H:i', $validatedData['start_time'], $appTimezone);
+    $endTime = Carbon::createFromFormat('H:i', $validatedData['end_time'], $appTimezone);
 
-        if ($endTime->lt($startTime)) {
-            $endTime->addDay();
-        }
-
-        if ($endTime->lte($startTime)) {
-            return back()->withInput()->withErrors(['end_time' => 'The end time must be after the start time.']);
-        }
-
-        try {
-            $validatedData['is_active'] = $request->boolean('is_active');
-            $validatedData['payout_enabled'] = $request->boolean('payout_enabled');
-
-            $validatedData['start_time'] = $startTime->copy()->setTimezone('UTC');
-            $validatedData['end_time'] = $endTime->copy()->setTimezone('UTC');
-
-            $gameSetting->update($validatedData);
-
-            return redirect()->route('admin.game_settings.index')->with('success', 'Game setting updated successfully.');
-        } catch (\Exception $e) {
-            Log::error("Error updating game setting {$gameSetting->id}: " . $e->getMessage());
-            return back()->withInput()->with('error', 'Failed to update game setting. Please try again.');
-        }
+    if ($endTime->lt($startTime)) {
+        $endTime->addDay();
     }
+
+    try {
+        $dataToUpdate = $validatedData;
+        $dataToUpdate['is_active'] = $request->boolean('is_active');
+        $dataToUpdate['payout_enabled'] = $request->boolean('payout_enabled');
+
+        // Convert to UTC for storage
+        $dataToUpdate['start_time'] = $startTime;
+        $dataToUpdate['end_time'] = $endTime;
+
+        $gameSetting->update($dataToUpdate);
+
+        return redirect()->route('admin.game_settings.index')->with('success', 'Game setting updated successfully.');
+    } catch (\Exception $e) {
+        Log::error("Error updating game setting {$gameSetting->id}: " . $e->getMessage());
+        return back()->withInput()->with('error', 'Failed to update game setting. Please try again.');
+    }
+
+
+}
+
+
 
     public function destroy(GameSetting $gameSetting)
     {

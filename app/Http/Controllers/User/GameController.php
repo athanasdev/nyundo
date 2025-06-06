@@ -20,53 +20,6 @@ class GameController extends Controller
 {
 
 
-    // public function aitrading()
-    // {
-    //     /** @var \App\Models\User $user */
-    //     $user = Auth::user();
-
-    //     if (!$user) {
-    //         // This check might be redundant if your middleware('auth') handles it,
-    //         // but doesn't hurt as a safeguard.
-    //         return redirect()->route('login')->with('error', 'Please log in to view this page.');
-    //     }
-
-    //     $now = Carbon::now();
-    //     $activeGameSetting = GameSetting::where('is_active', true)
-    //         ->where('start_time', '<=', $now)
-    //         ->where('end_time', '>=', $now)
-    //         ->orderBy('start_time', 'desc')
-    //         ->first();
-
-
-    //     $activeUserInvestment = null;
-    //     if ($activeGameSetting && $user) { // Ensure user is available
-    //         $activeUserInvestment = UserInvestment::where('user_id', $user->id)
-    //             ->where('game_setting_id', $activeGameSetting->id)
-    //             ->where('investment_result', 'pending')
-    //             ->get();
-    //     }
-
-    //     // Placeholder data for bot stats - you should fetch/calculate these
-    //     // These should ideally come from a service or another model, not hardcoded.
-    //     $bot_profit_24h = 0.00;
-    //     $bot_trades_24h = 0;
-    //     $bot_success_rate = 0.0;
-    //     $bot_uptime_seconds = 0;
-    //     $is_bot_globally_active = true; // This should be a system setting
-
-    //     return view('user.layouts.bot', compact( // Ensure this view path is correct
-    //         'user',
-    //         'activeGameSetting',
-    //         'activeUserInvestment',
-    //         'bot_profit_24h',
-    //         'bot_trades_24h',
-    //         'bot_success_rate',
-    //         'bot_uptime_seconds',
-    //         'is_bot_globally_active'
-    //     ));
-    // }
-
     public function aitrading()
     {
         /** @var \App\Models\User $user */
@@ -100,7 +53,7 @@ class GameController extends Controller
             $activeUserInvestment = UserInvestment::where('user_id', $user->id)
                 // Assuming game_setting_id links UserInvestment to GameSetting
                 // Add this if you have such a link and want trades for *this specific* game
-                // ->where('game_setting_id', $activeGameSetting->id)
+                ->where('game_setting_id', $activeGameSetting->id)
                 ->where('investment_result', 'pending') // Or your equivalent for active/ongoing trades
                 // Ensure UserInvestment also has a concept of its own end_time if not strictly tied to game_setting_id
                 // For example, if UserInvestment has its own 'ends_at' field:
@@ -132,15 +85,91 @@ class GameController extends Controller
     /**
      * Place a new trade (UserInvestment).
      */
+
+    /**
+     * Place a new trade for the authenticated user.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    // In app/Http/Controllers/User/GameController.php
+
+    // public function placeTrade(Request $request)
+    // {
+    //     /** @var \App\Models\User $user */
+    //     $user = Auth::user();
+
+    //     // This will now use the timezone from your .env file (Africa/Nairobi)
+    //     $now = Carbon::now();
+
+    //     $validatedData = $request->validate([
+    //         'crypto_category' => ['required', Rule::in(['XRP', 'BTC', 'ETH', 'SOLANA', 'PI'])],
+    //         'trade_type' => ['required', Rule::in(['buy', 'sell'])],
+    //         'amount' => 'required|numeric|min:1|max:' . $user->balance,
+    //     ], [
+    //         'amount.max' => 'Insufficient balance for this trade amount.',
+    //         'amount.min' => 'Minimum trade amount is $1.'
+    //     ]);
+
+    //     // The query now compares local time to local time in the database
+    //     $gameSetting = GameSetting::where('is_active', true)
+    //         ->where('start_time', '<=', $now)
+    //         ->where('end_time', '>', $now)
+    //         ->orderBy('start_time', 'desc')
+    //         ->first();
+
+    //     if (!$gameSetting) {
+    //         return redirect()->back()->with('error', 'The trading signal is not active or has just expired.')->withInput();
+    //     }
+
+    //     $existingInvestment = UserInvestment::where('user_id', $user->id)
+    //         ->where('game_setting_id', $gameSetting->id)
+    //         ->where('investment_result', 'pending')
+    //         ->first();
+
+    //     if ($existingInvestment) {
+    //         return redirect()->back()->with('error', 'You already have an active trade in this signal.')->withInput();
+    //     }
+
+    //     DB::beginTransaction();
+    //     try {
+    //         $user->balance -= $validatedData['amount'];
+    //         $user->save();
+
+    //         UserInvestment::create([
+    //             'user_id' => $user->id,
+    //             'game_setting_id' => $gameSetting->id,
+    //             'investment_date' => $now->toDateString(),
+    //             'amount' => $validatedData['amount'],
+    //             'daily_profit_amount' => 0,
+    //             'total_profit_paid_out' => 0,
+    //             'principal_returned' => false,
+    //             'game_start_time' => $gameSetting->start_time,
+    //             'game_end_time' => $gameSetting->end_time,
+    //             'type' => $validatedData['trade_type'],
+    //             'crypto_category' => $validatedData['crypto_category'],
+    //             'investment_result' => 'pending',
+    //         ]);
+
+    //         DB::commit();
+    //         return redirect()->route('ai-trading')->with('success', 'Trade placed successfully!');
+    //     } catch (\Exception $e) {
+    //         DB::rollBack();
+    //         Log::error('Error placing trade: ' . $e->getMessage());
+    //         return redirect()->back()->with('error', 'A server error occurred. Please try again.')->withInput();
+    //     }
+    // }
+
+
     public function placeTrade(Request $request)
     {
-
         /** @var \App\Models\User $user */
         $user = Auth::user();
+
+        // Using your app's local timezone as requested
         $now = Carbon::now();
 
         $validatedData = $request->validate([
-            // 'game_setting_id' => 'required|exists:game_settings,id',
             'crypto_category' => ['required', Rule::in(['XRP', 'BTC', 'ETH', 'SOLANA', 'PI'])],
             'trade_type' => ['required', Rule::in(['buy', 'sell'])],
             'amount' => 'required|numeric|min:1|max:' . $user->balance,
@@ -149,31 +178,23 @@ class GameController extends Controller
             'amount.min' => 'Minimum trade amount is $1.'
         ]);
 
-        // $gameSetting = GameSetting::find($validatedData['game_setting_id']);
-
-        // $gameSetting = GameSetting::where('is_active', true)
-        //     ->where('start_time', '<=', $now)
-        //     ->where('end_time', '>=', $now)
-        //     ->first();
-
-        $gameSetting = \App\Models\GameSetting::where('is_active', true)
+        $gameSetting = GameSetting::where('is_active', true)
             ->where('start_time', '<=', $now)
-            ->where('end_time', '>=', $now)
+            ->where('end_time', '>', $now)
             ->orderBy('start_time', 'desc')
             ->first();
 
-
-        if (!$gameSetting || !$gameSetting->is_active || $now->lt($gameSetting->start_time) || $now->gt($gameSetting->end_time)) {
-            return redirect()->back()->with('error', 'The selected siginal is not currently active or has expired.')->withInput();
+        if (!$gameSetting) {
+            return redirect()->back()->with('error', 'The trading signal is not active or has just expired.')->withInput();
         }
 
         $existingInvestment = UserInvestment::where('user_id', $user->id)
             ->where('game_setting_id', $gameSetting->id)
-            ->whereNull('investment_result')
+            ->where('investment_result', 'pending')
             ->first();
 
         if ($existingInvestment) {
-            return redirect()->back()->with('error', 'You already have an active trade in this siginal.')->withInput();
+            return redirect()->back()->with('error', 'You already have an active trade in this signal.')->withInput();
         }
 
         DB::beginTransaction();
@@ -196,16 +217,16 @@ class GameController extends Controller
                 'investment_result' => 'pending',
             ]);
 
-            // Transaction::create([...]); // Log transaction
             DB::commit();
-            return redirect()->route('bot.control')->with('success', 'Trade placed successfully! Waiting for siginal to end.');
+            return redirect()->route('ai-trading')->with('success', 'Trade placed successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Error placing trade: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Could not place trade. Please try again.')->withInput();
+
+            // THIS WILL NOW RUN AND SHOW YOU THE EXACT DATABASE ERROR
+            // Please copy the entire message it displays.
+            dd('An exception was caught:', $e->getMessage());
         }
     }
-
     /**
      * Close an active trade and determine result.
      */
@@ -334,49 +355,6 @@ class GameController extends Controller
      * Distribute referral commissions based on a user's profit from a specific investment.
      */
 
-    // public function distributeReferralCommissions(User $referredUser, float $qualifyingAmount)
-    // {
-    //     // Fetch all active referral levels and their percentages, ordered by level
-    //     $referralLevels = Referral::where('status', 1)->orderBy('level')->get();
-
-    //     // Get the initial referrer (Level 1 referrer)
-    //     // Ensure you have a 'referrer' relationship defined in your User model
-    //     // e.g., public function referrer() { return $this->belongsTo(User::class, 'referred_by'); }
-    //     $currentReferrer = $referredUser->referrer;
-
-    //     $level = 1;
-
-    //     // Loop through the referral chain and distribute commissions
-    //     while ($currentReferrer && $level <= $referralLevels->count()) {
-    //         // Find the commission percentage for the current level
-    //         $referralSetting = $referralLevels->where('level', $level)->first();
-
-    //         if ($referralSetting && $referralSetting->percent > 0) {
-    //             $commissionAmount = ($qualifyingAmount * $referralSetting->percent) / 100;
-
-    //             // Ensure balance update and transaction logging for commission are atomic
-    //             DB::transaction(function () use ($currentReferrer, $commissionAmount, $level, $referredUser) {
-    //                 $referrerBalanceBefore = $currentReferrer->balance;
-    //                 $currentReferrer->balance += $commissionAmount;
-    //                 $currentReferrer->save();
-
-    //                 // Record the commission transaction for the referrer
-    //                 Transaction::create([
-    //                     'user_id'        => $currentReferrer->id,
-    //                     'type'           => 'credit',
-    //                     'amount'         => $commissionAmount,
-    //                     'balance_before' => $referrerBalanceBefore,
-    //                     'balance_after'  => $currentReferrer->balance,
-    //                     'description'    => "Referral Commission (Level {$level}) from {$referredUser->username}'s activity",
-    //                 ]);
-    //             });
-    //         }
-
-    //         // Move up to the next level in the referral chain
-    //         $currentReferrer = $currentReferrer->referrer; // Go to the current referrer's referrer
-    //         $level++;
-    //     }
-    // }
 
 
     protected function distributeReferralCommissions(User $referredUser, float $profitAmount)
