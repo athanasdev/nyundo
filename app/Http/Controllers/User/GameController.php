@@ -94,12 +94,15 @@ class GameController extends Controller
      */
     // In app/Http/Controllers/User/GameController.php
 
+
+
+
     // public function placeTrade(Request $request)
     // {
     //     /** @var \App\Models\User $user */
     //     $user = Auth::user();
 
-    //     // This will now use the timezone from your .env file (Africa/Nairobi)
+    //     // Using your app's local timezone as requested
     //     $now = Carbon::now();
 
     //     $validatedData = $request->validate([
@@ -111,7 +114,6 @@ class GameController extends Controller
     //         'amount.min' => 'Minimum trade amount is $1.'
     //     ]);
 
-    //     // The query now compares local time to local time in the database
     //     $gameSetting = GameSetting::where('is_active', true)
     //         ->where('start_time', '<=', $now)
     //         ->where('end_time', '>', $now)
@@ -155,18 +157,19 @@ class GameController extends Controller
     //         return redirect()->route('ai-trading')->with('success', 'Trade placed successfully!');
     //     } catch (\Exception $e) {
     //         DB::rollBack();
-    //         Log::error('Error placing trade: ' . $e->getMessage());
-    //         return redirect()->back()->with('error', 'A server error occurred. Please try again.')->withInput();
+
+    //         // THIS WILL NOW RUN AND SHOW YOU THE EXACT DATABASE ERROR
+    //         // Please copy the entire message it displays.
+    //         dd('An exception was caught:', $e->getMessage());
     //     }
     // }
-
 
     public function placeTrade(Request $request)
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        // Using your app's local timezone as requested
+        // Using your app's local timezone as configured in .env
         $now = Carbon::now();
 
         $validatedData = $request->validate([
@@ -222,9 +225,9 @@ class GameController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
 
-            // THIS WILL NOW RUN AND SHOW YOU THE EXACT DATABASE ERROR
-            // Please copy the entire message it displays.
-            dd('An exception was caught:', $e->getMessage());
+            // Log the error for your records and return a friendly message to the user
+            Log::error('Error placing trade: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'A server error occurred. Please try again.')->withInput();
         }
     }
     /**
