@@ -33,6 +33,13 @@
             vertical-align: middle;
         }
 
+        .coins-table a {
+            text-decoration: none;
+            /* This removes the underline */
+            color: inherit;
+            /* This makes the text inside the link keep its original color */
+        }
+
         .coins-table .coin-market-info {
             display: flex;
             align-items: center;
@@ -178,7 +185,7 @@
                     </div>
                 </div>
             </div> --}}
-            
+
         </div>
     </div>
 @endsection
@@ -381,7 +388,7 @@
 
                 // Update table cells directly
                 updateElementsByClass(`${symbolBase}-price`,
-                `${formatCurrency(price, 2, 4)} USDT`); // Show more precision for price
+                    `${formatCurrency(price, 2, 4)} USDT`); // Show more precision for price
 
                 const percentContent = priceChangePercent >= 0 ?
                     `${upArrowSVG}<span>${formatPercentage(priceChangePercent)}</span>` :
