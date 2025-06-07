@@ -1203,9 +1203,9 @@
                 </div>
             </div>
 
-            <a href="#" class="header-action-btn">
+            {{-- <a href="#" class="header-action-btn">
                 <i class="fas fa-comment"></i> {{ __('messages.support') }}
-            </a>
+            </a> --}}
             <a href="{{ route('deposit.form') }}" class="header-action-btn">
                 <i class="fas fa-arrow-alt-circle-down"></i> {{ __('messages.deposit') }}
             </a>

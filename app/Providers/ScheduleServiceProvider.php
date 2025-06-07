@@ -22,12 +22,8 @@ class ScheduleServiceProvider extends ServiceProvider
     public function boot(Schedule $schedule): void
     {
         $schedule->command('trades:close-pending')->everyMinute();
-        // $schedule->command('trades:close-pending')->everyMinute()
-        // ->before(function () {
-        //     Log::info('Starting trade closure schedule...');
-        // })->after(function () {
-        //     Log::info('Finished trade closure schedule.');
-        // });
+
     }
+
 
 }
