@@ -58,9 +58,9 @@ class AdminUserController extends Controller
     public function systemLogs()
 
     {
-         $transactions = Transaction::select('id', 'user_id', 'type', 'amount', 'description', 'created_at')
+        $transactions = Transaction::select('id', 'user_id', 'type', 'amount', 'description', 'created_at')
             ->paginate(10);
-         return view('admin.dashbord.pages.logs', compact('transactions'));
+        return view('admin.dashbord.pages.logs', compact('transactions'));
     }
 
 
@@ -185,8 +185,6 @@ class AdminUserController extends Controller
             'total_deposits',
             'total_commissions'
         ));
-
-        
     }
 
 
@@ -225,10 +223,6 @@ class AdminUserController extends Controller
     }
 
 
-    // public function aproveDepost(Request $request , $id)
-    // {
-    //      return null;
-    // }
 
 
     public function aproveDepost(Request $request, $id)
@@ -266,6 +260,23 @@ class AdminUserController extends Controller
             Log::error("Failed to approve deposit ID {$id}: " . $e->getMessage());
             return back()->with('error', 'Failed to approve deposit. Please try again.');
         }
+    }
+
+
+    //  Aprovie with draws for the users
+
+    public function pay($id)
+    {
+        $withdraw = Withdrawal::findOrFail($id);
+
+        if ($withdraw->status !== 'pending') {
+            return back()->with('error', 'Already processed.');
+        }
+
+        $withdraw->status = 'complete';
+        $withdraw->save();
+
+        return back()->with('success', 'Payment marked as complete.');
 
     }
 

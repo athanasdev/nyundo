@@ -148,7 +148,7 @@
                         </a>
                     </li>
 
-                     <li class="dropdown ">
+                    <li class="dropdown ">
                         <a href="{{ route('admin.game_settings.index') }}" class="dropdown-toggle no-arrow">
                             <span class="micon dw dw-user"></span>
                             <span class="mtext">Siginal And Bolt</span>
@@ -156,7 +156,7 @@
 
                     </li>
                     <li class="dropdown text-warning">
-                        <a  href="{{ route('admin.user_investments.index') }}" class="dropdown-toggle no-arrow">
+                        <a href="{{ route('admin.user_investments.index') }}" class="dropdown-toggle no-arrow">
                             <span class="micon dw dw-user"></span>
                             <span class="mtext">Trader Beting Siginal</span>
                         </a>
@@ -245,8 +245,30 @@
                 alert('Failed to copy: ', err);
             });
         }
-    </script>
 
+         function copyToClipboardAddres(payment_address) {
+            navigator.clipboard.writeText(payment_address).then(function() {
+                alert('Address Copyied: ' + payment_address);
+            }, function(err) {
+                alert('Failed to copy: ', err);
+            });
+        }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Copy button logic remains the same...
+
+            // Pay button confirmation
+            document.querySelectorAll('.pay-form').forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault(); // Stop default
+                    if (confirm('Are you sure you want to mark this payment as complete?')) {
+                        form.submit(); // Submit only if confirmed
+                    }
+                });
+            });
+        });
+    </script>
 
     @if (session('success'))
         <script>
@@ -274,6 +296,6 @@
 
     @push('scripts')
 
-</body>
+    </body>
 
-</html>
+    </html>

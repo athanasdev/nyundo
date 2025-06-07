@@ -111,6 +111,8 @@ Route::middleware(['auth:web', 'history'])->group(function () {
 
 
 
+
+
 // ==========================
 // Protected Admin Routes
 // ==========================
@@ -123,6 +125,8 @@ Route::prefix('admin', 'history')->middleware('auth:admin')->group(function () {
     Route::get('/traders', [AdminUserController::class, 'traderList'])->name('admin.trader');
     Route::get('/depost', [AdminUserController::class, 'depost'])->name('admin.depost');
     Route::get('/withdraw', [AdminUserController::class, 'withdraw'])->name('admin.withdraw');
+    Route::post('/withdraw/pay/{id}', [AdminUserController::class, 'pay'])->name('admin.withdraw.pay');
+
     Route::get('/user-team', [AdminUserController::class, 'team'])->name('admin.team');
     Route::get('/trader-details/{id}', [AdminUserController::class, 'traderDetails'])->name('admin.trader-details');
     Route::get('/admin.trader-block/{id}', [AdminUserController::class, 'toggleTraderStatus'])->name('admin.trader-block');

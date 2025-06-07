@@ -1,8 +1,6 @@
 @extends('admin.dashbord.pages.layout')
 
 @section('content')
-    {{-- ... Your existing content section ... --}}
-    {{-- (The HTML structure from the previous answer for the table goes here) --}}
     <div class="main-container">
         <div class="pd-ltr-20 xs-pd-20-10">
             <div class="min-height-200px">
@@ -44,9 +42,14 @@
                                         </td> --}}
                                         <td>
                                             <span class="payment-address">{{ $withdraw->payment_address }}</span>
-                                            <button class="btn btn-sm btn-outline-primary copy-btn ml-2">
-                                                Copy
-                                            </button>
+                                            @if ($withdraw->payment_address)
+                                                <button class="btn btn-sm btn-outline-primary"
+                                                    onclick="copyToClipboardAddres('{{ $withdraw->payment_address }}')">
+                                                    <i class="dw dw-copy"></i> Copy
+                                                </button>
+                                            @else
+                                                <span class="text-muted">No Payment address</span>
+                                            @endif
                                         </td>
 
                                         <td>
@@ -61,10 +64,17 @@
                                         </td>
                                         <td>
                                             @if ($withdraw->status == 'pending')
-                                                <a class="btn btn-success btn-sm" href="{{-- route('admin.withdraw.process', $withdraw->id) --}}#">Pay</a>
+                                                <form method="POST"
+                                                    action="{{ route('admin.withdraw.pay', $withdraw->id) }}"
+                                                    class="d-inline pay-form">
+                                                    @csrf
+                                                    <button type="submit"
+                                                        class="btn btn-success btn-sm pay-btn">Pay</button>
+                                                </form>
                                             @else
                                                 <span class="badge badge-success">Processed</span>
                                             @endif
+
                                             <a class="btn btn-secondary btn-sm ml-1"
                                                 href="{{ url()->previous() }}">Return</a>
                                         </td>
@@ -80,12 +90,12 @@
         </div>
     </div>
 @endsection
-{{-- 
+{{--
 @section('scripts')
-   
+
 
     <script>
-        
+
         document.addEventListener('DOMContentLoaded', function() {
         // Copy Button Logic
         const copyBtn = document.getElementById("copyAddressButton1");
