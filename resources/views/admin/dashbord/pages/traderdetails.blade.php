@@ -95,7 +95,7 @@
                             <h5 class="text-blue mb-3">Referral Earnings</h5>
                             <p>Invite your friends to join and earn from their deposits.</p>
                             <p><strong>Referral Link:</strong>
-                                {{ config('app.url') }}?invited_by={{ $user->referral_code }}</p>
+                                {{ config('app.url') }}/register/?invited_by={{ $user->referral_code }}</p>
 
                             <div class="row">
                                 <div class="col-md-12">

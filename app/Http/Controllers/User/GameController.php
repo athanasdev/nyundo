@@ -158,78 +158,11 @@ class GameController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
 
-            // THIS WILL NOW RUN AND SHOW YOU THE EXACT DATABASE ERROR
-            // Please copy the entire message it displays.
-            //dd('An exception was caught:', $e->getMessage());
+
         }
     }
 
-    // public function placeTrade(Request $request)
-    // {
-    //     /** @var \App\Models\User $user */
-    //     $user = Auth::user();
 
-    //     // Using your app's local timezone as configured in .env
-    //     $now = Carbon::now();
-
-    //     $validatedData = $request->validate([
-    //         'crypto_category' => ['required', Rule::in(['XRP', 'BTC', 'ETH', 'SOLANA', 'PI'])],
-    //         'trade_type' => ['required', Rule::in(['buy', 'sell'])],
-    //         'amount' => 'required|numeric|min:1|max:' . $user->balance,
-    //     ], [
-    //         'amount.max' => 'Insufficient balance for this trade amount.',
-    //         'amount.min' => 'Minimum trade amount is $1.'
-    //     ]);
-
-    //     $gameSetting = GameSetting::where('is_active', true)
-    //         ->where('start_time', '<=', $now)
-    //         ->where('end_time', '>', $now)
-    //         ->orderBy('start_time', 'desc')
-    //         ->first();
-
-    //     if (!$gameSetting) {
-    //         return redirect()->back()->with('error', 'The trading signal is not active or has just expired.')->withInput();
-    //     }
-
-    //     $existingInvestment = UserInvestment::where('user_id', $user->id)
-    //         ->where('game_setting_id', $gameSetting->id)
-    //         ->where('investment_result', 'pending')
-    //         ->first();
-
-    //     if ($existingInvestment) {
-    //         return redirect()->back()->with('error', 'You already have an active trade in this signal.')->withInput();
-    //     }
-
-    //     DB::beginTransaction();
-    //     try {
-    //         $user->balance -= $validatedData['amount'];
-    //         $user->save();
-
-    //         UserInvestment::create([
-    //             'user_id' => $user->id,
-    //             'game_setting_id' => $gameSetting->id,
-    //             'investment_date' => $now->toDateString(),
-    //             'amount' => $validatedData['amount'],
-    //             'daily_profit_amount' => 0,
-    //             'total_profit_paid_out' => 0,
-    //             'principal_returned' => false,
-    //             'game_start_time' => $gameSetting->start_time,
-    //             'game_end_time' => $gameSetting->end_time,
-    //             'type' => $validatedData['trade_type'],
-    //             'crypto_category' => $validatedData['crypto_category'],
-    //             'investment_result' => 'pending',
-    //         ]);
-
-    //         DB::commit();
-    //         return redirect()->route('ai-trading')->with('success', 'Trade placed successfully!');
-    //     } catch (\Exception $e) {
-    //         DB::rollBack();
-
-    //         // Log the error for your records and return a friendly message to the user
-    //         Log::error('Error placing trade: ' . $e->getMessage());
-    //         return redirect()->back()->with('error', 'A server error occurred. Please try again.')->withInput();
-    //     }
-    // }
     /**
      * Close an active trade and determine result.
      */
@@ -353,11 +286,9 @@ class GameController extends Controller
         }
     }
 
-
     /**
      * Distribute referral commissions based on a user's profit from a specific investment.
      */
-
 
 
     protected function distributeReferralCommissions(User $referredUser, float $profitAmount)
@@ -401,4 +332,6 @@ class GameController extends Controller
             $level++;
         }
     }
+
+    
 }

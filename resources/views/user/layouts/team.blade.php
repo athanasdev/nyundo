@@ -268,7 +268,7 @@
                 <div class="w-100 d-row align-center referral-link-section">
                     <div class="link-class d-col">
                         <span class="title">Your Unique Referral Link</span>
-                        <span class="body" id="referralLinkElement">{{ config('app.url') }}/?invited_by={{ $user->referral_code }}</span>
+                        <span class="body" id="referralLinkElement">{{ config('app.url') }}/register/?invited_by={{ $user->referral_code }}</span>
                     </div>
                     <button class="copy-button" onclick="copyReferralLink()">
                         <i class="fas fa-copy"></i> Copy Link
@@ -375,7 +375,7 @@
                         <span class="value">{{ $level1_count }}</span>
                     </div>
                     <div class="stat-item">
-                        <span class="label">Total Deposits</span>
+                        <span class="label">Total Trade Stake</span>
                         <span class="value">{{ number_format($level1_deposit, 2) }} <small>USDT</small></span>
                     </div>
                     <div class="stat-item">
@@ -396,7 +396,7 @@
                         <span class="value">{{ $level2_count }}</span>
                     </div>
                     <div class="stat-item">
-                        <span class="label">Total Deposits</span>
+                        <span class="label">Total Trade Stake</span>
                         <span class="value">{{ number_format($level2_deposit, 2) }} <small>USDT</small></span>
                     </div>
                     <div class="stat-item">
@@ -417,7 +417,7 @@
                         <span class="value">{{ $level3_count }}</span>
                     </div>
                     <div class="stat-item">
-                        <span class="label">Total Deposits</span>
+                        <span class="label">Total Trade Stake</span>
                         <span class="value">{{ number_format($level3_deposit, 2) }} <small>USDT</small></span>
                     </div>
                     <div class="stat-item">
@@ -438,7 +438,7 @@
                         <span class="value">{{ $total_registered_users }}</span>
                     </div>
                     <div class="stat-item">
-                        <span class="label">Total Team Deposits</span>
+                        <span class="label">Total Team Trade Stake</span>
                         <span class="value">{{ number_format($total_deposits, 2) }} <small>USDT</small></span>
                     </div>
                     <div class="stat-item">

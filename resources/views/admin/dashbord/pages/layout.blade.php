@@ -143,7 +143,7 @@
                         </a>
                     </li>
                     <li class="dropdown">
-                        <a href="{{ route('admin.logs') }}" class="dropdown-toggle no-arrow">
+                        <a href="{{ route('admin.logs-list') }}" class="dropdown-toggle no-arrow">
                             <span class="micon dw dw-paint-brush"></span><span class="mtext"> Logs </span>
                         </a>
                     </li>
@@ -230,10 +230,6 @@
     <script src="{{ asset('admin/src/plugins/datatables/js/vfs_fonts.js') }}"></script>
 
 
-    <script src="{{ asset('admin/src/plugins/datatables/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('admin/src/plugins/datatables/js/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('admin/src/plugins/datatables/js/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ asset('admin/src/plugins/datatables/js/responsive.bootstrap4.min.js') }}"></script>
     <!-- Datatable Setting js -->
     <script src="{{ asset('admin/vendors/scripts/datatable-setting.js') }}"></script>
 

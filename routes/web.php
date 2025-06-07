@@ -134,7 +134,7 @@ Route::prefix('admin', 'history')->middleware('auth:admin')->group(function () {
     Route::put('/update-account/{id}', [AccountController::class, 'update'])->name('main-account.update');
 
     //  Managements
-    // Route::get('/logs', [AdminUserController::class, 'systemLogs'])->name('admin.logs');
+    Route::get('/logs-list', [AdminUserController::class, 'systemLogs'])->name('admin.logs-list');
 
 
     Route::get('/referrals', [ReferralController::class, 'index'])->name('admin.referrals.index');
@@ -179,6 +179,7 @@ Route::get('/check-time', function () {
         'Carbon::now()' => Carbon\Carbon::now()->toDateTimeString(),
         'Carbon::now(UTC)' => Carbon\Carbon::now('UTC')->toDateTimeString(),
     ];
+
 });
 
 

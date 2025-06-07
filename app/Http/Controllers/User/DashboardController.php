@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Models\User; // Your User model
+use App\Models\Withdrawal;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
@@ -53,15 +54,18 @@ class DashboardController extends Controller
                             // to accurately reflect only current investments vs total spent.
                             ->sum('amount');
 
+    $totalWithdraws = Withdrawal::where('user_id', $user->id)
+                               ->where('status','complete')
+                               ->sum('amount');
 
     return view('user.layouts.accounts', compact(
         'user',
         'transactions',
         'totalReferralEarning',
-        'investedCapital'
-        
+        'totalWithdraws'
+
     ));
-    
+
     }
 
     /**

@@ -26,49 +26,32 @@ class CheckGameSettingsTime extends Command
     /**
      * Execute the console command.
      */
-    // public function handle()
-    // {
-    //     $now = Carbon::now();
-
-    //     $activeGames = GameSetting::where('is_active', 1)
-    //         ->where('start_time', '<=', $now)
-    //         ->where('end_time', '>=', $now)
-    //         ->get();
-
-    //     foreach ($activeGames as $game) {
-    //         // Replace with your real logic
-    //         // Example: payout, update status, trigger controller, etc.
-    //         $this->info("Running logic for GameSetting ID: {$game->id}");
-
-    //         // Example: you could call a service or controller here
-    //         // \App\Http\Controllers\GameLogicController::handleGame($game);
-    //     }
-
-    //     if ($activeGames->isEmpty()) {
-    //         Log::info("there is no active games");
-    //         $this->info("No active games found for current time: $now");
-    //     }
-    // }
-
 
     public function handle()
     {
-        $now = now();
+        $now = Carbon::now();
 
-        $activeGames = GameSetting::where('start_time', '<=', $now)
+        $activeGames = GameSetting::where('is_active', 1)
+            ->where('start_time', '<=', $now)
             ->where('end_time', '>=', $now)
-            ->where('is_active', 1)
             ->get();
 
         foreach ($activeGames as $game) {
-            // You can trigger your controller, service, or logic here
-            Log::info("Game ID {$game->id} is active during scheduled time.");
+            // Replace with your real logic
+            // Example: payout, update status, trigger controller, etc.
+            $this->info("Running logic for GameSetting ID: {$game->id}");
 
-            // Example logic: deactivate game after end_time
-            if ($now->greaterThan($game->end_time)) {
-                $game->update(['is_active' => 0]);
-                Log::info("Game ID {$game->id} has ended and is now deactivated.");
-            }
+            // Example: you could call a service or controller here
+            // \App\Http\Controllers\GameLogicController::handleGame($game);
         }
+
+        if ($activeGames->isEmpty()) {
+            Log::info("there is no active games");
+            $this->info("No active games found for current time: $now");
+        }
+
     }
+
+
+
 }

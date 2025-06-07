@@ -386,8 +386,8 @@
                         <div class="stat-label">Total Referral Earning</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value" id="investedAccPage2">$ {{ number_format($investedCapital ?? 0, 2) }}</div>
-                        <div class="stat-label">Invested Capital</div>
+                        <div class="stat-value" id="investedAccPage2">$ {{ number_format($totalWithdraws ?? 0, 2) }}</div>
+                        <div class="stat-label">Total Withdraw</div>
                     </div>
                     {{-- <div class="stat-card">
                         <div class="stat-value positive" id="pnlAccPage">$0.00</div>
