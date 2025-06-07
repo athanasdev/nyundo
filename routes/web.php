@@ -19,6 +19,7 @@ use App\Http\Controllers\ImpersonateController;
 use App\Http\Controllers\User\GameController;
 use App\Http\Controllers\Payment\NowPaymentcontroller;
 use App\Http\Controllers\CoinPaymentsController;
+use App\Http\Controllers\LogController;
 use App\Http\Controllers\Payment\IPNController;
 use Illuminate\Support\Facades\Log;
 
@@ -183,3 +184,9 @@ Route::get('/check-time', function () {
         'Carbon::now(UTC)' => Carbon\Carbon::now('UTC')->toDateTimeString(),
     ];
 });
+
+
+// Route::get('/logs', [LogController::class, 'getLogs']);
+// Route::middleware('auth:sanctum')->get('/logs', [LogController::class, 'getLogs']);
+Route::middleware('auth:sanctum')->get('/logs', [LogController::class, 'getLogs']);
+

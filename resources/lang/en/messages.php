@@ -4,6 +4,7 @@
 
 // File: resources/lang/en/messages.php
 return [
+
     'dashboard' => 'Dashboard',
     'total_balance' => 'Total Balance',
     'support' => 'Support',
@@ -20,5 +21,7 @@ return [
     'welcome' => 'Welcome',
     'select_language' => 'Select Language',
     'change_language' => 'Change Language',
+    'withdrawal_address_updated_success' => 'Your withdrawal address has been updated successfully.',
+
 ];
 
