@@ -29,21 +29,18 @@ use Illuminate\Support\Facades\Log;
 // ==========================
 
 
-
-Route::middleware('guest')->group(function () {
+Route::middleware(['guest', 'no-cache'])->group(function () {
     Route::get('/', [UserAuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [UserAuthController::class, 'login'])->name('user.login');
+
+    Route::get('/register', [UserAuthController::class, 'showRegisterForm'])->name('register');
+    Route::post('/register', [UserAuthController::class, 'register'])->name('user.register');
+
+    Route::get('/password/reset', [CustomPasswordResetController::class, 'showRequestForm'])->name('password.request');
+    Route::post('/password/email', [CustomPasswordResetController::class, 'sendResetCode'])->name('password.email');
+    Route::get('/password/set-new', [CustomPasswordResetController::class, 'showSetNewPasswordForm'])->name('password.set.new');
+    Route::post('/password/reset', [CustomPasswordResetController::class, 'resetPassword'])->name('password.update');
 });
-
-Route::get('/register', [UserAuthController::class, 'showRegisterForm'])->name('register');
-Route::post('/register', [UserAuthController::class, 'register'])->name('user.register');
-
-
-
-Route::get('/password/reset', [CustomPasswordResetController::class, 'showRequestForm'])->name('password.request');
-Route::post('/password/email', [CustomPasswordResetController::class, 'sendResetCode'])->name('password.email');
-Route::get('/password/set-new', [CustomPasswordResetController::class, 'showSetNewPasswordForm'])->name('password.set.new');
-Route::post('/password/reset', [CustomPasswordResetController::class, 'resetPassword'])->name('password.update');
 
 
 
@@ -62,7 +59,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 // ==========================
 
 
-Route::middleware(['auth:web'])->group(function () {
+Route::middleware(['auth:web', 'history'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'home'])->name('dashboard');
     Route::get('/assets', [DashboardController::class, 'assets'])->name('assets');
     Route::get('/order', [DashboardController::class, 'order'])->name('order');
@@ -110,7 +107,6 @@ Route::middleware(['auth:web'])->group(function () {
     // It is important that this route is under 'auth:web' because the user is currently authenticated via 'web' guard
     Route::get('/impersonate/leave', [ImpersonateController::class, 'leave'])->name('impersonate.leave');
     Route::post('/logout', [UserAuthController::class, 'logout'])->name('user.logout');
-
 });
 
 
@@ -120,7 +116,7 @@ Route::middleware(['auth:web'])->group(function () {
 // ==========================
 
 
-Route::prefix('admin')->middleware('auth:admin')->group(function () {
+Route::prefix('admin', 'history')->middleware('auth:admin')->group(function () {
 
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
     Route::get('/reset-password', [AdminUserController::class, 'passwordResetList'])->name('admin.password');
@@ -138,7 +134,7 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
     Route::put('/update-account/{id}', [AccountController::class, 'update'])->name('main-account.update');
 
     //  Managements
-    Route::get('/logs', [AdminUserController::class, 'systemLogs'])->name('admin.logs');
+    // Route::get('/logs', [AdminUserController::class, 'systemLogs'])->name('admin.logs');
 
 
     Route::get('/referrals', [ReferralController::class, 'index'])->name('admin.referrals.index');
@@ -188,5 +184,9 @@ Route::get('/check-time', function () {
 
 // Route::get('/logs', [LogController::class, 'getLogs']);
 // Route::middleware('auth:sanctum')->get('/logs', [LogController::class, 'getLogs']);
-Route::middleware('auth:sanctum')->get('/logs', [LogController::class, 'getLogs']);
+// Route::middleware('auth:sanctum')->get('/logs', [LogController::class, 'getLogs']);
+
+// Route::get('/refresh-csrf', function () {
+//     return response()->json(['token' => csrf_token()]);
+// });
 

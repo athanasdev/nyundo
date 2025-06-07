@@ -1,10 +1,13 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up - TradePro</title>
+    <title>Sign Up - Soria10</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         * {
@@ -381,7 +384,7 @@
                 <h4><i class="fas fa-user-plus"></i> Create Your Account</h4>
             </div>
 
-             @include('user.common.alert')
+            @include('user.common.alert')
 
             <div class="form-group">
                 <label class="input-label" for="username">Username</label>
@@ -507,7 +510,7 @@
             }
         });
     </script>
-     <script>
+    <script>
         // Function to format currency
         const formatCurrency = (value, minDigits = 2, maxDigits = 2) =>
             `$${Number(value).toLocaleString('en-US', { minimumFractionDigits: minDigits, maximumFractionDigits: maxDigits })}`;
@@ -531,12 +534,17 @@
                 // Prevent common Ctrl key combinations
                 if (['c', 'v', 'x', 'a', 'z'].includes(e.key.toLowerCase())) {
                     e.preventDefault(); // Prevent the default action (e.g., copying, pasting)
-                   // alert(`The '${e.key.toUpperCase()}' shortcut is disabled for security reasons.`);
+                    // alert(`The '${e.key.toUpperCase()}' shortcut is disabled for security reasons.`);
                 }
             }
         });
 
         // Add event listeners for Deposit/Withdraw buttons if they trigger modals/JS actions
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
     </script>
 
 </body>
