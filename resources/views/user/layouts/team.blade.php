@@ -317,7 +317,7 @@
                             <th style="text-align:center; width:5%;">#</th>
                             <th>Username</th>
                             <th style="text-align:center;">Level</th>
-                            <th style="text-align:right;">Deposit Balance (USDT)</th>
+                            <th style="text-align:right;">Balance (USDT)</th>
                         </tr>
                     </thead>
                     <tbody>
