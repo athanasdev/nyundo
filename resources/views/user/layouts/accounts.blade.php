@@ -3,367 +3,233 @@
 @section('title', 'Account - Soria10')
 
 @push('styles')
-<style>
-/* Transactions Table Styling */
-.transactions-card-body {
-    padding: 0;
-}
+    <style>
+        /* Main Card and Grid Styling */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        .stat-card {
+            background-color: #0d1117;
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid #30363d;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+        .stat-value.positive {
+            color: #28a745; /* Green for positive values */
+        }
+        .stat-value.negative {
+            color: #dc3545; /* Red for negative values */
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #8b949e;
+            margin-top: 4px;
+        }
+        .card-header .card-title {
+             font-size: 18px;
+             font-weight: 600;
+        }
+        .card-header .card-title .fas {
+            margin-right: 8px;
+            color: #007bff;
+        }
 
-.transactions-table-container {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-}
+        /* Transactions Table Styling */
+        .transactions-card-body {
+            padding: 0;
+        }
+        .transactions-table-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .transactions-table {
+            min-width: 100%;
+            width: 100%;
+            table-layout: auto;
+            border-collapse: collapse;
+            font-size: 14px;
+            background-color: #000000;
+        }
+        .transactions-table-header {
+            background-color: #1a1a1a;
+            border-bottom: 2px solid #333333;
+        }
+        .table-header-cell {
+            padding: 12px 16px;
+            border-bottom: 1px solid #333333;
+            text-align: left;
+            font-size: 11px;
+            font-weight: 600;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+        }
+        .amount-header {
+            text-align: right;
+        }
+        .transaction-row {
+            transition: background-color 0.2s ease;
+            border-bottom: 1px solid #333333;
+        }
+        .transaction-row:hover {
+            background-color: #1a1a1a;
+        }
+        .table-cell {
+            padding: 12px 16px;
+            white-space: nowrap;
+            font-size: 14px;
+            color: #ffffff;
+            vertical-align: middle;
+        }
+        .amount-cell {
+            text-align: right;
+        }
+        .description-cell {
+            max-width: 200px;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+        .date-cell {
+            color: #cccccc;
+            font-size: 13px;
+        }
+        .type-credit {
+            color: #10b981;
+            font-weight: 600;
+        }
+        .type-debit {
+            color: #ef4444;
+            font-weight: 600;
+        }
+        .amount-credit {
+            color: #10b981;
+            font-weight: 700;
+        }
+        .amount-debit {
+            color: #ef4444;
+            font-weight: 700;
+        }
+        .currency-label {
+            font-size: 11px;
+            color: #cccccc;
+            margin-left: 4px;
+            font-weight: 400;
+        }
+        .status-badge {
+            padding: 4px 10px;
+            display: inline-flex;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 9999px;
+            text-transform: capitalize;
+        }
+        [data-theme="dark"] .status-success {
+            background-color: rgba(4, 120, 87, 0.3);
+            color: #34d399;
+        }
+        [data-theme="dark"] .status-warning {
+            background-color: rgba(245, 158, 11, 0.3);
+            color: #fcd34d;
+        }
+        [data-theme="dark"] .status-error {
+            background-color: rgba(220, 38, 38, 0.3);
+            color: #f87171;
+        }
+        [data-theme="dark"] .status-default {
+            background-color: #4b5563;
+            color: #d1d5db;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 48px 16px;
+            color: #8b949e;
+            font-style: italic;
+        }
 
-.transactions-table {
-    min-width: 100%;
-    width: 100%;
-    table-layout: auto;
-    border-collapse: collapse;
-    font-size: 14px;
-    background-color: #000000; /* Black background for table */
-}
+        /* --- Improved Tab Navigation Styling --- */
+        .nav-tabs {
+            border-bottom: none;
+            display: flex;
+            gap: 8px;
+            padding: 8px;
+        }
+        .nav-tabs .nav-link {
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 8px 16px;
+            color: #8b949e;
+            font-weight: 600;
+            font-size: 14px;
+            background-color: #161b22;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+        .nav-tabs .nav-link:hover {
+            background-color: #21262d;
+            color: #ffffff;
+            border-color: #8b949e;
+        }
+        .nav-tabs .nav-link.active {
+            color: #ffffff;
+            background-color: #007bff;
+            border-color: #007bff;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+        }
+        .tab-pane { display: none; }
+        .tab-pane.active { display: block; }
 
-.transactions-table-header {
-    background-color: #1a1a1a; /* Dark header */
-    border-bottom: 2px solid #333333;
-}
+        /* --- Responsive Tab Styling --- */
+        .tabs-container {
+            overflow-x: auto;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .tabs-container::-webkit-scrollbar {
+            display: none;
+        }
+        @media (max-width: 768px) {
+            .nav-tabs {
+                flex-wrap: nowrap;
+                padding-bottom: 8px;
+            }
+        }
 
-[data-theme="dark"] .transactions-table-header {
-    background-color: #1a1a1a;
-    border-bottom-color: #333333;
-}
-
-.table-header-cell {
-    padding: 12px 16px;
-    border-bottom: 1px solid #333333;
-    text-align: left;
-    font-size: 11px;
-    font-weight: 600;
-    color: #ffffff; /* White text for headers */
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    white-space: nowrap;
-}
-
-.amount-header {
-    text-align: right;
-}
-
-[data-theme="dark"] .table-header-cell {
-    border-bottom-color: #333333;
-    color: #ffffff;
-}
-
-.transactions-table-body {
-    background-color: #000000; /* Black background for body */
-    border: none;
-}
-
-[data-theme="dark"] .transactions-table-body {
-    background-color: #000000;
-}
-
-.transaction-row {
-    transition: background-color 0.2s ease;
-    border-bottom: 1px solid #333333;
-    background-color: #000000; /* Black row background */
-}
-
-.transaction-row:hover {
-    background-color: #1a1a1a; /* Dark hover effect */
-}
-
-.even-row {
-    background-color: #0d1117; /* Slightly lighter for even rows */
-}
-
-[data-theme="dark"] .transaction-row {
-    border-bottom-color: #333333;
-    background-color: #000000;
-}
-
-[data-theme="dark"] .transaction-row:hover {
-    background-color: #1a1a1a;
-}
-
-[data-theme="dark"] .even-row {
-    background-color: #0d1117;
-}
-
-.table-cell {
-    padding: 12px 16px;
-    border-bottom: 1px solid #333333;
-    white-space: nowrap;
-    font-size: 14px;
-    color: #ffffff; /* White text for cells */
-    vertical-align: middle;
-}
-
-[data-theme="dark"] .table-cell {
-    border-bottom-color: #333333;
-    color: #ffffff;
-}
-
-.amount-cell {
-    text-align: right;
-}
-
-.description-cell {
-    max-width: 200px;
-    white-space: normal;
-    word-wrap: break-word;
-}
-
-.date-cell {
-    color: #cccccc; /* Light gray for dates */
-    font-size: 13px;
-}
-
-[data-theme="dark"] .date-cell {
-    color: #cccccc;
-}
-
-/* Type Styling */
-.type-credit {
-    color: #10b981;
-    font-weight: 600;
-}
-
-.type-debit {
-    color: #ef4444;
-    font-weight: 600;
-}
-
-.type-neutral {
-    color: #ffffff;
-    font-weight: 500;
-}
-
-[data-theme="dark"] .type-credit {
-    color: #34d399;
-}
-
-[data-theme="dark"] .type-debit {
-    color: #f87171;
-}
-
-[data-theme="dark"] .type-neutral {
-    color: #ffffff;
-}
-
-/* Amount Styling */
-.amount-credit {
-    color: #10b981;
-    font-weight: 700;
-}
-
-.amount-debit {
-    color: #ef4444;
-    font-weight: 700;
-}
-
-.amount-neutral {
-    color: #ffffff;
-    font-weight: 500;
-}
-
-[data-theme="dark"] .amount-credit {
-    color: #34d399;
-}
-
-[data-theme="dark"] .amount-debit {
-    color: #f87171;
-}
-
-[data-theme="dark"] .amount-neutral {
-    color: #ffffff;
-}
-
-.currency-label {
-    font-size: 11px;
-    color: #cccccc;
-    margin-left: 4px;
-    font-weight: 400;
-}
-
-[data-theme="dark"] .currency-label {
-    color: #cccccc;
-}
-
-/* Status Badge Styling */
-.status-badge {
-    padding: 2px 8px;
-    display: inline-flex;
-    font-size: 11px;
-    line-height: 1.2;
-    font-weight: 600;
-    border-radius: 9999px;
-    text-transform: capitalize;
-}
-
-.status-success {
-    background-color: #d1fae5;
-    color: #065f46;
-}
-
-.status-warning {
-    background-color: #fef3c7;
-    color: #92400e;
-}
-
-.status-error {
-    background-color: #fee2e2;
-    color: #991b1b;
-}
-
-.status-default {
-    background-color: #f3f4f6;
-    color: #374151;
-}
-
-[data-theme="dark"] .status-success {
-    background-color: #065f46;
-    color: #d1fae5;
-}
-
-[data-theme="dark"] .status-warning {
-    background-color: #92400e;
-    color: #fef3c7;
-}
-
-[data-theme="dark"] .status-error {
-    background-color: #991b1b;
-    color: #fee2e2;
-}
-
-[data-theme="dark"] .status-default {
-    background-color: #4b5563;
-    color: #d1d5db;
-}
-
-/* Empty State */
-.empty-state {
-    text-align: center;
-    border-bottom: 1px solid #333333;
-    padding: 32px 16px;
-    color: #cccccc;
-    font-style: italic;
-}
-
-[data-theme="dark"] .empty-state {
-    border-bottom-color: #333333;
-    color: #cccccc;
-}
-
-/* Pagination Styling */
-.pagination-wrapper {
-    padding: 20px;
-    background-color: #000000;
-    border-top: 1px solid #333333;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.pagination {
-    display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    gap: 8px;
-}
-
-.pagination li {
-    display: inline-block;
-}
-
-.pagination a,
-.pagination span {
-    display: block;
-    padding: 8px 12px;
-    text-decoration: none;
-    border: 1px solid #333333;
-    color: #ffffff;
-    background-color: #1a1a1a;
-    border-radius: 4px;
-    transition: all 0.2s ease;
-}
-
-.pagination a:hover {
-    background-color: #333333;
-    color: #ffffff;
-}
-
-.pagination .active span {
-    background-color: #007bff;
-    border-color: #007bff;
-    color: #ffffff;
-}
-
-.pagination .disabled span {
-    color: #666666;
-    background-color: #0a0a0a;
-    border-color: #222222;
-    cursor: not-allowed;
-}
-
-/* Pagination Info */
-.pagination-info {
-    background-color: #000000;
-    padding: 15px 20px;
-    border-top: 1px solid #333333;
-    color: #cccccc;
-    font-size: 14px;
-    text-align: center;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .transactions-table {
-        font-size: 12px;
-    }
-
-    .table-header-cell,
-    .table-cell {
-        padding: 8px 12px;
-    }
-
-    .table-header-cell {
-        font-size: 10px;
-    }
-
-    .description-cell {
-        max-width: 150px;
-    }
-
-    .pagination a,
-    .pagination span {
-        padding: 6px 10px;
-        font-size: 12px;
-    }
-}
-
-@media (max-width: 640px) {
-    .transactions-table {
-        font-size: 11px;
-    }
-
-    .table-header-cell,
-    .table-cell {
-        padding: 6px 8px;
-    }
-
-    .description-cell {
-        max-width: 120px;
-    }
-
-    .pagination a,
-    .pagination span {
-        padding: 4px 8px;
-        font-size: 11px;
-    }
-}
-</style>
+        /* Pagination Styling */
+        .pagination-wrapper {
+            padding: 20px;
+            background-color: #0d1117;
+            border-top: 1px solid #30363d;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .pagination {
+            display: flex; list-style: none; margin: 0; padding: 0; gap: 8px;
+        }
+        .pagination a, .pagination span {
+            display: block; padding: 8px 12px; text-decoration: none; border: 1px solid #30363d; color: #8b949e; background-color: #161b22; border-radius: 6px; transition: all 0.2s ease;
+        }
+        .pagination a:hover {
+            background-color: #007bff; color: #ffffff; border-color: #007bff;
+        }
+        .pagination .active span {
+            background-color: #007bff; border-color: #007bff; color: #ffffff;
+        }
+        .pagination .disabled span {
+            color: #484f58; background-color: #010409; border-color: #21262d; cursor: not-allowed;
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -378,138 +244,202 @@
             <div class="card-body">
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <div class="stat-value positive" id="totalValueAccPage1">$ {{ number_format($user->balance ?? 0, 2) }}</div>
+                        <div class="stat-value positive">${{ number_format($user->balance ?? 0, 2) }}</div>
                         <div class="stat-label">Total Balance</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value" id="availableBalanceAccPage1">$ {{ number_format($totalReferralEarning ?? 0, 2) }}</div>
+                        <div class="stat-value">${{ number_format($totalReferralEarning ?? 0, 2) }}</div>
                         <div class="stat-label">Total Referral Earning</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value" id="investedAccPage2">$ {{ number_format($totalWithdraws ?? 0, 2) }}</div>
-                        <div class="stat-label">Total Withdraw</div>
+                        <div class="stat-value">${{ number_format($totalWithdraws ?? 0, 2) }}</div>
+                        <div class="stat-label">Total Withdrawals</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value positive" id="pnlAccPage">$ {{ number_format($lifetime_pnl ?? 0, 2) }}</div>
+                        <div class="stat-value {{ ($lifetime_pnl ?? 0) >= 0 ? 'positive' : 'negative' }}">${{ number_format($lifetime_pnl ?? 0, 2) }}</div>
                         <div class="stat-label">Lifetime P&L</div>
                     </div>
                 </div>
             </div>
         </div>
-        {{-- Recent Transactions Card --}}
+
+        {{-- Tabbed History Card --}}
         <div class="card" style="margin-top: 16px;">
             <div class="card-header">
-                <div class="card-title">
-                    <i class="fas fa-history"></i> Recent Transactions
+                <div class="tabs-container">
+                    <ul class="nav nav-tabs" id="historyTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="transactions-tab-btn" data-target="#transactions-content" type="button" role="tab">
+                                <i class="fas fa-history"></i> Transactions
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="withdrawals-tab-btn" data-target="#withdrawals-content" type="button" role="tab">
+                                <i class="fas fa-arrow-circle-down"></i> Withdrawals
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="deposits-tab-btn" data-target="#deposits-content" type="button" role="tab">
+                                <i class="fas fa-arrow-circle-up"></i> Deposits
+                            </button>
+                        </li>
+                    </ul>
                 </div>
             </div>
             <div class="card-body transactions-card-body">
-                <div class="transactions-table-container">
-                    <table class="transactions-table">
-                        <thead class="transactions-table-header">
-                            <tr>
-                                <th class="table-header-cell">ID</th>
-                                <th class="table-header-cell">Type</th>
-                                <th class="table-header-cell amount-header">Amount</th>
-                                <th class="table-header-cell">Status</th>
-                                <th class="table-header-cell">Description</th>
-                                <th class="table-header-cell">Date</th>
-                            </tr>
-                        </thead>
-                        <tbody class="transactions-table-body">
-                            @forelse($transactions as $txn)
-                                <tr class="transaction-row @if($loop->even) even-row @endif">
-                                    <td class="table-cell">
-                                        {{ $txn->id }}
-                                    </td>
-                                    <td class="table-cell">
-                                        @if(strtolower($txn->type) === 'credit')
-                                            <span class="type-credit">{{ ucfirst($txn->type) }}</span>
-                                        @elseif(strtolower($txn->type) === 'debit')
-                                            <span class="type-debit">{{ ucfirst($txn->type) }}</span>
-                                        @else
-                                            <span class="type-neutral">{{ ucfirst($txn->type) }}</span>
-                                        @endif
-                                    </td>
-                                    <td class="table-cell amount-cell">
-                                        @if(strtolower($txn->type) === 'credit')
-                                            <span class="amount-credit">+{{ number_format($txn->amount, 2) }}</span>
-                                        @elseif(strtolower($txn->type) === 'debit')
-                                            <span class="amount-debit">-{{ number_format($txn->amount, 2) }}</span>
-                                        @else
-                                            <span class="amount-neutral">{{ number_format($txn->amount, 2) }}</span>
-                                        @endif
-                                        @if($txn->currency)
-                                            <span class="currency-label">{{ $txn->currency }}</span>
-                                        @endif
-                                    </td>
-                                    <td class="table-cell">
-                                        @php
-                                            $statusClass = 'status-default';
-                                            $statusText = $txn->status ?? 'trx ';
-                                            switch (strtolower($statusText)) {
-                                                case 'completed': case 'confirmed':
-                                                    $statusClass = 'status-success'; break;
-                                                case 'pending':
-                                                    $statusClass = 'status-warning'; break;
-                                                case 'failed': case 'cancelled':
-                                                    $statusClass = 'status-error'; break;
-                                            }
-                                        @endphp
-                                        <span class="status-badge {{ $statusClass }}">
-                                            {{ ucfirst($statusText) }}
-                                        </span>
-                                    </td>
-                                    <td class="table-cell description-cell">
-                                        {{ Illuminate\Support\Str::limit($txn->description, 45) }}
-                                    </td>
-                                    <td class="table-cell date-cell">
-                                        {{ \Carbon\Carbon::parse($txn->created_at)->format('M d, Y H:i') }}
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="6" class="empty-state">
-                                        No transactions found.
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+                <div class="tab-content" id="historyTabsContent">
+
+                    {{-- 1. Transactions Tab Content --}}
+                    <div class="tab-pane active" id="transactions-content" role="tabpanel">
+                        <div class="transactions-table-container">
+                            <table class="transactions-table">
+                                <thead class="transactions-table-header">
+                                    <tr>
+                                        <th class="table-header-cell">ID</th>
+                                        <th class="table-header-cell">Type</th>
+                                        <th class="table-header-cell amount-header">Amount</th>
+                                        <th class="table-header-cell">Status</th>
+                                        <th class="table-header-cell">Description</th>
+                                        <th class="table-header-cell">Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($transactions as $txn)
+                                        <tr class="transaction-row">
+                                            <td class="table-cell">{{ $txn->id }}</td>
+                                            <td class="table-cell">
+                                                @if(strtolower($txn->type) === 'credit') <span class="type-credit">{{ ucfirst($txn->type) }}</span>
+                                                @else <span class="type-debit">{{ ucfirst($txn->type) }}</span> @endif
+                                            </td>
+                                            <td class="table-cell amount-cell">
+                                                @if(strtolower($txn->type) === 'credit') <span class="amount-credit">+{{ number_format($txn->amount, 2) }}</span>
+                                                @else <span class="amount-debit">-{{ number_format($txn->amount, 2) }}</span> @endif
+                                                <span class="currency-label">{{ $txn->currency }}</span>
+                                            </td>
+                                            <td class="table-cell"><span class="status-badge status-success">{{ ucfirst($txn->status) }}</span></td>
+                                            <td class="table-cell description-cell">{{ Illuminate\Support\Str::limit($txn->description, 45) }}</td>
+                                            <td class="table-cell date-cell">{{ \Carbon\Carbon::parse($txn->created_at)->format('M d, Y H:i') }}</td>
+                                        </tr>
+                                    @empty
+                                        <tr><td colspan="6" class="empty-state">No transactions found.</td></tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                        @if($transactions->hasPages())
+                            <div class="pagination-wrapper">{{ $transactions->appends(request()->query())->links() }}</div>
+                        @endif
+                    </div>
+
+                    {{-- 2. Withdrawals Tab Content --}}
+                    <div class="tab-pane" id="withdrawals-content" role="tabpanel">
+                         <div class="transactions-table-container">
+                            <table class="transactions-table">
+                                <thead class="transactions-table-header">
+                                    <tr>
+                                        <th class="table-header-cell">ID</th>
+                                        <th class="table-header-cell amount-header">Amount</th>
+                                        <th class="table-header-cell">Status</th>
+                                        <th class="table-header-cell">Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($withdrawals as $withdrawal)
+                                        <tr class="transaction-row">
+                                            <td class="table-cell">{{ $withdrawal->id }}</td>
+                                            <td class="table-cell amount-cell"><span class="amount-debit">-{{ number_format($withdrawal->amount, 2) }}</span></td>
+                                            <td class="table-cell">
+                                                @php
+                                                    $statusClass = 'status-default';
+                                                    switch (strtolower($withdrawal->status)) {
+                                                        case 'complete': $statusClass = 'status-success'; break;
+                                                        case 'pending': $statusClass = 'status-warning'; break;
+                                                        case 'rejected': $statusClass = 'status-error'; break;
+                                                    }
+                                                @endphp
+                                                <span class="status-badge {{ $statusClass }}">{{ ucfirst($withdrawal->status) }}</span>
+                                            </td>
+                                            <td class="table-cell date-cell">{{ \Carbon\Carbon::parse($withdrawal->created_at)->format('M d, Y H:i') }}</td>
+                                        </tr>
+                                    @empty
+                                        <tr><td colspan="4" class="empty-state">No withdrawals found.</td></tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                        @if($withdrawals->hasPages())
+                            <div class="pagination-wrapper">{{ $withdrawals->appends(request()->query())->links() }}</div>
+                        @endif
+                    </div>
+
+                    {{-- 3. Deposits Tab Content --}}
+                    <div class="tab-pane" id="deposits-content" role="tabpanel">
+                        <div class="transactions-table-container">
+                            <table class="transactions-table">
+                                 <thead class="transactions-table-header">
+                                    <tr>
+                                        <th class="table-header-cell">ID</th>
+                                        <th class="table-header-cell amount-header">Amount</th>
+                                        <th class="table-header-cell">Network</th>
+                                        <th class="table-header-cell">Status</th>
+                                        <th class="table-header-cell">Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                   @forelse($deposits as $deposit)
+                                        <tr class="transaction-row">
+                                            <td class="table-cell">{{ $deposit->id }}</td>
+                                            <td class="table-cell amount-cell"><span class="amount-credit">+{{ number_format($deposit->price_amount, 2) }}</span> <span class="currency-label">{{ $deposit->price_currency }}</span></td>
+                                            <td class="table-cell">{{ $deposit->network ?? 'N/A' }}</td>
+                                            <td class="table-cell">
+                                                @php
+                                                    $statusClass = 'status-default';
+                                                    switch (strtolower($deposit->payment_status)) {
+                                                        case 'finished': case 'confirmed': $statusClass = 'status-success'; break;
+                                                        case 'waiting': $statusClass = 'status-warning'; break;
+                                                        case 'failed': case 'expired': $statusClass = 'status-error'; break;
+                                                    }
+                                                @endphp
+                                                <span class="status-badge {{ $statusClass }}">{{ ucfirst($deposit->payment_status) }}</span>
+                                            </td>
+                                            <td class="table-cell date-cell">{{ \Carbon\Carbon::parse($deposit->created_at)->format('M d, Y H:i') }}</td>
+                                        </tr>
+                                    @empty
+                                        <tr><td colspan="5" class="empty-state">No deposits found.</td></tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                        @if($deposits->hasPages())
+                            <div class="pagination-wrapper">{{ $deposits->appends(request()->query())->links() }}</div>
+                        @endif
+                    </div>
                 </div>
-
-                {{-- Pagination Section --}}
-                @if(isset($transactions) && method_exists($transactions, 'hasPages') && $transactions->hasPages())
-                    <div class="pagination-wrapper">
-                        {{ $transactions->appends(request()->query())->links() }}
-                    </div>
-
-                    {{-- Pagination Info --}}
-                    <div class="pagination-info">
-                        Showing {{ $transactions->firstItem() ?? 0 }} to {{ $transactions->lastItem() ?? 0 }}
-                        of {{ $transactions->total() }} transactions
-                    </div>
-                @endif
             </div>
         </div>
-        
     </div>
 @endsection
 
 @push('scripts')
-{{-- Add any JavaScript if needed --}}
-<script>
-    // Optional: Add loading state for pagination
-    document.addEventListener('DOMContentLoaded', function() {
-        const paginationLinks = document.querySelectorAll('.pagination a');
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const tabs = document.querySelectorAll('#historyTabs .nav-link');
+            const tabPanes = document.querySelectorAll('#historyTabsContent .tab-pane');
 
-        paginationLinks.forEach(link => {
-            link.addEventListener('click', function() {
-                // Add loading state
-                const loadingSpinner = '<i class="fas fa-spinner fa-spin"></i>';
-                this.innerHTML = loadingSpinner;
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function (event) {
+                    event.preventDefault();
+
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabPanes.forEach(p => p.classList.remove('active'));
+
+                    this.classList.add('active');
+                    const targetPane = document.querySelector(this.getAttribute('data-target'));
+                    if (targetPane) {
+                        targetPane.classList.add('active');
+                    }
+                });
             });
         });
-    });
-</script>
+    </script>
 @endpush
