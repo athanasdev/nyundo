@@ -5,209 +5,58 @@
 @push('styles')
     <style>
         /* Main Card and Grid Styling */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-        }
-        .stat-card {
-            background-color: #0d1117;
-            padding: 16px;
-            border-radius: 8px;
-            border: 1px solid #30363d;
-        }
-        .stat-value {
-            font-size: 24px;
-            font-weight: 700;
-            color: #ffffff;
-        }
-        .stat-value.positive {
-            color: #28a745; /* Green for positive values */
-        }
-        .stat-value.negative {
-            color: #dc3545; /* Red for negative values */
-        }
-        .stat-label {
-            font-size: 14px;
-            color: #8b949e;
-            margin-top: 4px;
-        }
-        .card-header .card-title {
-             font-size: 18px;
-             font-weight: 600;
-        }
-        .card-header .card-title .fas {
-            margin-right: 8px;
-            color: #007bff;
-        }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+        .stat-card { background-color: #0d1117; padding: 16px; border-radius: 8px; border: 1px solid #30363d; }
+        .stat-value { font-size: 24px; font-weight: 700; color: #ffffff; }
+        .stat-value.positive { color: #28a745; }
+        .stat-value.negative { color: #dc3545; }
+        .stat-label { font-size: 14px; color: #8b949e; margin-top: 4px; }
+        .card-header .card-title { font-size: 18px; font-weight: 600; }
+        .card-header .card-title .fas { margin-right: 8px; color: #007bff; }
 
         /* Transactions Table Styling */
-        .transactions-card-body {
-            padding: 0;
-        }
-        .transactions-table-container {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        .transactions-table {
-            min-width: 100%;
-            width: 100%;
-            table-layout: auto;
-            border-collapse: collapse;
-            font-size: 14px;
-            background-color: #000000;
-        }
-        .transactions-table-header {
-            background-color: #1a1a1a;
-            border-bottom: 2px solid #333333;
-        }
-        .table-header-cell {
-            padding: 12px 16px;
-            border-bottom: 1px solid #333333;
-            text-align: left;
-            font-size: 11px;
-            font-weight: 600;
-            color: #ffffff;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            white-space: nowrap;
-        }
-        .amount-header {
-            text-align: right;
-        }
-        .transaction-row {
-            transition: background-color 0.2s ease;
-            border-bottom: 1px solid #333333;
-        }
-        .transaction-row:hover {
-            background-color: #1a1a1a;
-        }
-        .table-cell {
-            padding: 12px 16px;
-            white-space: nowrap;
-            font-size: 14px;
-            color: #ffffff;
-            vertical-align: middle;
-        }
-        .amount-cell {
-            text-align: right;
-        }
-        .description-cell {
-            max-width: 200px;
-            white-space: normal;
-            word-wrap: break-word;
-        }
-        .date-cell {
-            color: #cccccc;
-            font-size: 13px;
-        }
-        .type-credit {
-            color: #10b981;
-            font-weight: 600;
-        }
-        .type-debit {
-            color: #ef4444;
-            font-weight: 600;
-        }
-        .amount-credit {
-            color: #10b981;
-            font-weight: 700;
-        }
-        .amount-debit {
-            color: #ef4444;
-            font-weight: 700;
-        }
-        .currency-label {
-            font-size: 11px;
-            color: #cccccc;
-            margin-left: 4px;
-            font-weight: 400;
-        }
-        .status-badge {
-            padding: 4px 10px;
-            display: inline-flex;
-            font-size: 11px;
-            font-weight: 600;
-            border-radius: 9999px;
-            text-transform: capitalize;
-        }
-        [data-theme="dark"] .status-success {
-            background-color: rgba(4, 120, 87, 0.3);
-            color: #34d399;
-        }
-        [data-theme="dark"] .status-warning {
-            background-color: rgba(245, 158, 11, 0.3);
-            color: #fcd34d;
-        }
-        [data-theme="dark"] .status-error {
-            background-color: rgba(220, 38, 38, 0.3);
-            color: #f87171;
-        }
-        [data-theme="dark"] .status-default {
-            background-color: #4b5563;
-            color: #d1d5db;
-        }
-        .empty-state {
-            text-align: center;
-            padding: 48px 16px;
-            color: #8b949e;
-            font-style: italic;
-        }
+        .transactions-card-body { padding: 0; }
+        .transactions-table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .transactions-table { min-width: 100%; width: 100%; table-layout: auto; border-collapse: collapse; font-size: 14px; background-color: #000000; }
+        .transactions-table-header { background-color: #1a1a1a; border-bottom: 2px solid #333333; }
+        .table-header-cell { padding: 12px 16px; border-bottom: 1px solid #333333; text-align: left; font-size: 11px; font-weight: 600; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
+        .amount-header { text-align: right; }
+        .transaction-row { transition: background-color 0.2s ease; border-bottom: 1px solid #333333; }
+        .transaction-row:hover { background-color: #1a1a1a; }
+        .table-cell { padding: 12px 16px; white-space: nowrap; font-size: 14px; color: #ffffff; vertical-align: middle; }
+        .amount-cell { text-align: right; }
+        .description-cell { max-width: 200px; white-space: normal; word-wrap: break-word; }
+        .date-cell { color: #cccccc; font-size: 13px; }
+        .type-credit { color: #10b981; font-weight: 600; }
+        .type-debit { color: #ef4444; font-weight: 600; }
+        .amount-credit { color: #10b981; font-weight: 700; }
+        .amount-debit { color: #ef4444; font-weight: 700; }
+        .currency-label { font-size: 11px; color: #cccccc; margin-left: 4px; font-weight: 400; }
+        .status-badge { padding: 4px 10px; display: inline-flex; font-size: 11px; font-weight: 600; border-radius: 9999px; text-transform: capitalize; }
+        [data-theme="dark"] .status-success { background-color: rgba(4, 120, 87, 0.3); color: #34d399; }
+        [data-theme="dark"] .status-warning { background-color: rgba(245, 158, 11, 0.3); color: #fcd34d; }
+        [data-theme="dark"] .status-error { background-color: rgba(220, 38, 38, 0.3); color: #f87171; }
+        [data-theme="dark"] .status-default { background-color: #4b5563; color: #d1d5db; }
+        .empty-state { text-align: center; padding: 48px 16px; color: #8b949e; font-style: italic; }
 
-        /* --- Improved Tab Navigation Styling --- */
-        .nav-tabs {
-            border-bottom: none;
-            display: flex;
-            gap: 8px;
-            padding: 8px;
-        }
-        .nav-tabs .nav-link {
-            border: 1px solid #30363d;
-            border-radius: 8px;
-            padding: 8px 16px;
-            color: #8b949e;
-            font-weight: 600;
-            font-size: 14px;
-            background-color: #161b22;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-        }
-        .nav-tabs .nav-link:hover {
-            background-color: #21262d;
-            color: #ffffff;
-            border-color: #8b949e;
-        }
-        .nav-tabs .nav-link.active {
-            color: #ffffff;
-            background-color: #007bff;
-            border-color: #007bff;
-            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
-        }
+        /* Improved Tab Navigation Styling */
+        .nav-tabs { border-bottom: none; display: flex; gap: 8px; padding: 8px; }
+        .nav-tabs .nav-link { border: 1px solid #30363d; border-radius: 8px; padding: 8px 16px; color: #8b949e; font-weight: 600; font-size: 14px; background-color: #161b22; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px; cursor: pointer; }
+        .nav-tabs .nav-link:hover { background-color: #21262d; color: #ffffff; border-color: #8b949e; }
+        .nav-tabs .nav-link.active { color: #ffffff; background-color: #007bff; border-color: #007bff; box-shadow: 0 0 10px rgba(0, 123, 255, 0.5); }
         .tab-pane { display: none; }
         .tab-pane.active { display: block; }
 
-        /* --- Responsive Tab Styling --- */
-        .tabs-container {
-            overflow-x: auto;
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-        .tabs-container::-webkit-scrollbar {
-            display: none;
-        }
+        /* Responsive Tab Styling */
+        .tabs-container { overflow-x: auto; -ms-overflow-style: none; scrollbar-width: none; }
+        .tabs-container::-webkit-scrollbar { display: none; }
         @media (max-width: 768px) {
-            .nav-tabs {
-                flex-wrap: nowrap;
-                padding-bottom: 8px;
-            }
+            .nav-tabs { flex-wrap: nowrap; padding-bottom: 8px; }
         }
 
-        /* Pagination Styling */
+        /* NEW & IMPROVED Pagination Styling */
         .pagination-wrapper {
-            padding: 20px;
+            padding: 24px 16px;
             background-color: #0d1117;
             border-top: 1px solid #30363d;
             display: flex;
@@ -215,19 +64,43 @@
             align-items: center;
         }
         .pagination {
-            display: flex; list-style: none; margin: 0; padding: 0; gap: 8px;
+            display: flex;
+            padding-left: 0;
+            list-style: none;
+            border-radius: 0.25rem;
+            gap: 6px; /* Adds space between pagination buttons */
         }
-        .pagination a, .pagination span {
-            display: block; padding: 8px 12px; text-decoration: none; border: 1px solid #30363d; color: #8b949e; background-color: #161b22; border-radius: 6px; transition: all 0.2s ease;
+        .page-item .page-link {
+            position: relative;
+            display: block;
+            padding: .5rem .75rem;
+            line-height: 1.25;
+            color: #8b949e; /* Default text color for numbers */
+            background-color: #161b22; /* Button background */
+            border: 1px solid #30363d;
+            transition: all 0.2s ease-in-out;
+            border-radius: 6px; /* Rounded corners for buttons */
+            font-weight: 600;
         }
-        .pagination a:hover {
-            background-color: #007bff; color: #ffffff; border-color: #007bff;
+        .page-item:not(.active) .page-link:hover {
+            z-index: 2;
+            color: #ffffff;
+            text-decoration: none;
+            background-color: #21262d;
+            border-color: #8b949e;
         }
-        .pagination .active span {
-            background-color: #007bff; border-color: #007bff; color: #ffffff;
+        .page-item.active .page-link {
+            z-index: 3;
+            color: #fff;
+            background-color: #007bff; /* Primary blue for active page */
+            border-color: #007bff;
         }
-        .pagination .disabled span {
-            color: #484f58; background-color: #010409; border-color: #21262d; cursor: not-allowed;
+        .page-item.disabled .page-link {
+            color: #484f58;
+            pointer-events: none;
+            cursor: auto;
+            background-color: #010409;
+            border-color: #21262d;
         }
     </style>
 @endpush
@@ -327,7 +200,7 @@
                             </table>
                         </div>
                         @if($transactions->hasPages())
-                            <div class="pagination-wrapper">{{ $transactions->appends(request()->query())->links() }}</div>
+                            <div class="pagination-wrapper">{{ $transactions->appends(request()->query())->links('pagination::bootstrap-4') }}</div>
                         @endif
                     </div>
 
@@ -368,7 +241,7 @@
                             </table>
                         </div>
                         @if($withdrawals->hasPages())
-                            <div class="pagination-wrapper">{{ $withdrawals->appends(request()->query())->links() }}</div>
+                            <div class="pagination-wrapper">{{ $withdrawals->appends(request()->query())->links('pagination::bootstrap-4') }}</div>
                         @endif
                     </div>
 
@@ -411,7 +284,7 @@
                             </table>
                         </div>
                         @if($deposits->hasPages())
-                            <div class="pagination-wrapper">{{ $deposits->appends(request()->query())->links() }}</div>
+                            <div class="pagination-wrapper">{{ $deposits->appends(request()->query())->links('pagination::bootstrap-4') }}</div>
                         @endif
                     </div>
                 </div>
