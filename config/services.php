@@ -42,9 +42,5 @@ return [
     ],
 
 
-    'providers' => [
-        App\Providers\ScheduleServiceProvider::class,
-    ],
-
 
 ];
