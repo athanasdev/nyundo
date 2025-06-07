@@ -389,14 +389,13 @@
                         <div class="stat-value" id="investedAccPage2">$ {{ number_format($totalWithdraws ?? 0, 2) }}</div>
                         <div class="stat-label">Total Withdraw</div>
                     </div>
-                    {{-- <div class="stat-card">
-                        <div class="stat-value positive" id="pnlAccPage">$0.00</div>
+                    <div class="stat-card">
+                        <div class="stat-value positive" id="pnlAccPage">$ {{ number_format($lifetime_pnl ?? 0, 2) }}</div>
                         <div class="stat-label">Lifetime P&L</div>
-                    </div> --}}
+                    </div>
                 </div>
             </div>
         </div>
-
         {{-- Recent Transactions Card --}}
         <div class="card" style="margin-top: 16px;">
             <div class="card-header">
@@ -493,6 +492,7 @@
                 @endif
             </div>
         </div>
+        
     </div>
 @endsection
 

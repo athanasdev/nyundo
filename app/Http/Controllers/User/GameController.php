@@ -20,6 +20,8 @@ class GameController extends Controller
 {
 
 
+
+
     public function aitrading()
     {
         /** @var \App\Models\User $user */
@@ -32,55 +34,78 @@ class GameController extends Controller
         // Use Carbon::now('UTC') for correct comparison with UTC database timestamps
         $nowUTC = Carbon::now('UTC');
 
-        // Fetches a game setting that is currently active (start_time <= nowUTC < end_time)
-        // Using '>' for end_time is generally preferred to mean "active until, but not including, the end_time"
+        // Fetches a game setting that is currently active
         $activeGameSetting = GameSetting::where('is_active', true)
             ->where('start_time', '<=', $nowUTC)
-            ->where('end_time', '>', $nowUTC) // Changed from '>=' to '>'
-            ->orderBy('start_time', 'desc') // Gets the most recently started game if multiple overlap
+            ->where('end_time', '>', $nowUTC)
+            ->orderBy('start_time', 'desc')
             ->first();
 
-        // Optional: If you want to show a countdown for the *next* upcoming game if none is active:
+        // If no game is active, find the next upcoming one
         if (!$activeGameSetting) {
             $activeGameSetting = GameSetting::where('is_active', true)
-                ->where('start_time', '>', $nowUTC) // Game starts in the future
-                ->orderBy('start_time', 'asc')     // Get the soonest upcoming game
+                ->where('start_time', '>', $nowUTC)
+                ->orderBy('start_time', 'asc')
                 ->first();
         }
 
-        $activeUserInvestment = collect(); // Initialize as empty Laravel collection
-        if ($activeGameSetting && $user) {
+        // Fetch user's pending investments for the active game
+        $activeUserInvestment = collect();
+        if ($activeGameSetting) {
             $activeUserInvestment = UserInvestment::where('user_id', $user->id)
-                // Assuming game_setting_id links UserInvestment to GameSetting
-                // Add this if you have such a link and want trades for *this specific* game
                 ->where('game_setting_id', $activeGameSetting->id)
-                ->where('investment_result', 'pending') // Or your equivalent for active/ongoing trades
-                // Ensure UserInvestment also has a concept of its own end_time if not strictly tied to game_setting_id
-                // For example, if UserInvestment has its own 'ends_at' field:
-                // ->where('ends_at', '>', $nowUTC)
+                ->where('investment_result', 'pending')
                 ->get();
         }
 
-        // Bot statistics (replace with your actual data retrieval logic)
-        $bot_profit_24h = 0.00; // Example: $user->getBotProfit24h();
-        $bot_trades_24h = 0;    // Example: $user->getBotTrades24h();
-        $bot_success_rate = 0.0; // Example: $user->getBotSuccessRate();
-        $bot_uptime_seconds = 0; // Example: $user->getBotUptimeSeconds();
+        // --- Bot Statistics ---
 
-        // This was hardcoded to true. Fetch from a reliable source (e.g., user setting or global app setting)
-        $is_bot_globally_active = $user->is_trading_bot_enabled ?? true; // Example from user model
+        // The corrected query to SUM the profit from all 'gain' trades in the last 24 hours
+        $bot_profit_24h = UserInvestment::where('user_id', $user->id)
+            ->where('investment_result', 'gain')
+            ->where('created_at', '>=', Carbon::now()->subDay())
+            ->sum('daily_profit_amount');
 
-        return view('user.layouts.bot', compact( // Ensure 'user.layouts.bot' is the correct path to your Blade file
-            'user', // The authenticated user model
+        // 2. Calculate Trades and Success Rate in the last 24h
+        $trades_in_24h_query = UserInvestment::where('user_id', $user->id)
+            ->where('created_at', '>=', Carbon::now()->subDay());
+
+        $bot_trades_24h = (clone $trades_in_24h_query)->count();
+        $successful_trades_24h = (clone $trades_in_24h_query)->where('investment_result', 'gain')->count();
+
+        if ($bot_trades_24h > 0) {
+            $success_rate = ($successful_trades_24h / $bot_trades_24h) * 100;
+        } else {
+            $success_rate = 0;
+        }
+        // This is the variable holding the calculated percentage, e.g., 85.7
+        $bot_success_rate = number_format($success_rate, 1);
+
+
+        // 3. Calculate Bot Uptime
+        $first_investment = UserInvestment::where('user_id', $user->id)->oldest()->first();
+        $bot_uptime_seconds = 0;
+        if ($first_investment) {
+            // Calculate difference in seconds between the first investment and now
+            $bot_uptime_seconds = $first_investment->created_at->diffInSeconds(Carbon::now());
+        }
+
+        // 4. Check if the bot is globally active (e.g., from a user setting)
+        $is_bot_globally_active = $user->is_trading_bot_enabled ?? false;
+
+        // Pass all calculated variables to the view
+        return view('user.layouts.bot', compact(
+            'user',
             'activeGameSetting',
-            'activeUserInvestment', // Pass the collection with this name as per your original compact
+            'activeUserInvestment',
             'bot_profit_24h',
             'bot_trades_24h',
-            'bot_success_rate',
+            'bot_success_rate', // Correctly passing the calculated rate
             'bot_uptime_seconds',
             'is_bot_globally_active'
         ));
     }
+
 
     /**
      * Place a new trade (UserInvestment).
@@ -157,8 +182,6 @@ class GameController extends Controller
             return redirect()->route('ai-trading')->with('success', 'Trade placed successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
-
-
         }
     }
 
@@ -332,6 +355,4 @@ class GameController extends Controller
             $level++;
         }
     }
-
-    
 }
