@@ -321,6 +321,7 @@
                     <li>Ensure your withdrawal address is correct and on the TRC20 network for USDT.</li>
                     <li>Withdrawals are processed within 24 hours.</li>
                     <li>You can make one withdrawal request per day.</li>
+                    <li>One day before making a withdrawal ,you should not trading.</li>
                     <li>For assistance, contact <a href="#" style="color:#f0b90b;">Customer Support</a>.</li>
                 </ul>
             </div>

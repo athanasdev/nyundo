@@ -230,7 +230,7 @@ public function withdrawRequest(Request $request)
     $lastTradeDate = $trades->max('investment_date');
 
     if (Carbon::parse($lastTradeDate)->isToday()) {
-        return redirect()->back()->withErrors(['error' => 'One day before making a withdrawal ,you should avoid trading.']);
+        return redirect()->back()->withErrors(['error' => 'One day before making a withdrawal ,you should not trading.']);
     }
 
     // Continue with withdrawal logic
