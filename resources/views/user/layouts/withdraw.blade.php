@@ -230,10 +230,9 @@
 
             @if ($errors->any())
                 <div class="alert-error flex items-start space-x-2">
-                    <span class="mt-1">⚠️</span>
                     <ul style="list-style-type: none;" class="list-disc list-inside">
                         @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
+                           ⚠️ <li>{{ $error }}</li>
                         @endforeach
                     </ul>
                 </div>
@@ -241,15 +240,13 @@
 
             @if (session('error'))
                 <div class="alert-error flex items-center space-x-2">
-                    <span>❌</span>
-                    <span>{{ session('error') }}</span>
+                    ❌ <span>{{ session('error') }}</span>
                 </div>
             @endif
 
             @if (session('success'))
                 <div class="alert alert-success flex items-center space-x-2">
-                    <span>✅</span>
-                    <span>{{ session('success') }}</span>
+                ✅<span>{{ session('success') }}</span>
                 </div>
             @endif
 
