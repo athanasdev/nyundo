@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Payment;
 
 use App\Http\Controllers\Controller;
 use App\Models\Payment; // Make sure this is your Eloquent Payment model
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use Illuminate\Contracts\Encryption\DecryptException;
@@ -20,25 +21,87 @@ class NowPaymentcontroller extends Controller
         return view('user.layouts.deposit', compact('user'));
     }
 
+    // public function createPayment(Request $request)
+    // {
+    //     $validated = $request->validate([
+    //         'price_amount' => 'required|numeric',
+    //         'price_currency' => 'required|string',
+    //         'pay_currency' => 'required|string',
+    //         'order_id' => 'required', // Consider making this unique or generated
+    //         'order_description' => 'required|string',
+    //         'ipn_callback_url' => 'required|url',
+    //         'customer_email' => 'nullable|email',
+    //     ]);
+
+
+
+    //     $client = new Client();
+    //     $headers = [
+    //         'x-api-key' => env('NOWPAYMENTS_API_KEY'),
+    //         'Content-Type' => 'application/json',
+    //     ];
+
+    //     try {
+    //         $response = $client->post('https://api.nowpayments.io/v1/payment', [
+    //             'headers' => $headers,
+    //             'json' => $validated,
+    //             'verify' => false, // Consider setting to true in production if you have SSL configured
+    //         ]);
+
+    //         $nowPaymentData = json_decode($response->getBody(), true);
+
+    //         // Important: Log the API response for debugging
+    //         Log::info('NOWPayments API Response: ', $nowPaymentData);
+
+    //         // Check if essential data is present
+    //         if (empty($nowPaymentData['payment_id'])) {
+    //             Log::error('payment_id missing from NOWPayments response.', $nowPaymentData);
+    //             return back()->with('error', 'Payment creation failed. Please try again or contact support.');
+    //         }
+
+    //         $paymentData = Payment::create([
+    //             'user_id'            => Auth::id(),
+    //             'payment_id'         => $nowPaymentData['payment_id'],
+    //             'purchase_id'        => $nowPaymentData['purchase_id'] ?? null,
+    //             'order_id'           => $nowPaymentData['order_id'], // This is from the form, ensure it's correctly handled
+    //             'payment_status'     => $nowPaymentData['payment_status'],
+    //             'price_amount'       => $nowPaymentData['price_amount'],
+    //             'price_currency'     => $nowPaymentData['price_currency'],
+    //             'pay_amount'         => $nowPaymentData['pay_amount'],
+    //             'pay_currency'       => $nowPaymentData['pay_currency'],
+    //             'amount_received'    => $nowPaymentData['amount_received'] ?? 0.00, // Default if not present
+    //             'pay_address'        => $nowPaymentData['pay_address'],
+    //             'network'            => $nowPaymentData['network'] ?? null,
+    //             'payment_created_at' => $nowPaymentData['created_at'] ?? now(), // Use current time as fallback
+    //             'payment_updated_at' => $nowPaymentData['updated_at'] ?? now(), // Use current time as fallback
+    //         ]);
+
+    //         // Instead of returning a view, redirect to a new route
+    //         // Pass the ID of the payment record you just created in your database
+    //         return redirect()->route('payment.confirm.show', ['id' => Crypt::encrypt($paymentData->id)]);
+    //     } catch (\GuzzleHttp\Exception\ClientException $e) {
+    //         $responseBody = $e->getResponse()->getBody()->getContents();
+    //         Log::error('NOWPayments API Client Exception: ' . $e->getMessage(), ['response' => $responseBody]);
+    //         return back()->with('error', 'Payment gateway error. Please try again later. Details: ' . json_decode($responseBody)->message ?? $e->getMessage());
+    //     } catch (\Exception $e) {
+    //         Log::error('General Error in createPayment: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+    //         return back()->with('error', 'An unexpected error occurred: ' . $e->getMessage());
+    //     }
+    // }
+
+
     public function createPayment(Request $request)
     {
         $validated = $request->validate([
-            'price_amount' => 'required|numeric',
+            'price_amount' => 'required|numeric|min:1',
             'price_currency' => 'required|string',
             'pay_currency' => 'required|string',
-            'order_id' => 'required', // Consider making this unique or generated
+            // The order_id from your form MUST be the user's ID for the IPN to work
+            'order_id' => 'required|exists:users,id',
             'order_description' => 'required|string',
             'ipn_callback_url' => 'required|url',
             'customer_email' => 'nullable|email',
         ]);
-
-        // Prevent duplicate submissions if order_id is meant to be unique per attempt
-        // For example, you could check if a payment with this order_id already exists
-        // and is not in a failed state. This is an additional layer of protection.
-        // if (Payment::where('order_id', $validated['order_id'])->where('user_id', Auth::id())->exists()) {
-        //     return back()->with('error', 'A payment with this order ID already exists or is being processed.');
-        // }
-
 
         $client = new Client();
         $headers = [
@@ -50,47 +113,48 @@ class NowPaymentcontroller extends Controller
             $response = $client->post('https://api.nowpayments.io/v1/payment', [
                 'headers' => $headers,
                 'json' => $validated,
-                'verify' => false, // Consider setting to true in production if you have SSL configured
+                'verify' => true, // Recommended to set to true in production
             ]);
 
-            $nowPaymentData = json_decode($response->getBody(), true);
+            $nowPaymentData = json_decode($response->getBody()->getContents(), true);
 
-            // Important: Log the API response for debugging
             Log::info('NOWPayments API Response: ', $nowPaymentData);
 
-            // Check if essential data is present
             if (empty($nowPaymentData['payment_id'])) {
                 Log::error('payment_id missing from NOWPayments response.', $nowPaymentData);
                 return back()->with('error', 'Payment creation failed. Please try again or contact support.');
             }
 
+            // Create the initial payment record in the database.
+            // This is the correct logic.
             $paymentData = Payment::create([
-                'user_id'            => Auth::id(),
+                'user_id'            => Auth::id(), // The currently logged-in user
                 'payment_id'         => $nowPaymentData['payment_id'],
                 'purchase_id'        => $nowPaymentData['purchase_id'] ?? null,
-                'order_id'           => $nowPaymentData['order_id'], // This is from the form, ensure it's correctly handled
-                'payment_status'     => $nowPaymentData['payment_status'],
+                'order_id'           => $nowPaymentData['order_id'],
+                'payment_status'     => $nowPaymentData['payment_status'], // Will be 'waiting'
                 'price_amount'       => $nowPaymentData['price_amount'],
                 'price_currency'     => $nowPaymentData['price_currency'],
                 'pay_amount'         => $nowPaymentData['pay_amount'],
                 'pay_currency'       => $nowPaymentData['pay_currency'],
-                'amount_received'    => $nowPaymentData['amount_received'] ?? 0.00, // Default if not present
+                'amount_received'    => 0.00, // Amount received is always 0 initially
                 'pay_address'        => $nowPaymentData['pay_address'],
                 'network'            => $nowPaymentData['network'] ?? null,
-                'payment_created_at' => $nowPaymentData['created_at'] ?? now(), // Use current time as fallback
-                'payment_updated_at' => $nowPaymentData['updated_at'] ?? now(), // Use current time as fallback
+                'payment_created_at' => Carbon::parse($nowPaymentData['created_at'] ?? now()),
+                'payment_updated_at' => Carbon::parse($nowPaymentData['updated_at'] ?? now()),
+                'is_processed'       => false, // Explicitly set to false. This is perfect.
             ]);
 
-            // Instead of returning a view, redirect to a new route
-            // Pass the ID of the payment record you just created in your database
+            // Redirect to a confirmation/payment instruction page
             return redirect()->route('payment.confirm.show', ['id' => Crypt::encrypt($paymentData->id)]);
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             $responseBody = $e->getResponse()->getBody()->getContents();
-            Log::error('NOWPayments API Client Exception: ' . $e->getMessage(), ['response' => $responseBody]);
-            return back()->with('error', 'Payment gateway error. Please try again later. Details: ' . json_decode($responseBody)->message ?? $e->getMessage());
+            Log::error('NOWPayments API Client Exception: ', ['response' => $responseBody]);
+            $errorMessage = json_decode($responseBody)->message ?? 'Payment gateway error.';
+            return back()->with('error', 'Payment gateway error. Please try again later. Details: ' . $errorMessage);
         } catch (\Exception $e) {
-            Log::error('General Error in createPayment: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
-            return back()->with('error', 'An unexpected error occurred: ' . $e->getMessage());
+            Log::error('General Error in createPayment: ' . $e->getMessage());
+            return back()->with('error', 'An unexpected error occurred. Please contact support.');
         }
     }
 
