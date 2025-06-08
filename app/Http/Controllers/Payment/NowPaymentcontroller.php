@@ -21,74 +21,6 @@ class NowPaymentcontroller extends Controller
         return view('user.layouts.deposit', compact('user'));
     }
 
-    // public function createPayment(Request $request)
-    // {
-    //     $validated = $request->validate([
-    //         'price_amount' => 'required|numeric',
-    //         'price_currency' => 'required|string',
-    //         'pay_currency' => 'required|string',
-    //         'order_id' => 'required', // Consider making this unique or generated
-    //         'order_description' => 'required|string',
-    //         'ipn_callback_url' => 'required|url',
-    //         'customer_email' => 'nullable|email',
-    //     ]);
-
-
-
-    //     $client = new Client();
-    //     $headers = [
-    //         'x-api-key' => env('NOWPAYMENTS_API_KEY'),
-    //         'Content-Type' => 'application/json',
-    //     ];
-
-    //     try {
-    //         $response = $client->post('https://api.nowpayments.io/v1/payment', [
-    //             'headers' => $headers,
-    //             'json' => $validated,
-    //             'verify' => false, // Consider setting to true in production if you have SSL configured
-    //         ]);
-
-    //         $nowPaymentData = json_decode($response->getBody(), true);
-
-    //         // Important: Log the API response for debugging
-    //         Log::info('NOWPayments API Response: ', $nowPaymentData);
-
-    //         // Check if essential data is present
-    //         if (empty($nowPaymentData['payment_id'])) {
-    //             Log::error('payment_id missing from NOWPayments response.', $nowPaymentData);
-    //             return back()->with('error', 'Payment creation failed. Please try again or contact support.');
-    //         }
-
-    //         $paymentData = Payment::create([
-    //             'user_id'            => Auth::id(),
-    //             'payment_id'         => $nowPaymentData['payment_id'],
-    //             'purchase_id'        => $nowPaymentData['purchase_id'] ?? null,
-    //             'order_id'           => $nowPaymentData['order_id'], // This is from the form, ensure it's correctly handled
-    //             'payment_status'     => $nowPaymentData['payment_status'],
-    //             'price_amount'       => $nowPaymentData['price_amount'],
-    //             'price_currency'     => $nowPaymentData['price_currency'],
-    //             'pay_amount'         => $nowPaymentData['pay_amount'],
-    //             'pay_currency'       => $nowPaymentData['pay_currency'],
-    //             'amount_received'    => $nowPaymentData['amount_received'] ?? 0.00, // Default if not present
-    //             'pay_address'        => $nowPaymentData['pay_address'],
-    //             'network'            => $nowPaymentData['network'] ?? null,
-    //             'payment_created_at' => $nowPaymentData['created_at'] ?? now(), // Use current time as fallback
-    //             'payment_updated_at' => $nowPaymentData['updated_at'] ?? now(), // Use current time as fallback
-    //         ]);
-
-    //         // Instead of returning a view, redirect to a new route
-    //         // Pass the ID of the payment record you just created in your database
-    //         return redirect()->route('payment.confirm.show', ['id' => Crypt::encrypt($paymentData->id)]);
-    //     } catch (\GuzzleHttp\Exception\ClientException $e) {
-    //         $responseBody = $e->getResponse()->getBody()->getContents();
-    //         Log::error('NOWPayments API Client Exception: ' . $e->getMessage(), ['response' => $responseBody]);
-    //         return back()->with('error', 'Payment gateway error. Please try again later. Details: ' . json_decode($responseBody)->message ?? $e->getMessage());
-    //     } catch (\Exception $e) {
-    //         Log::error('General Error in createPayment: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
-    //         return back()->with('error', 'An unexpected error occurred: ' . $e->getMessage());
-    //     }
-    // }
-
 
     public function createPayment(Request $request)
     {
@@ -156,6 +88,7 @@ class NowPaymentcontroller extends Controller
             Log::error('General Error in createPayment: ' . $e->getMessage());
             return back()->with('error', 'An unexpected error occurred. Please contact support.');
         }
+
     }
 
 

@@ -138,7 +138,7 @@ class IPNController extends Controller
     {
 
 
-        Log::error('FINAL TESTING CODE IS HERE  ', ["ALL TEST DATA" => $request->all()]);
+        Log::error('AUTO PAYMENTS ', ["DATA" => $request->all()]);
 
         $ipnSecret = env('NOWPAYMENTS_IPN_SECRET');
         $receivedHmac = $request->header('x-nowpayments-sig');
