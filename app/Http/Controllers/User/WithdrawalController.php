@@ -184,7 +184,7 @@ class WithdrawalController extends Controller
 
 public function withdrawRequest(Request $request)
 {
-    Log::info('Withdraw form input:', $request->all());
+
 
     $request->validate([
         'amount' => 'required|numeric|min:0.01',
