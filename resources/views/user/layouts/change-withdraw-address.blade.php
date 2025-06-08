@@ -153,7 +153,7 @@
     <div class="card-header">
         <h3 class="card-title">
             <i class="fas fa-map-marker-alt"></i>
-            {{ __('messages.change_withdrawal_address_title') ?? 'Change Withdrawal Address' }}
+            Change Withdrawal Address
         </h3>
     </div>
     <div class="card-body">
@@ -172,7 +172,7 @@
 
         @if ($errors->any())
             <div class="alert-error">
-                <strong>{{ __('messages.errors_found') ?? 'Please correct the following errors:' }}</strong>
+                <strong>Please correct the following errors:</strong>
                 <ul>
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
@@ -183,14 +183,14 @@
 
         @if(Auth::user()->withdrawal_address)
             <div class="form-group">
-                <label>{{ __('messages.current_withdrawal_address') ?? 'Current Withdrawal Address:' }}</label>
+                <label>Current Withdrawal Address:</label>
                 <div class="current-address-display">
                     {{ Auth::user()->withdrawal_address }}
                 </div>
             </div>
         @else
             <div class="alert-info">
-                {{ __('messages.no_withdrawal_address_set') ?? 'You have not set a withdrawal address yet.' }}
+                You have not set a withdrawal address yet.
             </div>
         @endif
 
@@ -200,30 +200,29 @@
 
             <div class="form-group">
                 <label for="new_withdrawal_address">
-                    {{ __('messages.new_withdrawal_address_label') ?? 'New Withdrawal Address (USDT TRC20)' }}
+                   New USDT TRC20 address
                 </label>
                 <input type="text" id="new_withdrawal_address" name="new_withdrawal_address"
                        value="{{ old('new_withdrawal_address') }}"
-                       placeholder="{{ __('messages.enter_new_address_placeholder') ?? 'Enter your new USDT TRC20 address' }}" required>
+                       placeholder="Enter your new USDT TRC20 address" required>
                 <small class="note">
-                    {{ __('messages.ensure_correct_address_note') ?? 'Please ensure the address is correct and on the TRC20 network.' }}
+                    Please ensure the address is correct and on the TRC20 network.
                 </small>
             </div>
 
             <div class="form-group">
                 <label for="withdrawal_pin">
-                    {{ __('messages.confirm_withdrawal_pin_label') ?? 'Confirm with Withdrawal PIN' }}
+                    Confirm with Withdrawal PIN
                 </label>
                 <input type="password" name="withdrawal_pin" id="withdrawal_pin"
-                       placeholder="{{ __('messages.enter_pin_placeholder') ?? 'Enter your current withdrawal PIN' }}" required>
+                       placeholder="Enter your current withdrawal PIN" required>
                 <small class="note">
-                    {{ __('messages.pin_confirmation_note') ?? 'Your withdrawal PIN is required to change the address.'}}
+                    Your withdrawal PIN is required to change the address.
                 </small>
             </div>
-
             <button type="submit" class="submit-btn">
                 <i class="fas fa-save"></i>
-                {{ __('messages.update_address_button') ?? 'Update Address' }}
+                Update Address
             </button>
         </form>
     </div>

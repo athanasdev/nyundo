@@ -152,8 +152,8 @@
             @csrf
             <div class="form-group">
                 <label for="price_amount">Amount (USD):</label>
-                <input type="number" id="price_amount" name="price_amount" step="0.01" min="10" required>
-                <small class="note">This is the equivalent value in USD you wish to deposit. Minimum $10.00.</small>
+                <input type="number" id="price_amount" name="price_amount" step="0.01" min="15" required>
+                <small class="note">Minimum deposit is $15.00.</small>
             </div>
             <input type="hidden" name="price_currency" value="usd">
             <input type="hidden" name="order_description" value="deposit">
