@@ -74,12 +74,9 @@ Route::middleware(['auth:web', 'history'])->group(function () {
 
     Route::get('/deposit/confirm/{id}', [NowPaymentController::class, 'showConfirmDepositPage'])->name('payment.confirm.show');
     Route::post('/ipn-callback', [IPNController::class, 'handle'])->name('ipn.callback');
-    Route::get('/nowpayments/balance', [NowPaymentController::class, 'checkBalance']);
-    Route::post('/nowpayments/validate-address', [NowPaymentController::class, 'validateAddress']);
 
 
     // Withdrawal
-
     Route::get('/withdraw', [WithdrawalController::class, 'withdraw'])->name('withdraw');
     Route::post('/withdraw', [WithdrawalController::class, 'withdrawRequest'])->name('withdraw.request');
     Route::get('/withdraw/setup', [WithdrawalController::class, 'setup'])->name('withdraw.setup');
@@ -116,7 +113,6 @@ Route::middleware(['auth:web', 'history'])->group(function () {
 // ==========================
 // Protected Admin Routes
 // ==========================
-
 
 Route::prefix('admin', 'history')->middleware('auth:admin')->group(function () {
 
@@ -161,7 +157,12 @@ Route::prefix('admin', 'history')->middleware('auth:admin')->group(function () {
     Route::post('/admin/user-investments/{user_investment}/complete', [UserInvestmentsController::class, 'completeInvestment'])->name('admin.user_investments.complete');
     Route::post('/user-investments/{user_investment}/cancel', [UserInvestmentsController::class, 'cancelInvestment'])->name('admin.user_investments.cancel');
 
-    // Admin-initiated Impersonation
+    // CHECK ACCOUNT BALANCE
+    Route::post('/nowpayments/validate-address', [NowPaymentController::class, 'validateAddress']);
+    Route::get('/nowpayments/balance', [NowPaymentController::class, 'checkBalance']);
+
+
+
     // This route needs to be protected by the 'auth:admin' middleware
     Route::get('/impersonate/{id}', [ImpersonateController::class, 'loginAsUser'])->name('impersonate.login');
 
@@ -183,15 +184,6 @@ Route::get('/check-time', function () {
         'Carbon::now()' => Carbon\Carbon::now()->toDateTimeString(),
         'Carbon::now(UTC)' => Carbon\Carbon::now('UTC')->toDateTimeString(),
     ];
-
+    
 });
-
-
-// Route::get('/logs', [LogController::class, 'getLogs']);
-// Route::middleware('auth:sanctum')->get('/logs', [LogController::class, 'getLogs']);
-// Route::middleware('auth:sanctum')->get('/logs', [LogController::class, 'getLogs']);
-
-// Route::get('/refresh-csrf', function () {
-//     return response()->json(['token' => csrf_token()]);
-// });
 

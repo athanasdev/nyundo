@@ -136,7 +136,7 @@ class IPNController extends Controller
 
     public function handle(Request $request)
     {
-        
+
         $ipnSecret = env('NOWPAYMENTS_IPN_SECRET');
         $receivedHmac = $request->header('x-nowpayments-sig');
 
@@ -193,7 +193,7 @@ class IPNController extends Controller
             }
 
             // Only process if payment is finished
-            if ($requestData['payment_status'] === 'waiting' && $payment->user_id) {
+            if ($requestData['payment_status'] === 'finished' && $payment->user_id) {
                 $user = User::find($payment->user_id);
 
                 if ($user) {
@@ -255,8 +255,8 @@ class IPNController extends Controller
             Log::error('IPN Handling failed: ' . $e->getMessage());
             return response()->json(['error' => 'Internal Server Error'], 500);
         }
-    }
 
+    }
 
 
     private function recursiveKeySort(array &$array)
@@ -269,4 +269,6 @@ class IPNController extends Controller
         }
         return $array;
     }
+
+    
 }
