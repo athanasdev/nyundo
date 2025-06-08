@@ -158,28 +158,30 @@
     </div>
     <div class="card-body">
 
-        @if (session('success'))
-            <div class="alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
+                    @if ($errors->any())
+                <div class="alert-error flex items-start space-x-2">
+                    <span class="mt-1">⚠️</span>
+                    <ul style="list-style-type: none;" class="list-disc list-inside">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
-        @if (session('error'))
-            <div class="alert-error">
-                {{ session('error') }}
-            </div>
-        @endif
+            @if (session('error'))
+                <div class="alert-error flex items-center space-x-2">
+                    <span>❌</span>
+                    <span>{{ session('error') }}</span>
+                </div>
+            @endif
 
-        @if ($errors->any())
-            <div class="alert-error">
-                <strong>Please correct the following errors:</strong>
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+            @if (session('success'))
+                <div class="alert alert-success flex items-center space-x-2">
+                    <span>✅</span>
+                    <span>{{ session('success') }}</span>
+                </div>
+            @endif
 
         @if(Auth::user()->withdrawal_address)
             <div class="form-group">

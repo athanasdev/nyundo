@@ -562,26 +562,28 @@
             </div>
 
             <div class="section">
-                @if (session('success'))
-                    <div class="alert alert-success" role="alert">
-                        {{ session('success') }}
-                    </div>
-                @endif
-
-                @if (session('error'))
-                    <div class="alert alert-danger" role="alert">
-                        {{ session('error') }}
-                    </div>
-                @endif
-
-                {{-- This handles validation errors, like 'amount' being too high --}}
                 @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
+                    <div class="alert-error flex items-start space-x-2">
+                        <span class="mt-1">⚠️</span>
+                        <ul style="list-style-type: none;" class="list-disc list-inside">
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
                             @endforeach
                         </ul>
+                    </div>
+                @endif
+
+                @if (session('error'))
+                    <div class="alert-error flex items-center space-x-2">
+                        <span>❌</span>
+                        <span>{{ session('error') }}</span>
+                    </div>
+                @endif
+
+                @if (session('success'))
+                    <div class="alert alert-success flex items-center space-x-2">
+                        <span>✅</span>
+                        <span>{{ session('success') }}</span>
                     </div>
                 @endif
 
@@ -1185,7 +1187,10 @@
 
             // --- HELPER FUNCTIONS ---
             function formatCurrency(amount) {
-                return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+                return new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD'
+                }).format(amount);
             }
 
             // --- UI UPDATE & INITIALIZATION FUNCTIONS ---
@@ -1224,7 +1229,8 @@
                         const s = Math.floor((timeToStart % 60000) / 1000);
                         signalStatus.textContent = 'Waiting';
                         signalStatus.className = 'signal-status waiting';
-                        countdownDisplay.textContent = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+                        countdownDisplay.textContent =
+                            `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
                         countdownLabel.textContent = 'Time until signal opens';
                     } else if (now < endTime) {
                         const timeToEnd = endTime - now;
@@ -1233,7 +1239,8 @@
                         const s = Math.floor((timeToEnd % 60000) / 1000);
                         signalStatus.textContent = 'Active';
                         signalStatus.className = 'signal-status active';
-                        countdownDisplay.textContent = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+                        countdownDisplay.textContent =
+                            `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
                         countdownLabel.textContent = 'Time remaining to trade';
                     } else {
                         signalStatus.textContent = 'Expired';
@@ -1275,7 +1282,8 @@
                     document.getElementById('chartSymbol').textContent = `${selectedCrypto}/USD`;
                     executeTradeBtn.disabled = false;
                     executeTradeBtn.className = `action-btn ${selectedDirection}`;
-                    executeBtnText.innerHTML = `<i class="fas fa-exchange-alt"></i> Execute ${selectedDirection.toUpperCase()}`;
+                    executeBtnText.innerHTML =
+                        `<i class="fas fa-exchange-alt"></i> Execute ${selectedDirection.toUpperCase()}`;
                 } else {
                     tradePreview.style.display = 'none';
                     executeTradeBtn.disabled = true;
@@ -1292,28 +1300,85 @@
                 ctx.innerHTML = '<canvas id="chartCanvas"></canvas>';
                 const canvas = document.getElementById('chartCanvas');
                 candlestickChart = new Chart(canvas, {
-                    type: 'line', data: { labels: sampleData.labels, datasets: [{ label: 'Price', data: sampleData.prices, borderColor: '#f0b90b', backgroundColor: 'rgba(240, 185, 11, 0.1)', borderWidth: 2, fill: true, tension: 0.1 }] },
-                    options: { responsive: true, maintainAspectRatio: false, scales: { x: { grid: { color: '#2b3139' }, ticks: { color: '#848e9c' } }, y: { grid: { color: '#2b3139' }, ticks: { color: '#848e9c' } } }, plugins: { legend: { display: false } }, elements: { point: { radius: 0 } } }
+                    type: 'line',
+                    data: {
+                        labels: sampleData.labels,
+                        datasets: [{
+                            label: 'Price',
+                            data: sampleData.prices,
+                            borderColor: '#f0b90b',
+                            backgroundColor: 'rgba(240, 185, 11, 0.1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                grid: {
+                                    color: '#2b3139'
+                                },
+                                ticks: {
+                                    color: '#848e9c'
+                                }
+                            },
+                            y: {
+                                grid: {
+                                    color: '#2b3139'
+                                },
+                                ticks: {
+                                    color: '#848e9c'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        elements: {
+                            point: {
+                                radius: 0
+                            }
+                        }
+                    }
                 });
                 setInterval(updateChartData, 5000);
             }
+
             function generateSampleCandlestickData() {
-                const labels = []; const prices = []; let currentPrice = 45000;
+                const labels = [];
+                const prices = [];
+                let currentPrice = 45000;
                 for (let i = 0; i < 50; i++) {
-                    const time = new Date(); time.setMinutes(time.getMinutes() - (49 - i));
-                    labels.push(time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+                    const time = new Date();
+                    time.setMinutes(time.getMinutes() - (49 - i));
+                    labels.push(time.toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    }));
                     currentPrice += (Math.random() - 0.5) * 200;
                     prices.push(currentPrice);
                 }
-                return { labels, prices };
+                return {
+                    labels,
+                    prices
+                };
             }
+
             function updateChartData() {
                 if (!candlestickChart) return;
                 const lastPrice = candlestickChart.data.datasets[0].data.slice(-1)[0];
                 const change = (Math.random() - 0.5) * 100;
                 const newPrice = lastPrice + change;
                 const now = new Date();
-                candlestickChart.data.labels.push(now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+                candlestickChart.data.labels.push(now.toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }));
                 candlestickChart.data.datasets[0].data.push(newPrice);
                 if (candlestickChart.data.labels.length > 50) {
                     candlestickChart.data.labels.shift();
@@ -1322,10 +1387,13 @@
                 candlestickChart.update('none');
                 updatePriceDisplay(newPrice, change);
             }
+
             function updatePriceDisplay(price, change) {
                 const chartPrice = document.getElementById('chartPrice');
                 const chartChange = document.getElementById('chartChange');
-                if (chartPrice) { chartPrice.textContent = formatCurrency(price); }
+                if (chartPrice) {
+                    chartPrice.textContent = formatCurrency(price);
+                }
                 if (chartChange) {
                     const changePercent = (change / price * 100).toFixed(2);
                     chartChange.textContent = `${change >= 0 ? '+' : ''}${changePercent}%`;
@@ -1337,7 +1405,9 @@
             function simulatePnlUpdates() {
                 const pnlElements = document.querySelectorAll('[id^="activeTradePnl_"]');
                 if (pnlElements.length === 0) return;
-                pnlElements.forEach(el => { el.dataset.currentPnl = (Math.random() * 2 - 1).toFixed(2); });
+                pnlElements.forEach(el => {
+                    el.dataset.currentPnl = (Math.random() * 2 - 1).toFixed(2);
+                });
                 setInterval(() => {
                     pnlElements.forEach(el => {
                         let currentPnl = parseFloat(el.dataset.currentPnl);
@@ -1382,9 +1452,11 @@
             simulatePnlUpdates(); // PNL simulation starts here
 
             // Initialize bot stats display
-            document.getElementById('botProfitPageDisplay').textContent = formatCurrency(botStatsInitialData.profit24h);
+            document.getElementById('botProfitPageDisplay').textContent = formatCurrency(botStatsInitialData
+                .profit24h);
             document.getElementById('botTradesPageDisplay').textContent = botStatsInitialData.trades24h;
-            document.getElementById('botSuccessRatePageDisplay').textContent = `${botStatsInitialData.successRate.toFixed(1)}%`;
+            document.getElementById('botSuccessRatePageDisplay').textContent =
+                `${botStatsInitialData.successRate.toFixed(1)}%`;
             const h = Math.floor(botStatsInitialData.uptimeSeconds / 3600);
             const m = Math.floor((botStatsInitialData.uptimeSeconds % 3600) / 60);
             document.getElementById('botUptimePageDisplay').textContent = `${h}h ${m}m`;
@@ -1410,7 +1482,10 @@
                 profitCalculator.style.display = 'block';
                 const expectedProfit = tradeAmount * (profitSettings.expectedROI / 100);
                 const totalReturnAmount = tradeAmount + expectedProfit;
-                const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+                const formatter = new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD'
+                });
                 investmentAmount.textContent = formatter.format(tradeAmount);
                 potentialProfit.textContent = formatter.format(expectedProfit);
                 totalReturn.textContent = `Total Return: ${formatter.format(totalReturnAmount)}`;

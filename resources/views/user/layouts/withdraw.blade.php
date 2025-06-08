@@ -231,7 +231,7 @@
             @if ($errors->any())
                 <div class="alert-error flex items-start space-x-2">
                     <span class="mt-1">⚠️</span>
-                    <ul class="list-disc list-inside">
+                    <ul style="list-style-type: none;" class="list-disc list-inside">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
