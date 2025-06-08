@@ -755,8 +755,9 @@
     </div>
 @endsection
 
-@push('scripts')
-    <!-- TradingView Charting Library -->
+
+
+{{-- @push('scripts')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 
     <script>
@@ -822,14 +823,9 @@
             function initializeCandlestickChart() {
                 const ctx = document.getElementById('tradingViewChart');
                 if (!ctx) return;
-
-                // Generate sample candlestick data
                 const sampleData = generateSampleCandlestickData();
-
-                // Clear loading message
                 ctx.innerHTML = '<canvas id="chartCanvas"></canvas>';
                 const canvas = document.getElementById('chartCanvas');
-
                 candlestickChart = new Chart(canvas, {
                     type: 'line',
                     data: {
@@ -877,8 +873,6 @@
                         }
                     }
                 });
-
-                // Update chart data periodically
                 setInterval(updateChartData, 5000);
             }
 
@@ -887,7 +881,6 @@
                 const prices = [];
                 const basePrice = 45000;
                 let currentPrice = basePrice;
-
                 for (let i = 0; i < 50; i++) {
                     const time = new Date();
                     time.setMinutes(time.getMinutes() - (49 - i));
@@ -895,13 +888,10 @@
                         hour: '2-digit',
                         minute: '2-digit'
                     }));
-
-                    // Generate realistic price movement
                     const change = (Math.random() - 0.5) * 200;
                     currentPrice += change;
                     prices.push(currentPrice);
                 }
-
                 return {
                     labels,
                     prices
@@ -910,40 +900,29 @@
 
             function updateChartData() {
                 if (!candlestickChart) return;
-
-                // Simulate new price data
                 const lastPrice = candlestickChart.data.datasets[0].data.slice(-1)[0];
                 const change = (Math.random() - 0.5) * 100;
                 const newPrice = lastPrice + change;
-
-                // Add new data point
                 const now = new Date();
                 candlestickChart.data.labels.push(now.toLocaleTimeString([], {
                     hour: '2-digit',
                     minute: '2-digit'
                 }));
                 candlestickChart.data.datasets[0].data.push(newPrice);
-
-                // Remove old data points (keep last 50)
                 if (candlestickChart.data.labels.length > 50) {
                     candlestickChart.data.labels.shift();
                     candlestickChart.data.datasets[0].data.shift();
                 }
-
                 candlestickChart.update('none');
-
-                // Update price display
                 updatePriceDisplay(newPrice, change);
             }
 
             function updatePriceDisplay(price, change) {
                 const chartPrice = document.getElementById('chartPrice');
                 const chartChange = document.getElementById('chartChange');
-
                 if (chartPrice) {
                     chartPrice.textContent = formatCurrency(price);
                 }
-
                 if (chartChange) {
                     const changePercent = (change / price * 100).toFixed(2);
                     chartChange.textContent = `${change >= 0 ? '+' : ''}${changePercent}%`;
@@ -953,10 +932,8 @@
 
             function initializeCountdown() {
                 if (!signalData.startTime || !signalData.endTime) return;
-
                 const startTime = new Date(signalData.startTime);
                 const endTime = new Date(signalData.endTime);
-                const currentTime = new Date();
 
                 countdownInterval = setInterval(() => {
                     const now = new Date();
@@ -965,31 +942,26 @@
                     const countdownLabel = document.getElementById('countdownLabel');
 
                     if (now < startTime) {
-                        // Signal hasn't started yet
                         const timeToStart = startTime - now;
-                        const hours = Math.floor(timeToStart / (1000 * 60 * 60));
-                        const minutes = Math.floor((timeToStart % (1000 * 60 * 60)) / (1000 * 60));
-                        const seconds = Math.floor((timeToStart % (1000 * 60)) / 1000);
-
+                        const h = Math.floor(timeToStart / 3600000);
+                        const m = Math.floor((timeToStart % 3600000) / 60000);
+                        const s = Math.floor((timeToStart % 60000) / 1000);
                         signalStatus.textContent = 'Waiting';
                         signalStatus.className = 'signal-status waiting';
                         countdownDisplay.textContent =
-                            `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                            `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
                         countdownLabel.textContent = 'Time until signal opens';
-                    } else if (now >= startTime && now < endTime) {
-                        // Signal is active
+                    } else if (now < endTime) {
                         const timeToEnd = endTime - now;
-                        const hours = Math.floor(timeToEnd / (1000 * 60 * 60));
-                        const minutes = Math.floor((timeToEnd % (1000 * 60 * 60)) / (1000 * 60));
-                        const seconds = Math.floor((timeToEnd % (1000 * 60)) / 1000);
-
+                        const h = Math.floor(timeToEnd / 3600000);
+                        const m = Math.floor((timeToEnd % 3600000) / 60000);
+                        const s = Math.floor((timeToEnd % 60000) / 1000);
                         signalStatus.textContent = 'Active';
                         signalStatus.className = 'signal-status active';
                         countdownDisplay.textContent =
-                            `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                            `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
                         countdownLabel.textContent = 'Time remaining to trade';
                     } else {
-                        // Signal has expired
                         signalStatus.textContent = 'Expired';
                         signalStatus.className = 'signal-status expired';
                         countdownDisplay.textContent = '00:00:00';
@@ -999,58 +971,17 @@
                 }, 1000);
             }
 
-            function updateProfitCalculator(amount) {
-                const profitCalculator = document.getElementById('profitCalculator');
-                const investmentAmount = document.getElementById('investmentAmount');
-                const potentialProfit = document.getElementById('potentialProfit');
-                const totalReturn = document.getElementById('totalReturn');
-                const returnPercentage = document.getElementById('returnPercentage');
-                const balanceWarningEl = document.getElementById('balanceWarning');
-
-                const tradeAmount = parseFloat(amount);
-
-                // Check balance warning
-                if (!isNaN(tradeAmount) && tradeAmount > userAvailableBalance) {
-                    balanceWarningEl.style.display = 'block';
-                } else {
-                    balanceWarningEl.style.display = 'none';
-                }
-
-                if (!isNaN(tradeAmount) && tradeAmount > 0) {
-                    profitCalculator.style.display = 'block';
-
-                    const expectedProfit = tradeAmount * (profitSettings.expectedROI / 100);
-                    const totalReturnAmount = tradeAmount + expectedProfit;
-
-                    investmentAmount.textContent = formatCurrency(tradeAmount);
-                    potentialProfit.textContent = formatCurrency(expectedProfit);
-                    totalReturn.textContent = `Total Return: ${formatCurrency(totalReturnAmount)}`;
-                    returnPercentage.textContent = `Expected ROI: ${profitSettings.expectedROI}%`;
-                } else {
-                    profitCalculator.style.display = 'none';
-                }
-            }
-
             function updateBotDisplayStatus() {
-                if (!botToggleEl || !botStatusContainerEl || !botIndicatorEl || !botStatusTextEl) return;
-
+                if (!botToggleEl) return;
                 if (botActive) {
                     botToggleEl.classList.add('active');
-                    botStatusContainerEl.classList.remove('inactive');
-                    botIndicatorEl.classList.remove('inactive');
                     botStatusTextEl.textContent = 'Active';
                     botStatusTextEl.style.color = '#0ecb81';
-
-                    if (activeGamesAvailable && tradingFormCardEl) {
-                        tradingFormCardEl.style.display = 'block';
-                    }
+                    if (activeGamesAvailable) tradingFormCardEl.style.display = 'block';
                 } else {
                     botToggleEl.classList.remove('active');
-                    botStatusContainerEl.classList.add('inactive');
-                    botIndicatorEl.classList.add('inactive');
                     botStatusTextEl.textContent = 'Inactive';
                     botStatusTextEl.style.color = '#848e9c';
-
                     if (tradingFormCardEl) tradingFormCardEl.style.display = 'none';
                 }
             }
@@ -1058,22 +989,14 @@
             function updateTradePreview() {
                 if (selectedDirection && selectedCrypto) {
                     tradePreview.style.display = 'block';
-
                     previewDirection.textContent = selectedDirection.toUpperCase();
                     previewDirection.className = `trade-type-display ${selectedDirection}`;
-
                     previewCrypto.textContent = selectedCrypto.toUpperCase();
-
-                    // Update chart symbol
-                    const chartSymbol = document.getElementById('chartSymbol');
-                    if (chartSymbol) {
-                        chartSymbol.textContent = `${selectedCrypto}/USD`;
-                    }
-
+                    document.getElementById('chartSymbol').textContent = `${selectedCrypto}/USD`;
                     executeTradeBtn.disabled = false;
                     executeTradeBtn.className = `action-btn ${selectedDirection}`;
                     executeBtnText.innerHTML =
-                        `<i class="fas fa-${selectedDirection === 'buy' ? 'shopping-cart' : 'hand-holding-usd'}"></i> Execute ${selectedDirection.toUpperCase()}`;
+                        `<i class="fas fa-exchange-alt"></i> Execute ${selectedDirection.toUpperCase()}`;
                 } else {
                     tradePreview.style.display = 'none';
                     executeTradeBtn.disabled = true;
@@ -1082,7 +1005,53 @@
                 }
             }
 
-            // Trade direction selection
+            function updateActiveTradeCountdowns() {
+                document.querySelectorAll('.countdown-timer-inline').forEach(element => {
+                    const endTime = new Date(element.getAttribute('data-end-time'));
+                    if (!endTime) return;
+                    const update = () => {
+                        const timeLeft = endTime - new Date();
+                        if (timeLeft > 0) {
+                            const h = Math.floor(timeLeft / 3600000);
+                            const m = Math.floor((timeLeft % 3600000) / 60000);
+                            const s = Math.floor((timeLeft % 60000) / 1000);
+                            element.textContent = `${h}h ${m}m ${s}s remaining`;
+                        } else {
+                            element.textContent = 'Expired';
+                            element.style.color = '#f6465d';
+                        }
+                    };
+                    update();
+                    setInterval(update, 1000);
+                });
+            }
+
+            // =================================================================
+            //  NEW: Function to Simulate Live PNL Updates
+            // =================================================================
+            function simulatePnlUpdates() {
+                const pnlElements = document.querySelectorAll('[id^="activeTradePnl_"]');
+                if (pnlElements.length === 0) return;
+
+                pnlElements.forEach(el => {
+                    el.dataset.currentPnl = (Math.random() * 2 - 1).toFixed(2);
+                });
+
+                setInterval(() => {
+                    pnlElements.forEach(el => {
+                        let currentPnl = parseFloat(el.dataset.currentPnl);
+                        const change = (Math.random() - 0.5) * 0.25;
+                        currentPnl += change;
+                        el.dataset.currentPnl = currentPnl.toFixed(4);
+                        const displayPnl = currentPnl.toFixed(2);
+                        const sign = displayPnl >= 0 ? '+' : '';
+                        el.textContent = `${sign}$ ${Math.abs(displayPnl)}`;
+                        el.className = displayPnl >= 0 ? 'pnl-positive' : 'pnl-negative';
+                    });
+                }, 2500);
+            }
+
+            // EVENT LISTENERS
             tradeDirectionBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
                     tradeDirectionBtns.forEach(b => b.classList.remove('active'));
@@ -1092,108 +1061,365 @@
                     updateTradePreview();
                 });
             });
-
-            // Crypto selection
             if (cryptoCategorySelect) {
                 cryptoCategorySelect.addEventListener('change', function() {
                     selectedCrypto = this.value;
                     updateTradePreview();
                 });
             }
-
-            // Bot toggle functionality
             if (botToggleEl) {
                 botToggleEl.addEventListener('click', function() {
                     botActive = !botActive;
-                    console.log("Bot toggled. New state:", botActive);
+                    updateBotDisplayStatus();
+                    // TODO: API call to update bot status on backend
+                });
+            }
 
-                    // TODO: Make API call to update bot status on backend
-                    // fetch('/api/bot/toggle', {
-                    //     method: 'POST',
-                    //     body: JSON.stringify({isActive: botActive}),
-                    //     headers: {
-                    //         'Content-Type': 'application/json',
-                    //         'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    //     }
-                    // })
-                    // .then(response => response.json())
-                    // .then(data => {
-                    //     botActive = data.isActive;
-                    //     updateBotDisplayStatus();
-                    // })
-                    // .catch(error => console.error('Error:', error));
+            // INITIALIZE PAGE
+            updateBotDisplayStatus();
+            initializeCandlestickChart();
+            initializeCountdown();
+            updateActiveTradeCountdowns();
 
+            // Initialize bot stats display
+            document.getElementById('botProfitPageDisplay').textContent =
+                `${botStatsInitialData.profit24h >= 0 ? '+' : ''}${formatCurrency(botStatsInitialData.profit24h)}`;
+            document.getElementById('botTradesPageDisplay').textContent = botStatsInitialData.trades24h.toString();
+            document.getElementById('botSuccessRatePageDisplay').textContent =
+                `${botStatsInitialData.successRate.toFixed(1)}%`;
+            const h = Math.floor(botStatsInitialData.uptimeSeconds / 3600);
+            const m = Math.floor((botStatsInitialData.uptimeSeconds % 3600) / 60);
+            document.getElementById('botUptimePageDisplay').textContent = `${h}h ${m}m`;
+
+            // CALL THE NEW PNL SIMULATION SCRIPT
+            simulatePnlUpdates();
+        });
+
+        // This function MUST be global to be called from the HTML `oninput` attribute
+        function updateProfitCalculator(amount) {
+            const profitCalculator = document.getElementById('profitCalculator');
+            const investmentAmount = document.getElementById('investmentAmount');
+            const potentialProfit = document.getElementById('potentialProfit');
+            const totalReturn = document.getElementById('totalReturn');
+            const returnPercentage = document.getElementById('returnPercentage');
+            const balanceWarningEl = document.getElementById('balanceWarning');
+            const tradeAmount = parseFloat(amount);
+            const userAvailableBalance = parseFloat("{{ Auth::user()->balance ?? 0 }}");
+
+            if (!isNaN(tradeAmount) && tradeAmount > userAvailableBalance) {
+                balanceWarningEl.style.display = 'block';
+            } else {
+                balanceWarningEl.style.display = 'none';
+            }
+
+            if (!isNaN(tradeAmount) && tradeAmount > 0) {
+                profitCalculator.style.display = 'block';
+                const expectedProfit = tradeAmount * (profitSettings.expectedROI / 100);
+                const totalReturnAmount = tradeAmount + expectedProfit;
+                const formatter = new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD'
+                });
+                investmentAmount.textContent = formatter.format(tradeAmount);
+                potentialProfit.textContent = formatter.format(expectedProfit);
+                totalReturn.textContent = `Total Return: ${formatter.format(totalReturnAmount)}`;
+                returnPercentage.textContent = `Expected ROI: ${profitSettings.expectedROI}%`;
+            } else {
+                profitCalculator.style.display = 'none';
+            }
+        }
+
+        window.addEventListener('beforeunload', function() {
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+            }
+        });
+    </script>
+@endpush --}}
+
+
+@push('scripts')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+
+    <script>
+        // --- DATA FROM LARAVEL CONTROLLER ---
+        // This data is injected by Blade when the page loads.
+        const botStatsInitialData = {
+            profit24h: {{ $bot_profit_24h ?? 0 }},
+            trades24h: {{ $bot_trades_24h ?? 0 }},
+            successRate: {{ $bot_success_rate ?? 0.0 }},
+            uptimeSeconds: {{ $bot_uptime_seconds ?? 0 }}
+        };
+        const initialBotActiveState = {{ $is_bot_globally_active ? 'true' : 'false' }};
+        const userAvailableBalance = parseFloat("{{ Auth::user()->balance ?? 0 }}");
+        const activeGamesAvailable = {{ $activeGameSetting ? 'true' : 'false' }};
+        const signalData = {
+            startTime: "{{ isset($activeGameSetting) ? $activeGameSetting->start_time : '' }}",
+            endTime: "{{ isset($activeGameSetting) ? $activeGameSetting->end_time : '' }}",
+        };
+        // This now uses the dynamic earning_percentage from the database
+        const profitSettings = {
+            expectedROI: {{ $activeGameSetting->earning_percentage ?? 0 }},
+        };
+        // -----------------------------------------
+
+        let countdownInterval;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- ELEMENTS ---
+            let candlestickChart;
+            const botToggleEl = document.getElementById('botTogglePage');
+            const botStatusTextEl = document.getElementById('botStatusTextPage');
+            const tradingFormCardEl = document.getElementById('tradingFormCard');
+            const tradeDirectionBtns = document.querySelectorAll('.trade-direction-btn');
+            const selectedTradeTypeInput = document.getElementById('selectedTradeType');
+            const cryptoCategorySelect = document.getElementById('crypto_category');
+            const tradePreview = document.getElementById('tradePreview');
+            const previewDirection = document.getElementById('previewDirection');
+            const previewCrypto = document.getElementById('previewCrypto');
+            const executeTradeBtn = document.getElementById('executeTradeBtn');
+            const executeBtnText = document.getElementById('executeBtnText');
+            let botActive = initialBotActiveState;
+            let selectedDirection = '';
+            let selectedCrypto = '';
+
+            // --- HELPER FUNCTIONS ---
+            function formatCurrency(amount) {
+                return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+            }
+
+            // --- UI UPDATE & INITIALIZATION FUNCTIONS ---
+            function updateBotDisplayStatus() {
+                if (!botToggleEl) return;
+                if (botActive) {
+                    botToggleEl.classList.add('active');
+                    botStatusTextEl.textContent = 'Active';
+                    botStatusTextEl.style.color = '#0ecb81';
+                    if (activeGamesAvailable && tradingFormCardEl) {
+                        tradingFormCardEl.style.display = 'block';
+                    }
+                } else {
+                    botToggleEl.classList.remove('active');
+                    botStatusTextEl.textContent = 'Inactive';
+                    botStatusTextEl.style.color = '#848e9c';
+                    if (tradingFormCardEl) tradingFormCardEl.style.display = 'none';
+                }
+            }
+
+            function initializeCountdown() {
+                if (!signalData.startTime || !signalData.endTime) return;
+                const startTime = new Date(signalData.startTime);
+                const endTime = new Date(signalData.endTime);
+
+                countdownInterval = setInterval(() => {
+                    const now = new Date();
+                    const signalStatus = document.getElementById('signalStatus');
+                    const countdownDisplay = document.getElementById('countdownDisplay');
+                    const countdownLabel = document.getElementById('countdownLabel');
+
+                    if (now < startTime) {
+                        const timeToStart = startTime - now;
+                        const h = Math.floor(timeToStart / 3600000);
+                        const m = Math.floor((timeToStart % 3600000) / 60000);
+                        const s = Math.floor((timeToStart % 60000) / 1000);
+                        signalStatus.textContent = 'Waiting';
+                        signalStatus.className = 'signal-status waiting';
+                        countdownDisplay.textContent = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+                        countdownLabel.textContent = 'Time until signal opens';
+                    } else if (now < endTime) {
+                        const timeToEnd = endTime - now;
+                        const h = Math.floor(timeToEnd / 3600000);
+                        const m = Math.floor((timeToEnd % 3600000) / 60000);
+                        const s = Math.floor((timeToEnd % 60000) / 1000);
+                        signalStatus.textContent = 'Active';
+                        signalStatus.className = 'signal-status active';
+                        countdownDisplay.textContent = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+                        countdownLabel.textContent = 'Time remaining to trade';
+                    } else {
+                        signalStatus.textContent = 'Expired';
+                        signalStatus.className = 'signal-status expired';
+                        countdownDisplay.textContent = '00:00:00';
+                        countdownLabel.textContent = 'Signal has ended';
+                        clearInterval(countdownInterval);
+                    }
+                }, 1000);
+            }
+
+            function updateActiveTradeCountdowns() {
+                document.querySelectorAll('.countdown-timer-inline').forEach(element => {
+                    const endTime = new Date(element.getAttribute('data-end-time'));
+                    if (!endTime) return;
+                    const update = () => {
+                        const timeLeft = endTime - new Date();
+                        if (timeLeft > 0) {
+                            const h = Math.floor(timeLeft / 3600000);
+                            const m = Math.floor((timeLeft % 3600000) / 60000);
+                            const s = Math.floor((timeLeft % 60000) / 1000);
+                            element.textContent = `${h}h ${m}m ${s}s remaining`;
+                        } else {
+                            element.textContent = 'Expired';
+                            element.style.color = '#f6465d';
+                        }
+                    };
+                    update();
+                    setInterval(update, 1000);
+                });
+            }
+
+            function updateTradePreview() {
+                if (selectedDirection && selectedCrypto) {
+                    tradePreview.style.display = 'block';
+                    previewDirection.textContent = selectedDirection.toUpperCase();
+                    previewDirection.className = `trade-type-display ${selectedDirection}`;
+                    previewCrypto.textContent = selectedCrypto.toUpperCase();
+                    document.getElementById('chartSymbol').textContent = `${selectedCrypto}/USD`;
+                    executeTradeBtn.disabled = false;
+                    executeTradeBtn.className = `action-btn ${selectedDirection}`;
+                    executeBtnText.innerHTML = `<i class="fas fa-exchange-alt"></i> Execute ${selectedDirection.toUpperCase()}`;
+                } else {
+                    tradePreview.style.display = 'none';
+                    executeTradeBtn.disabled = true;
+                    executeTradeBtn.className = 'action-btn';
+                    executeBtnText.textContent = 'Select Direction & Crypto';
+                }
+            }
+
+            // This is your dummy chart logic, kept as requested
+            function initializeCandlestickChart() {
+                const ctx = document.getElementById('tradingViewChart');
+                if (!ctx) return;
+                const sampleData = generateSampleCandlestickData();
+                ctx.innerHTML = '<canvas id="chartCanvas"></canvas>';
+                const canvas = document.getElementById('chartCanvas');
+                candlestickChart = new Chart(canvas, {
+                    type: 'line', data: { labels: sampleData.labels, datasets: [{ label: 'Price', data: sampleData.prices, borderColor: '#f0b90b', backgroundColor: 'rgba(240, 185, 11, 0.1)', borderWidth: 2, fill: true, tension: 0.1 }] },
+                    options: { responsive: true, maintainAspectRatio: false, scales: { x: { grid: { color: '#2b3139' }, ticks: { color: '#848e9c' } }, y: { grid: { color: '#2b3139' }, ticks: { color: '#848e9c' } } }, plugins: { legend: { display: false } }, elements: { point: { radius: 0 } } }
+                });
+                setInterval(updateChartData, 5000);
+            }
+            function generateSampleCandlestickData() {
+                const labels = []; const prices = []; let currentPrice = 45000;
+                for (let i = 0; i < 50; i++) {
+                    const time = new Date(); time.setMinutes(time.getMinutes() - (49 - i));
+                    labels.push(time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+                    currentPrice += (Math.random() - 0.5) * 200;
+                    prices.push(currentPrice);
+                }
+                return { labels, prices };
+            }
+            function updateChartData() {
+                if (!candlestickChart) return;
+                const lastPrice = candlestickChart.data.datasets[0].data.slice(-1)[0];
+                const change = (Math.random() - 0.5) * 100;
+                const newPrice = lastPrice + change;
+                const now = new Date();
+                candlestickChart.data.labels.push(now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+                candlestickChart.data.datasets[0].data.push(newPrice);
+                if (candlestickChart.data.labels.length > 50) {
+                    candlestickChart.data.labels.shift();
+                    candlestickChart.data.datasets[0].data.shift();
+                }
+                candlestickChart.update('none');
+                updatePriceDisplay(newPrice, change);
+            }
+            function updatePriceDisplay(price, change) {
+                const chartPrice = document.getElementById('chartPrice');
+                const chartChange = document.getElementById('chartChange');
+                if (chartPrice) { chartPrice.textContent = formatCurrency(price); }
+                if (chartChange) {
+                    const changePercent = (change / price * 100).toFixed(2);
+                    chartChange.textContent = `${change >= 0 ? '+' : ''}${changePercent}%`;
+                    chartChange.className = `chart-change ${change >= 0 ? 'positive' : 'negative'}`;
+                }
+            }
+
+            // --- PNL SIMULATION ---
+            function simulatePnlUpdates() {
+                const pnlElements = document.querySelectorAll('[id^="activeTradePnl_"]');
+                if (pnlElements.length === 0) return;
+                pnlElements.forEach(el => { el.dataset.currentPnl = (Math.random() * 2 - 1).toFixed(2); });
+                setInterval(() => {
+                    pnlElements.forEach(el => {
+                        let currentPnl = parseFloat(el.dataset.currentPnl);
+                        currentPnl += (Math.random() - 0.5) * 0.25;
+                        el.dataset.currentPnl = currentPnl.toFixed(4);
+                        const displayPnl = currentPnl.toFixed(2);
+                        const sign = displayPnl >= 0 ? '+' : '';
+                        el.textContent = `${sign}$ ${Math.abs(displayPnl)}`;
+                        el.className = displayPnl >= 0 ? 'pnl-positive' : 'pnl-negative';
+                    });
+                }, 2500);
+            }
+
+            // --- EVENT LISTENERS ---
+            tradeDirectionBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    tradeDirectionBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    selectedDirection = this.dataset.direction;
+                    selectedTradeTypeInput.value = selectedDirection;
+                    updateTradePreview();
+                });
+            });
+            if (cryptoCategorySelect) {
+                cryptoCategorySelect.addEventListener('change', function() {
+                    selectedCrypto = this.value;
+                    updateTradePreview();
+                });
+            }
+            if (botToggleEl) {
+                botToggleEl.addEventListener('click', function() {
+                    botActive = !botActive;
                     updateBotDisplayStatus();
                 });
             }
 
-            // Initialize components
+            // --- INITIAL PAGE LOAD CALLS ---
             updateBotDisplayStatus();
             initializeCandlestickChart();
             initializeCountdown();
+            updateActiveTradeCountdowns();
+            simulatePnlUpdates(); // PNL simulation starts here
 
             // Initialize bot stats display
-            const botProfitElPage = document.getElementById('botProfitPageDisplay');
-            const botTradesElPage = document.getElementById('botTradesPageDisplay');
-            const botSuccessRateElPage = document.getElementById('botSuccessRatePageDisplay');
-            const botUptimeElPage = document.getElementById('botUptimePageDisplay');
-
-            if (botProfitElPage) {
-                botProfitElPage.textContent =
-                    `${botStatsInitialData.profit24h >= 0 ? '+' : ''}${formatCurrency(botStatsInitialData.profit24h)}`;
-                botProfitElPage.className =
-                    `stat-value ${botStatsInitialData.profit24h >= 0 ? 'positive' : 'negative'}`;
-            }
-            if (botTradesElPage) botTradesElPage.textContent = botStatsInitialData.trades24h.toString();
-            if (botSuccessRateElPage) {
-                botSuccessRateElPage.textContent = `${botStatsInitialData.successRate.toFixed(1)}%`;
-                botSuccessRateElPage.className =
-                    `stat-value ${botStatsInitialData.successRate >= 90 ? 'positive' : ''}`;
-            }
-            if (botUptimeElPage) {
-                const h = Math.floor(botStatsInitialData.uptimeSeconds / 3600);
-                const m = Math.floor((botStatsInitialData.uptimeSeconds % 3600) / 60);
-                botUptimeElPage.textContent = `${h}h ${m}m`;
-            }
-
-            // Update active trade countdowns
-            updateActiveTradeCountdowns();
+            document.getElementById('botProfitPageDisplay').textContent = formatCurrency(botStatsInitialData.profit24h);
+            document.getElementById('botTradesPageDisplay').textContent = botStatsInitialData.trades24h;
+            document.getElementById('botSuccessRatePageDisplay').textContent = `${botStatsInitialData.successRate.toFixed(1)}%`;
+            const h = Math.floor(botStatsInitialData.uptimeSeconds / 3600);
+            const m = Math.floor((botStatsInitialData.uptimeSeconds % 3600) / 60);
+            document.getElementById('botUptimePageDisplay').textContent = `${h}h ${m}m`;
         });
 
-        function updateActiveTradeCountdowns() {
-            const countdownElements = document.querySelectorAll('.countdown-timer-inline');
+        // This function must be global to be called by the oninput="" HTML attribute
+        function updateProfitCalculator(amount) {
+            const profitCalculator = document.getElementById('profitCalculator');
+            const investmentAmount = document.getElementById('investmentAmount');
+            const potentialProfit = document.getElementById('potentialProfit');
+            const totalReturn = document.getElementById('totalReturn');
+            const returnPercentage = document.getElementById('returnPercentage');
+            const balanceWarningEl = document.getElementById('balanceWarning');
+            const tradeAmount = parseFloat(amount);
 
-            countdownElements.forEach(element => {
-                const endTime = element.getAttribute('data-end-time');
-                if (!endTime) return;
+            if (tradeAmount > userAvailableBalance) {
+                balanceWarningEl.style.display = 'block';
+            } else {
+                balanceWarningEl.style.display = 'none';
+            }
 
-                const endDate = new Date(endTime);
-
-                const updateCountdown = () => {
-                    const now = new Date();
-                    const timeLeft = endDate - now;
-
-                    if (timeLeft > 0) {
-                        const hours = Math.floor(timeLeft / (1000 * 60 * 60));
-                        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-                        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-
-                        element.textContent = `${hours}h ${minutes}m ${seconds}s remaining`;
-                    } else {
-                        element.textContent = 'Expired';
-                        element.style.color = '#f6465d';
-                    }
-                };
-
-                updateCountdown();
-                setInterval(updateCountdown, 1000);
-            });
+            if (!isNaN(tradeAmount) && tradeAmount > 0) {
+                profitCalculator.style.display = 'block';
+                const expectedProfit = tradeAmount * (profitSettings.expectedROI / 100);
+                const totalReturnAmount = tradeAmount + expectedProfit;
+                const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+                investmentAmount.textContent = formatter.format(tradeAmount);
+                potentialProfit.textContent = formatter.format(expectedProfit);
+                totalReturn.textContent = `Total Return: ${formatter.format(totalReturnAmount)}`;
+                returnPercentage.textContent = `Expected ROI: ${profitSettings.expectedROI}%`;
+            } else {
+                profitCalculator.style.display = 'none';
+            }
         }
 
-        // Make updateProfitCalculator available globally
-        window.updateProfitCalculator = updateProfitCalculator;
-
-        // Cleanup on page unload
         window.addEventListener('beforeunload', function() {
             if (countdownInterval) {
                 clearInterval(countdownInterval);
