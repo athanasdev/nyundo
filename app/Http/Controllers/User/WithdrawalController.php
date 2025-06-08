@@ -187,7 +187,7 @@ public function withdrawRequest(Request $request)
 
 
     $request->validate([
-        'amount' => 'required|numeric|min:0.01',
+        'amount' => 'required|numeric|min:10',
         'withdraw_password' => 'required|string',
     ]);
 
