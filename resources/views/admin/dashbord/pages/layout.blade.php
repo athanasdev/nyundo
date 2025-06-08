@@ -142,11 +142,11 @@
                             <span class="micon dw dw-apartment"></span><span class="mtext"> Password Resets </span>
                         </a>
                     </li>
-                    <li class="dropdown">
+                    {{-- <li class="dropdown">
                         <a href="{{ route('admin.logs-list') }}" class="dropdown-toggle no-arrow">
                             <span class="micon dw dw-paint-brush"></span><span class="mtext"> Logs </span>
                         </a>
-                    </li>
+                    </li> --}}
 
                     <li class="dropdown ">
                         <a href="{{ route('admin.game_settings.index') }}" class="dropdown-toggle no-arrow">
@@ -165,21 +165,21 @@
 
 
 
-                    <li class="dropdown ">
+                    {{-- <li class="dropdown ">
                         <a href="{{ route('admin.referrals.index') }}" class="dropdown-toggle no-arrow">
                             <span class="micon dw dw-user-2"></span>
                             <span class="mtext">Referrals</span>
                         </a>
 
-                    </li>
+                    </li> --}}
 
-                    <li class="dropdown ">
+                    {{-- <li class="dropdown ">
                         <a href="{{ route('admin.settings') }}" class="dropdown-toggle no-arrow">
                             <span class="micon dw dw-settings"></span>
                             <span class="mtext">Setups</span>
                         </a>
 
-                    </li>
+                    </li> --}}
                     <li>
 
                         <a class="dropdown-toggle no-arrow text-danger" href="#"

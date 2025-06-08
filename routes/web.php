@@ -168,10 +168,8 @@ Route::prefix('admin', 'history')->middleware('auth:admin')->group(function () {
 });
 
 
-
 //  NOW PAYMENTS IPN CALL BACK
  Route::post('/ipn-callback', [IPNController::class, 'handle'])->name('ipn.callback');
-
 
 
 Route::get('/language/{language}', [App\Http\Controllers\LanguageController::class, 'changeLanguage'])
