@@ -47,7 +47,7 @@ Route::middleware(['guest', 'no-cache'])->group(function () {
 // ==========================
 // Admin Authentication
 // ==========================
-Route::prefix('admin')->name('admin.')->group(function () {
+Route::prefix('pc10')->name('admin.')->group(function () {
     Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AdminAuthController::class, 'login']);
 });
