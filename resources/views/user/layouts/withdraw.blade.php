@@ -319,7 +319,7 @@
                     <li>Withdrawals are processed within 24 hours.</li>
                     <li>You can make one withdrawal request per day.</li>
                     <li>One day before making a withdrawal ,you should not trading.</li>
-                    <li>For assistance, contact <a href="https://t.me/queenann0101" style="color:#f0b90b;">Customer Support</a>.</li>
+                    <li>For assistance, contact <a href="https://t.me/queenann0101" style="color:#f0b90b;" target="_blank">Customer Support</a>.</li>
                 </ul>
             </div>
         </div>
