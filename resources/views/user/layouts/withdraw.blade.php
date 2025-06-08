@@ -229,9 +229,9 @@
         <div class="card-body">
 
             @if ($errors->any())
-                <div class="alert-error">
-                    <strong>Please correct the following errors:</strong>
-                    <ul>
+                <div class="alert-error flex items-start space-x-2">
+                    <span class="mt-1">⚠️</span>
+                    <ul class="list-disc list-inside">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
@@ -240,13 +240,16 @@
             @endif
 
             @if (session('error'))
-                <div class="alert-error">
-                    {{ session('error') }}
+                <div class="alert-error flex items-center space-x-2">
+                    <span>❌</span>
+                    <span>{{ session('error') }}</span>
                 </div>
             @endif
+
             @if (session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
+                <div class="alert alert-success flex items-center space-x-2">
+                    <span>✅</span>
+                    <span>{{ session('success') }}</span>
                 </div>
             @endif
 
@@ -267,7 +270,8 @@
                 <div class="address-display-group">
                     <input type="text" name="withdrawal_address" id="withdrawal_address_display"
                         value="{{ $userWithdrawalAddress }}" readonly>
-                    <a href="{{route('withdrawal.address.edit')}}" class="copy-btn-sm" id="copyWithdrawalAddressBtn" onclick="copyWithdrawalAddr()">
+                    <a href="{{ route('withdrawal.address.edit') }}" class="copy-btn-sm" id="copyWithdrawalAddressBtn"
+                        onclick="copyWithdrawalAddr()">
                         <i class="fas fa-exchange-alt"></i> Change
                     </a>
                 </div>
@@ -298,8 +302,8 @@
 
                 <div class="form-group">
                     <label for="security_pin">Withdrawal PIN / Security Password:</label>
-                    <input type="password" name="withdraw_password" id="withdraw_password" placeholder="Enter your PIN/Password"
-                        required>
+                    <input type="password" name="withdraw_password" id="withdraw_password"
+                        placeholder="Enter your PIN/Password" required>
                 </div>
 
                 {{-- Hidden field for the currency being withdrawn, if needed by backend --}}
