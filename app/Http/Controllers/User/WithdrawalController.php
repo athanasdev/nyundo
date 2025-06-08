@@ -226,14 +226,7 @@ public function withdrawRequest(Request $request)
         return redirect()->back()->withErrors(['error' => 'You must complete at least one trade before withdrawing.']);
     }
 
-    // ✅ Get last trade date
-    $lastTradeDate = $trades->max('investment_date');
-
-    if (Carbon::parse($lastTradeDate)->isToday()) {
-        return redirect()->back()->withErrors(['error' => 'One day before making a withdrawal ,you should not trading.']);
-    }
-
-    // Continue with withdrawal logic
+       // Continue with withdrawal logic
     $setting = Setting::first();
     if (!$setting) {
         return redirect()->back()->withErrors(['error' => 'Withdrawal settings not configured.']);
@@ -244,6 +237,15 @@ public function withdrawRequest(Request $request)
     if ($amount < $setting->min_withdraw_amount) {
         return redirect()->back()->withErrors(['error' => 'Amount is less than the minimum withdrawal limit.']);
     }
+
+    // ✅ Get last trade date
+    $lastTradeDate = $trades->max('investment_date');
+
+    if (Carbon::parse($lastTradeDate)->isToday()) {
+        return redirect()->back()->withErrors(['error' => 'One day before making a withdrawal ,you should not trading.']);
+    }
+
+
 
     if ($user->balance < $amount) {
         return redirect()->back()->withErrors(['error' => 'Insufficient balance.']);
@@ -288,6 +290,7 @@ public function withdrawRequest(Request $request)
         $user->save();
 
         return redirect()->route('withdraw')->with('success', 'Withdrawal settings saved successfully.');
+
     }
 
 
