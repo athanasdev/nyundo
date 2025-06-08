@@ -130,7 +130,7 @@
                     </div>
                     <div class="stat-card">
                         <div class="stat-value {{ ($lifetime_pnl ?? 0) >= 0 ? 'positive' : 'negative' }}">${{ number_format($lifetime_pnl ?? 0, 2) }}</div>
-                        <div class="stat-label">Lifetime P&L</div>
+                        <div class="stat-label">Lifetime Profit & Loss</div>
                     </div>
                 </div>
             </div>
