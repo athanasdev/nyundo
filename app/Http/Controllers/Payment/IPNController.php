@@ -196,7 +196,7 @@ class IPNController extends Controller
             }
 
             // Only process if payment is finished
-            if ($requestData['payment_status'] === 'waiting' && $payment->user_id) {
+            if ($requestData['payment_status'] === 'finished' && $payment->user_id) {
                 $user = User::find($payment->user_id);
 
                 if ($user) {
