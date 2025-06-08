@@ -376,11 +376,11 @@
                     </div>
                     <div class="stat-item">
                         <span class="label">Total Trade Stake</span>
-                        <span class="value">{{ number_format($level1_deposit, 2) }} <small>USDT</small></span>
+                        <span class="value">{{ number_format($level1_deposit, 5) }} <small>USDT</small></span>
                     </div>
                     <div class="stat-item">
                         <span class="label">My Commissions</span>
-                        <span class="value">{{ number_format($level1_commissions, 2) }} <small>USDT</small></span>
+                        <span class="value">{{ number_format($level1_commissions, 5) }} <small>USDT</small></span>
                     </div>
                 </div>
             </div>
@@ -397,11 +397,11 @@
                     </div>
                     <div class="stat-item">
                         <span class="label">Total Trade Stake</span>
-                        <span class="value">{{ number_format($level2_deposit, 2) }} <small>USDT</small></span>
+                        <span class="value">{{ number_format($level2_deposit, 5) }} <small>USDT</small></span>
                     </div>
                     <div class="stat-item">
                         <span class="label">My Commissions</span>
-                        <span class="value">{{ number_format($level2_commissions, 2) }} <small>USDT</small></span>
+                        <span class="value">{{ number_format($level2_commissions, 5) }} <small>USDT</small></span>
                     </div>
                 </div>
             </div>
@@ -418,11 +418,11 @@
                     </div>
                     <div class="stat-item">
                         <span class="label">Total Trade Stake</span>
-                        <span class="value">{{ number_format($level3_deposit, 2) }} <small>USDT</small></span>
+                        <span class="value">{{ number_format($level3_deposit, 5) }} <small>USDT</small></span>
                     </div>
                     <div class="stat-item">
                         <span class="label">My Commissions</span>
-                        <span class="value">{{ number_format($level3_commissions, 2) }} <small>USDT</small></span>
+                        <span class="value">{{ number_format($level3_commissions, 5) }} <small>USDT</small></span>
                     </div>
                 </div>
             </div>
@@ -439,11 +439,11 @@
                     </div>
                     <div class="stat-item">
                         <span class="label">Total Team Trade Stake</span>
-                        <span class="value">{{ number_format($total_deposits, 2) }} <small>USDT</small></span>
+                        <span class="value">{{ number_format($total_deposits, 5) }} <small>USDT</small></span>
                     </div>
                     <div class="stat-item">
                         <span class="label">My Total Commissions</span>
-                        <span class="value">{{ number_format($total_commissions, 2) }} <small>USDT</small></span>
+                        <span class="value">{{ number_format($total_commissions, 5) }} <small>USDT</small></span>
                     </div>
                 </div>
             </div>
