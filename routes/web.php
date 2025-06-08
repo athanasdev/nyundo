@@ -73,8 +73,6 @@ Route::middleware(['auth:web', 'history'])->group(function () {
     Route::post('/payments/create', [NowPaymentcontroller::class, 'createPayment'])->name('payments.create');
 
     Route::get('/deposit/confirm/{id}', [NowPaymentController::class, 'showConfirmDepositPage'])->name('payment.confirm.show');
-    Route::post('/ipn-callback', [IPNController::class, 'handle'])->name('ipn.callback');
-
 
     // Withdrawal
     Route::get('/withdraw', [WithdrawalController::class, 'withdraw'])->name('withdraw');
@@ -171,6 +169,8 @@ Route::prefix('admin', 'history')->middleware('auth:admin')->group(function () {
 
 
 
+//  NOW PAYMENTS IPN CALL BACK
+ Route::post('/ipn-callback', [IPNController::class, 'handle'])->name('ipn.callback');
 
 
 
@@ -184,6 +184,6 @@ Route::get('/check-time', function () {
         'Carbon::now()' => Carbon\Carbon::now()->toDateTimeString(),
         'Carbon::now(UTC)' => Carbon\Carbon::now('UTC')->toDateTimeString(),
     ];
-    
+
 });
 
