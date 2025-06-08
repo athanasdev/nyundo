@@ -132,7 +132,6 @@ class NowPaymentcontroller extends Controller
     }
 
 
-
     // ... other methods (checkBalance, validateAddress) ...
     public function checkBalance()
     {
