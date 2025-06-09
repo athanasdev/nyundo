@@ -321,13 +321,15 @@ class GameController extends Controller
         }
 
         // 4. Check if the user has already placed a trade for this specific signal.
-        $existingInvestment = UserInvestment::where('user_id', $user->id)
+        $existingPendingInvestment = UserInvestment::where('user_id', $user->id)
             ->where('game_setting_id', $gameSetting->id)
+            ->where('investment_result', 'pending')
             ->exists();
 
-        if ($existingInvestment) {
+        if ($existingPendingInvestment) {
             return redirect()->back()->with('error', 'You already have an active trade in this signal.')->withInput();
         }
+
 
         // 5. Use a database transaction to safely place the trade.
         DB::beginTransaction();
