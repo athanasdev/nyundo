@@ -704,11 +704,11 @@
                                 {{ \Carbon\Carbon::parse($investment->created_at)->format('M d, Y H:i') }}</p>
                             <p><strong>Closes At:</strong>
                                 {{ \Carbon\Carbon::parse($investment->game_end_time)->format('M d, Y H:i') }}</p>
-                            <p><strong>Status:</strong>
+                            {{-- <p><strong>Status:</strong>
                                 <span class="countdown-timer-inline" data-end-time="{{ $investment->game_end_time }}">
                                     Active
                                 </span>
-                            </p>
+                            </p> --}}
                             <p><strong>Current PNL (Est.):</strong>
                                 <span id="activeTradePnl_{{ $investment->id }}"
                                     class="pnl-positive">Calculating...</span>
