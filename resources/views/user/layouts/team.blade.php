@@ -1,6 +1,6 @@
-@extends('user.layouts.app')
+@extends('user.layouts.app') {{-- Assuming this is your correct layout path --}}
 
-@section('title', 'My Team & Referrals - Soria10')
+@section('title', __('messages.team_page_title') . ' - Soria10')
 
 @push('styles')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
@@ -12,8 +12,6 @@
         max-width: 900px;
         margin: 0 auto;
     }
-
-    /* Swiper Styles */
     .swiper.mySwiperTeam {
         height: 150px !important;
         border-radius: 6px;
@@ -29,8 +27,6 @@
     .swiper-pagination-bullet-active {
         background: #f0b90b !important;
     }
-
-    /* Invite Section Styles */
     .invite-section-card .card-body {
         display: flex;
         flex-direction: column;
@@ -106,7 +102,6 @@
     .copy-button i { margin-right: 6px;}
     .copy-button:hover { background: #d8a40a; }
 
-    /* Team Summary Stats (Registered Users, Active Users) */
     .team-summary-stats {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -139,34 +134,6 @@
         gap: 5px;
     }
     .stat-summary-card .stat-description i { font-size: 1em; }
-
-    /* Trading Team Performance Card (Original Soria10 Style) */
-    .stats-grid { /* For the 4-column stat cards */
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-        gap: 16px;
-    }
-    .stat-card { /* Individual stat card within stats-grid */
-        background: #2b3139; /* Darker than main card bg for contrast */
-        padding: 16px;
-        border-radius: 4px;
-        text-align: center;
-    }
-    .stat-card .stat-value {
-        font-size: 1.3em;
-        font-weight: 600;
-        margin-bottom: 4px;
-        color: #eaecef;
-    }
-    .stat-card .stat-label {
-        font-size: 0.8em;
-        color: #848e9c;
-        text-transform: uppercase;
-    }
-    .stat-card .positive { color: #0ecb81; }
-    .stat-card .negative { color: #f6465d; }
-
-    /* My Referred Users Table Styles */
     .referrals-table {
         width: 100%;
         border-collapse: collapse;
@@ -191,8 +158,6 @@
     .referrals-table td.balance-col { text-align: right; font-weight: 500; color: #0ecb81; }
     .referrals-table tr:hover td { background-color: #222531; }
 
-
-    /* Referral Levels Info Section */
     .levels-info-section { margin-top: 20px; }
     .level-card { margin-bottom: 16px; }
     .level-card .card-header .level-title {
@@ -236,42 +201,37 @@
         .referral-link-section { flex-direction: column; gap: 10px; }
         .referral-link-section .link-class { margin-right: 0; }
         .team-summary-stats { grid-template-columns: 1fr; }
-        .stats-grid { grid-template-columns: repeat(2, 1fr); }
         .level-card .card-body { grid-template-columns: 1fr; }
         .referrals-table th, .referrals-table td { font-size: 0.85em; padding: 8px;}
-
     }
-     @media (max-width: 480px) {
-        .stats-grid { grid-template-columns: 1fr; }
+    @media (max-width: 480px) {
         .referrals-table th, .referrals-table td { font-size: 0.8em; padding: 6px;}
         .referrals-table .username-col { min-width: 100px; }
-     }
+    }
 </style>
 @endpush
 
 @section('content')
 <div class="team-content-wrapper">
     <div class="tf-container-team">
-        {{-- Swiper for Banners --}}
-
         {{-- Invite Friends Section --}}
         <div class="card invite-section-card">
             <div class="card-body">
                 <div class="invite-header">
-                    <img src="{{ asset('images/default/invite_friends_icon.png') }}" alt="Invite Friends to Earn"
+                    <img src="{{ asset('images/default/invite_friends_icon.png') }}" alt="{{ __('messages.invite_friends_alt_text') }}"
                          onerror="this.style.display='none'; this.parentElement.insertAdjacentHTML('beforebegin', '<div style=\'text-align:center; margin-bottom:15px;\'><i class=\'fas fa-gift fa-3x\' style=\'color:#f0b90b;\'></i></div>');"><br>
-                    <span class="title-text">Invite Friends & Earn Rewards</span><br>
+                    <span class="title-text">{{ __('messages.invite_friends_title') }}</span><br>
                     <span class="description-text">
-                        Share your referral link with friends. When they join and trade on {{ config('app.name', 'Soria10') }}, you earn commissions across multiple levels!
+                        {{ __('messages.invite_friends_description', ['appName' => config('app.name', 'Soria10')]) }}
                     </span>
                 </div>
                 <div class="w-100 d-row align-center referral-link-section">
                     <div class="link-class d-col">
-                        <span class="title">Your Unique Referral Link</span>
+                        <span class="title">{{ __('messages.your_unique_referral_link') }}</span>
                         <span class="body" id="referralLinkElement">{{ config('app.url') }}/register/?invited_by={{ $user->referral_code }}</span>
                     </div>
                     <button class="copy-button" onclick="copyReferralLink()">
-                        <i class="fas fa-copy"></i> Copy Link
+                        <i class="fas fa-copy"></i> {{ __('messages.copy_link_button') }}
                     </button>
                 </div>
             </div>
@@ -282,20 +242,20 @@
             <div class="card stat-summary-card">
                 <div class="card-body">
                     <span class="stat-number">{{ $total_registered_users }}</span>
-                    <span class="stat-title">Total Team Members</span>
+                    <span class="stat-title">{{ __('messages.total_team_members') }}</span>
                     <span class="stat-description">
                         <i class="fas fa-users"></i>
-                        Across All Referral Levels
+                        {{ __('messages.across_all_referral_levels') }}
                     </span>
                 </div>
             </div>
             <div class="card stat-summary-card">
                 <div class="card-body">
                     <span class="stat-number">{{ $active_users }}</span>
-                    <span class="stat-title">Active Referrals</span>
+                    <span class="stat-title">{{ __('messages.active_referrals') }}</span>
                     <span class="stat-description">
                         <i class="fas fa-user-check"></i>
-                        Users with Recent Activity
+                        {{ __('messages.users_with_recent_activity') }}
                     </span>
                 </div>
             </div>
@@ -307,24 +267,24 @@
             <div class="card-header">
                 <div class="card-title">
                     <i class="fas fa-list-ul"></i>
-                    My Referred Users
+                    {{ __('messages.my_referred_users') }}
                 </div>
             </div>
-            <div class="card-body no-padding"> {{-- no-padding for table to touch edges --}}
+            <div class="card-body no-padding">
                 <table class="referrals-table">
                     <thead>
                         <tr>
                             <th style="text-align:center; width:5%;">#</th>
-                            <th>Username</th>
-                            <th style="text-align:center;">Level</th>
-                            <th style="text-align:right;">Balance (USDT)</th>
+                            <th>{{ __('messages.table_header_username') }}</th>
+                            <th style="text-align:center;">{{ __('messages.table_header_level') }}</th>
+                            <th style="text-align:right;">{{ __('messages.table_header_balance_usdt') }}</th>
                         </tr>
                     </thead>
                     <tbody>
                         @php $index = 0; @endphp
                         @if($level1_members->isEmpty() && $level2_members->isEmpty() && $level3_members->isEmpty())
                             <tr>
-                                <td colspan="4" style="text-align: center; padding: 20px; color: #848e9c;">You have no referred users in your team yet.</td>
+                                <td colspan="4" style="text-align: center; padding: 20px; color: #848e9c;">{{ __('messages.no_referred_users_yet') }}</td>
                             </tr>
                         @endif
 
@@ -362,24 +322,24 @@
             </div>
         </div>
 
-        {{-- Referral Levels Information Cards (from Nyundo design) --}}
+        {{-- Referral Levels Information Cards --}}
         <div class="levels-info-section">
             {{-- Level 1 Card --}}
             <div class="card level-card">
                 <div class="card-header">
-                    <h5 class="card-title level-title"><i class="fas fa-sitemap"></i> Level 1 Summary</h5>
+                    <h5 class="card-title level-title"><i class="fas fa-sitemap"></i> {{ __('messages.level_1_summary_title') }}</h5>
                 </div>
                 <div class="card-body">
                     <div class="stat-item">
-                        <span class="label">Members</span>
+                        <span class="label">{{ __('messages.summary_members') }}</span>
                         <span class="value">{{ $level1_count }}</span>
                     </div>
                     <div class="stat-item">
-                        <span class="label">Total Trade Stake</span>
+                        <span class="label">{{ __('messages.summary_total_trade_stake') }}</span>
                         <span class="value">{{ number_format($level1_deposit, 5) }} <small>USDT</small></span>
                     </div>
                     <div class="stat-item">
-                        <span class="label">My Commissions</span>
+                        <span class="label">{{ __('messages.summary_my_commissions') }}</span>
                         <span class="value">{{ number_format($level1_commissions, 5) }} <small>USDT</small></span>
                     </div>
                 </div>
@@ -388,19 +348,19 @@
             {{-- Level 2 Card --}}
             <div class="card level-card">
                 <div class="card-header">
-                    <h5 class="card-title level-title"><i class="fas fa-sitemap"></i> Level 2 Summary</h5>
+                    <h5 class="card-title level-title"><i class="fas fa-sitemap"></i> {{ __('messages.level_2_summary_title') }}</h5>
                 </div>
                 <div class="card-body">
                     <div class="stat-item">
-                        <span class="label">Members</span>
+                        <span class="label">{{ __('messages.summary_members') }}</span>
                         <span class="value">{{ $level2_count }}</span>
                     </div>
                     <div class="stat-item">
-                        <span class="label">Total Trade Stake</span>
+                        <span class="label">{{ __('messages.summary_total_trade_stake') }}</span>
                         <span class="value">{{ number_format($level2_deposit, 5) }} <small>USDT</small></span>
                     </div>
                     <div class="stat-item">
-                        <span class="label">My Commissions</span>
+                        <span class="label">{{ __('messages.summary_my_commissions') }}</span>
                         <span class="value">{{ number_format($level2_commissions, 5) }} <small>USDT</small></span>
                     </div>
                 </div>
@@ -409,19 +369,19 @@
             {{-- Level 3 Card --}}
             <div class="card level-card">
                 <div class="card-header">
-                    <h5 class="card-title level-title"><i class="fas fa-sitemap"></i> Level 3 Summary</h5>
+                    <h5 class="card-title level-title"><i class="fas fa-sitemap"></i> {{ __('messages.level_3_summary_title') }}</h5>
                 </div>
                 <div class="card-body">
                     <div class="stat-item">
-                        <span class="label">Members</span>
+                        <span class="label">{{ __('messages.summary_members') }}</span>
                         <span class="value">{{ $level3_count }}</span>
                     </div>
                     <div class="stat-item">
-                        <span class="label">Total Trade Stake</span>
+                        <span class="label">{{ __('messages.summary_total_trade_stake') }}</span>
                         <span class="value">{{ number_format($level3_deposit, 5) }} <small>USDT</small></span>
                     </div>
                     <div class="stat-item">
-                        <span class="label">My Commissions</span>
+                        <span class="label">{{ __('messages.summary_my_commissions') }}</span>
                         <span class="value">{{ number_format($level3_commissions, 5) }} <small>USDT</small></span>
                     </div>
                 </div>
@@ -430,19 +390,19 @@
             {{-- Totals Card --}}
             <div class="card level-card">
                 <div class="card-header">
-                    <h5 class="card-title level-title"><i class="fas fa-calculator"></i> Overall Team Totals</h5>
+                    <h5 class="card-title level-title"><i class="fas fa-calculator"></i> {{ __('messages.overall_team_totals_title') }}</h5>
                 </div>
                 <div class="card-body">
                     <div class="stat-item">
-                        <span class="label">Total Team Members</span>
+                        <span class="label">{{ __('messages.total_team_members') }}</span>
                         <span class="value">{{ $total_registered_users }}</span>
                     </div>
                     <div class="stat-item">
-                        <span class="label">Total Team Trade Stake</span>
+                        <span class="label">{{ __('messages.total_team_trade_stake') }}</span>
                         <span class="value">{{ number_format($total_deposits, 5) }} <small>USDT</small></span>
                     </div>
                     <div class="stat-item">
-                        <span class="label">My Total Commissions</span>
+                        <span class="label">{{ __('messages.my_total_commissions') }}</span>
                         <span class="value">{{ number_format($total_commissions, 5) }} <small>USDT</small></span>
                     </div>
                 </div>
@@ -476,10 +436,10 @@
 
         const linkText = linkTextElement.innerText;
         navigator.clipboard.writeText(linkText).then(function() {
-            alert('Referral link copied to clipboard!');
+            alert("{{ __('messages.referral_link_copied') }}");
         }, function(err) {
             console.error('Could not copy text: ', err);
-            alert('Failed to copy link. Please copy it manually.');
+            alert("{{ __('messages.copy_link_failed') }}");
         });
     }
 </script>

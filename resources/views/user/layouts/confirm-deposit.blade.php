@@ -1,6 +1,6 @@
 @extends('user.layouts.app')
 
-@section('title', 'Payment Details ')
+@section('title', __('messages.payment_details_title'))
 
 @push('styles')
 <style>
@@ -102,7 +102,7 @@
         border-color: #f0b90b;
         box-shadow: 0 0 0 2px rgba(240, 185, 11, 0.3);
     }
-    #paymentAddressInput { /* Changed ID from paymentAddress */
+    #paymentAddressInput {
         flex-grow: 1;
         padding: 12px 15px;
         border: none;
@@ -115,7 +115,7 @@
         text-overflow: ellipsis;
         white-space: nowrap;
     }
-    #copyAddressButton { /* Changed ID from copyButton */
+    #copyAddressButton {
         padding: 12px 18px;
         background: #f0b90b;
         color: #1e2329;
@@ -135,7 +135,7 @@
         background: #0ecb81;
         color: #fff;
     }
-    .copy-feedback { /* Changed ID to copyFeedbackDisplay */
+    .copy-feedback {
         margin-top: 0;
         margin-bottom: 15px;
         font-size: 0.85em;
@@ -192,27 +192,21 @@
         .payment-card-container { padding: 20px; }
         #qrcode-box { width: 170px; height: 170px; }
         .payment-card-container h2 { font-size: 1.4em; }
-        #paymentAddressInput { font-size: 0.8em;} /* Updated ID */
-        #copyAddressButton { padding: 10px 15px; font-size: 0.85em;} /* Updated ID */
+        #paymentAddressInput { font-size: 0.8em;}
+        #copyAddressButton { padding: 10px 15px; font-size: 0.85em;}
     }
 </style>
-{{-- Font Awesome is in main layout, qrcode.min.js needs to be included --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 @endpush
 
 @section('content')
 <div class="payment-page-container">
-    <div class="page-title-header">
-        {{-- Optional page-specific title --}}
-        {{-- <i class="fas fa-shield-alt"></i> TradePro Secure Payment Instruction --}}
-    </div>
-
     <div class="payment-card-container">
-        <h2><i class="fas fa-coins"></i> Crypto Deposit</h2>
+        <h2><i class="fas fa-coins"></i> {{ __('messages.crypto_deposit_title') }}</h2>
 
         <div class="instructions">
-            Please send exactly <strong><span id="payAmountDisplay">0.00</span> <span id="payCurrencyDisplay">COIN</span></strong> to the address below.
-            <br><small>Order ID: <span id="orderIdInfoDisplay">N/A</span></small>
+            {{ __('messages.payment_instruction_line_1') }} <strong><span id="payAmountDisplay">0.00</span> <span id="payCurrencyDisplay">COIN</span></strong> {{ __('messages.payment_instruction_line_2') }}
+            <br><small>{{ __('messages.order_id') }}: <span id="orderIdInfoDisplay">{{ __('messages.not_applicable') }}</span></small>
         </div>
 
         <div id="qrcode-box">
@@ -220,16 +214,16 @@
         </div>
 
         <div class="address-container">
-            <input type="text" id="paymentAddressInput" readonly value="Waiting for address...">
-            <button id="copyAddressButton"><i class="fas fa-copy"></i> Copy</button>
+            <input type="text" id="paymentAddressInput" readonly value="{{ __('messages.waiting_for_address') }}...">
+            <button id="copyAddressButton"><i class="fas fa-copy"></i> {{ __('messages.copy_button') }}</button>
         </div>
         <div id="copyFeedbackDisplay" class="copy-feedback"></div>
 
         <div class="payment-details">
-            <p><strong>Network:</strong> <span id="networkTypeDisplay">N/A</span></p>
-            <p><strong>Payment ID:</strong> <span id="paymentIdInfoDisplay">N/A</span></p>
-            <p><strong>Status:</strong> <span id="paymentStatusValue" class="status-waiting">Waiting</span></p>
-            <p><strong>Expires:</strong> <span id="expirationDateDisplay">N/A</span></p>
+            <p><strong>{{ __('messages.network') }}:</strong> <span id="networkTypeDisplay">{{ __('messages.not_applicable') }}</span></p>
+            <p><strong>{{ __('messages.payment_id') }}:</strong> <span id="paymentIdInfoDisplay">{{ __('messages.not_applicable') }}</span></p>
+            <p><strong>{{ __('messages.status') }}:</strong> <span id="paymentStatusValue" class="status-waiting">{{ __('messages.status_waiting') }}</span></p>
+            <p><strong>{{ __('messages.expires') }}:</strong> <span id="expirationDateDisplay">{{ __('messages.not_applicable') }}</span></p>
         </div>
     </div>
 </div>
@@ -238,6 +232,11 @@
 @push('scripts')
 <script>
     const paymentData = @json($paymentData);
+    const lang = {
+        copied_feedback: "{{ __('messages.copied_feedback') }}",
+        error_details_missing: "{{ __('messages.error_payment_details_missing') }}",
+        not_applicable: "{{ __('messages.not_applicable') }}"
+    };
 
     document.addEventListener('DOMContentLoaded', function() {
         if (!paymentData) {
@@ -245,7 +244,7 @@
             const container = document.querySelector('.payment-card-container');
             if (container) {
                 const instructions = container.querySelector('.instructions');
-                if (instructions) instructions.innerHTML = '<p style="color: #f6465d;">Error: Payment details are missing.</p>';
+                if (instructions) instructions.innerHTML = `<p style="color: #f6465d;">${lang.error_details_missing}</p>`;
                 document.getElementById('qrcode-box')?.remove();
                 container.querySelector('.address-container')?.remove();
                 container.querySelector('.payment-details')?.remove();
@@ -253,14 +252,14 @@
             return;
         }
 
-        const paymentAddress = paymentData.pay_address || 'N/A';
+        const paymentAddress = paymentData.pay_address || lang.not_applicable;
         const payAmount = parseFloat(paymentData.price_amount) || 0;
         const payCurrency = paymentData.pay_currency ? paymentData.pay_currency.toUpperCase() : 'COIN';
-        const orderId = paymentData.order_id || 'N/A';
-        const network = paymentData.network || 'N/A';
-        const paymentId = paymentData.payment_id || 'N/A';
+        const orderId = paymentData.order_id || lang.not_applicable;
+        const network = paymentData.network || lang.not_applicable;
+        const paymentId = paymentData.payment_id || lang.not_applicable;
         const status = paymentData.status || 'waiting';
-        const expiresAt = paymentData.valid_until || 'N/A';
+        const expiresAt = paymentData.valid_until || lang.not_applicable;
 
         // Set field values
         document.getElementById('payAmountDisplay').textContent = payAmount.toFixed(8);
@@ -279,7 +278,7 @@
 
         // Generate QR Code
         const qrBox = document.getElementById("qrcode-box");
-        if (qrBox) {
+        if (qrBox && paymentAddress !== lang.not_applicable) {
             new QRCode(qrBox, {
                 text: paymentAddress,
                 width: 180,
@@ -300,7 +299,7 @@
             addressInput.setSelectionRange(0, 99999); // for mobile
             navigator.clipboard.writeText(addressInput.value).then(() => {
                 copyBtn.classList.add("copied");
-                feedback.textContent = "Address copied!";
+                feedback.textContent = lang.copied_feedback;
                 setTimeout(() => {
                     copyBtn.classList.remove("copied");
                     feedback.textContent = "";

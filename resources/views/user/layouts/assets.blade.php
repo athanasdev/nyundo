@@ -1,17 +1,17 @@
 @extends('user.layouts.app')
 
-@section('title', 'Assets')
+@section('title', __('messages.assets_page_title') . ' - Soria10')
 
 @section('content')
-<div id="assets" class="content-section active"> {{-- 'active' class not needed for MPA --}}
+<div id="assets" class="content-section active">
     <div class="dashboard-grid">
         <div class="main-content">
             <div class="card">
                 <div class="card-header">
                     <div class="card-title">
                         <i class="fas fa-chart-area"></i>
-                        Live Market Data
-                        <span class="status-indicator" title="Live Feed Active"></span>
+                        {{ __('messages.live_market_data') }}
+                        <span class="status-indicator" title="{{ __('messages.live_feed_active') }}"></span>
                     </div>
                 </div>
                 <div class="card-body" style="padding: 0;">
@@ -19,7 +19,7 @@
                         <div class="trading-view">
                             <div class="chart-placeholder">
                                 <i class="fas fa-chart-line"></i>
-                                Real-time Chart View (Placeholder)
+                                {{ __('messages.real_time_chart_placeholder') }}
                             </div>
                         </div>
                     </div>
@@ -30,7 +30,7 @@
                 <div class="card-header">
                     <div class="card-title">
                         <i class="fab fa-bitcoin"></i>
-                        Top Cryptocurrencies
+                        {{ __('messages.top_cryptocurrencies') }}
                     </div>
                 </div>
                 <div class="coins-list" id="coinsListContainer">
@@ -44,18 +44,18 @@
                 <div class="card-header">
                     <div class="card-title">
                         <i class="fas fa-bolt"></i>
-                        Quick Actions
+                        {{ __('messages.quick_actions') }}
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="quick-actions">
                         <button class="action-btn buy">
                             <i class="fas fa-arrow-up"></i>
-                            Buy
+                            {{ __('messages.buy') }}
                         </button>
                         <button class="action-btn sell">
                             <i class="fas fa-arrow-down"></i>
-                            Sell
+                            {{ __('messages.sell') }}
                         </button>
                     </div>
                 </div>
@@ -65,7 +65,7 @@
                 <div class="card-header">
                     <div class="card-title">
                         <i class="fas fa-wallet"></i>
-                        Portfolio
+                        {{ __('messages.portfolio') }}
                     </div>
                 </div>
                 <div class="card-body">
@@ -81,6 +81,18 @@
 
 @push('scripts')
 <script>
+    // --- Localization for JavaScript ---
+    const lang = {
+        usd_pair: " / USD", // Fallback
+        coins_suffix: "{{ __('messages.coins_suffix') }}",
+        avg_buy_price: "{{ __('messages.avg_buy_price') }}"
+    };
+    try {
+        // More robust way to get the translation
+        lang.usd_pair = " {{ __('messages.usd_pair') }}";
+    } catch(e) { /* use fallback */ }
+
+
     // Sample data for Assets page (in a real app, this comes from controller)
     let coinData = [
         { symbol: 'BTC', name: 'Bitcoin', price: 45234.56, change: 2.34, icon: 'btc', marketCap: 890123456789 },
@@ -106,7 +118,7 @@
                     <div class="coin-icon ${coin.icon}">${coin.symbol.substring(0,3)}</div>
                     <div class="coin-details">
                         <div class="coin-name">${coin.name}</div>
-                        <div class="coin-symbol">${coin.symbol} / USD</div>
+                        <div class="coin-symbol">${coin.symbol}${lang.usd_pair}</div>
                     </div>
                 </div>
                 <div class="coin-price">
@@ -134,8 +146,8 @@
             return `
             <div class="portfolio-item">
                 <div>
-                    <strong>${item.symbol}</strong> (${item.amount} coins)<br>
-                    <small style="color: #848e9c;">Avg. Buy: ${formatCurrency(item.avgBuyPrice)}</small>
+                    <strong>${item.symbol}</strong> (${item.amount} ${lang.coins_suffix})<br>
+                    <small style="color: #848e9c;">${lang.avg_buy_price} ${formatCurrency(item.avgBuyPrice)}</small>
                 </div>
                 <div style="text-align: right;">
                     <strong>${formatCurrency(item.value)}</strong><br>
@@ -143,40 +155,24 @@
                 </div>
             </div>
         `;}).join('');
-
-        // Update global header from this page's data if it's the primary source for these values
-        // For today's P&L, you might need a more complex calculation or a dedicated variable
-        const currentPnl = parseFloat(document.getElementById('todayPnLDisplay')?.textContent.replace(/[^0-9.-]+/g,"") || "0"); // Get existing PNL
-        updateGlobalHeaderDisplay(totalPortfolioValue, currentPnl);
     }
 
     function updateRealTimeAssetData() {
         coinData = coinData.map(coin => {
-            const changePercent = (Math.random() - 0.48) * 1; // Smaller changes for less erratic display
+            const changePercent = (Math.random() - 0.48) * 1;
             const priceChange = coin.price * (changePercent / 100);
             coin.price += priceChange;
-            coin.price = Math.max(0, coin.price); // Prevent negative prices
+            coin.price = Math.max(0, coin.price);
             coin.change = parseFloat(changePercent.toFixed(2));
             return coin;
         });
         updateCoinsList();
         updatePortfolio();
-
-        // Simulate Today's P&L change (could be derived from portfolio changes)
-        let pnlVal = portfolioData.reduce((sum, item) => {
-             const coin = coinData.find(c => c.symbol === item.symbol);
-             return sum + (coin ? (coin.price - item.avgBuyPrice) * item.amount : 0);
-        }, 0) - portfolioData.reduce((sum, item) => sum + ( (item.value / (1 + (Math.random()-0.5)*0.02) ) - item.avgBuyPrice) * item.amount, 0) ; // Simplified P&L simulation
-
-        updateGlobalHeaderDisplay(portfolioData.reduce((sum, asset) => sum + asset.value, 0), pnlVal);
     }
 
     document.addEventListener('DOMContentLoaded', function() {
         updateCoinsList();
         updatePortfolio();
-        // Initial P&L for example
-        updateGlobalHeaderDisplay(portfolioData.reduce((sum, asset) => sum + asset.value, 0), 234.56);
-
         setInterval(updateRealTimeAssetData, 3000); // Update data every 3 seconds
     });
 </script>

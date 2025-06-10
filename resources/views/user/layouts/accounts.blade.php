@@ -1,6 +1,6 @@
 @extends('user.layouts.app')
 
-@section('title', 'Account - Soria10')
+@section('title', __('messages.account_page_title') . ' - Soria10')
 
 @push('styles')
     <style>
@@ -111,26 +111,26 @@
         <div class="card">
             <div class="card-header">
                 <div class="card-title">
-                    <i class="fas fa-user-circle"></i> Account Overview
+                    <i class="fas fa-user-circle"></i> {{ __('messages.account_overview') }}
                 </div>
             </div>
             <div class="card-body">
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-value positive">${{ number_format($user->balance ?? 0, 2) }}</div>
-                        <div class="stat-label">Total Balance</div>
+                        <div class="stat-label">{{ __('messages.total_balance') }}</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-value">${{ number_format($totalReferralEarning ?? 0, 2) }}</div>
-                        <div class="stat-label">Total Referral Earning</div>
+                        <div class="stat-label">{{ __('messages.total_referral_earning') }}</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-value">${{ number_format($totalWithdraws ?? 0, 2) }}</div>
-                        <div class="stat-label">Total Withdrawals</div>
+                        <div class="stat-label">{{ __('messages.total_withdrawals') }}</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-value {{ ($lifetime_pnl ?? 0) >= 0 ? 'positive' : 'negative' }}">${{ number_format($lifetime_pnl ?? 0, 2) }}</div>
-                        <div class="stat-label">Lifetime Profit & Loss</div>
+                        <div class="stat-label">{{ __('messages.lifetime_profit_loss') }}</div>
                     </div>
                 </div>
             </div>
@@ -143,17 +143,17 @@
                     <ul class="nav nav-tabs" id="historyTabs" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="transactions-tab-btn" data-target="#transactions-content" type="button" role="tab">
-                                <i class="fas fa-history"></i> Transactions
+                                <i class="fas fa-history"></i> {{ __('messages.transactions') }}
                             </button>
                         </li>
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="withdrawals-tab-btn" data-target="#withdrawals-content" type="button" role="tab">
-                                <i class="fas fa-arrow-circle-down"></i> Withdrawals
+                                <i class="fas fa-arrow-circle-down"></i> {{ __('messages.withdrawals') }}
                             </button>
                         </li>
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="deposits-tab-btn" data-target="#deposits-content" type="button" role="tab">
-                                <i class="fas fa-arrow-circle-up"></i> Deposits
+                                <i class="fas fa-arrow-circle-up"></i> {{ __('messages.deposits') }}
                             </button>
                         </li>
                     </ul>
@@ -168,12 +168,12 @@
                             <table class="transactions-table">
                                 <thead class="transactions-table-header">
                                     <tr>
-                                        <th class="table-header-cell">ID</th>
-                                        <th class="table-header-cell">Type</th>
-                                        <th class="table-header-cell amount-header">Amount</th>
-                                        <th class="table-header-cell">Status</th>
-                                        <th class="table-header-cell">Description</th>
-                                        <th class="table-header-cell">Date</th>
+                                        <th class="table-header-cell">{{ __('messages.table_header_id') }}</th>
+                                        <th class="table-header-cell">{{ __('messages.table_header_type') }}</th>
+                                        <th class="table-header-cell amount-header">{{ __('messages.table_header_amount') }}</th>
+                                        <th class="table-header-cell">{{ __('messages.table_header_status') }}</th>
+                                        <th class="table-header-cell">{{ __('messages.table_header_description') }}</th>
+                                        <th class="table-header-cell">{{ __('messages.table_header_date') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -181,20 +181,19 @@
                                         <tr class="transaction-row">
                                             <td class="table-cell">{{ $txn->id }}</td>
                                             <td class="table-cell">
-                                                @if(strtolower($txn->type) === 'credit') <span class="type-credit">{{ ucfirst($txn->type) }}</span>
-                                                @else <span class="type-debit">{{ ucfirst($txn->type) }}</span> @endif
+                                                <span class="type-{{ strtolower($txn->type) }}">{{ __('messages.type_' . strtolower($txn->type)) }}</span>
                                             </td>
                                             <td class="table-cell amount-cell">
                                                 @if(strtolower($txn->type) === 'credit') <span class="amount-credit">+{{ number_format($txn->amount, 2) }}</span>
                                                 @else <span class="amount-debit">-{{ number_format($txn->amount, 2) }}</span> @endif
                                                 <span class="currency-label">{{ $txn->currency }}</span>
                                             </td>
-                                            <td class="table-cell"><span class="status-badge status-success">{{ ucfirst($txn->status) }}</span></td>
+                                            <td class="table-cell"><span class="status-badge status-success">{{ __('messages.status_' . strtolower($txn->status)) }}</span></td>
                                             <td class="table-cell description-cell">{{ Illuminate\Support\Str::limit($txn->description, 45) }}</td>
                                             <td class="table-cell date-cell">{{ \Carbon\Carbon::parse($txn->created_at)->format('M d, Y H:i') }}</td>
                                         </tr>
                                     @empty
-                                        <tr><td colspan="6" class="empty-state">No transactions found.</td></tr>
+                                        <tr><td colspan="6" class="empty-state">{{ __('messages.no_transactions_found') }}</td></tr>
                                     @endforelse
                                 </tbody>
                             </table>
@@ -210,10 +209,10 @@
                             <table class="transactions-table">
                                 <thead class="transactions-table-header">
                                     <tr>
-                                        <th class="table-header-cell">ID</th>
-                                        <th class="table-header-cell amount-header">Amount</th>
-                                        <th class="table-header-cell">Status</th>
-                                        <th class="table-header-cell">Date</th>
+                                        <th class="table-header-cell">{{ __('messages.table_header_id') }}</th>
+                                        <th class="table-header-cell amount-header">{{ __('messages.table_header_amount') }}</th>
+                                        <th class="table-header-cell">{{ __('messages.table_header_status') }}</th>
+                                        <th class="table-header-cell">{{ __('messages.table_header_date') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -230,12 +229,12 @@
                                                         case 'rejected': $statusClass = 'status-error'; break;
                                                     }
                                                 @endphp
-                                                <span class="status-badge {{ $statusClass }}">{{ ucfirst($withdrawal->status) }}</span>
+                                                <span class="status-badge {{ $statusClass }}">{{ __('messages.status_' . strtolower($withdrawal->status)) }}</span>
                                             </td>
                                             <td class="table-cell date-cell">{{ \Carbon\Carbon::parse($withdrawal->created_at)->format('M d, Y H:i') }}</td>
                                         </tr>
                                     @empty
-                                        <tr><td colspan="4" class="empty-state">No withdrawals found.</td></tr>
+                                        <tr><td colspan="4" class="empty-state">{{ __('messages.no_withdrawals_found') }}</td></tr>
                                     @endforelse
                                 </tbody>
                             </table>
@@ -251,11 +250,11 @@
                             <table class="transactions-table">
                                  <thead class="transactions-table-header">
                                     <tr>
-                                        <th class="table-header-cell">ID</th>
-                                        <th class="table-header-cell amount-header">Amount</th>
-                                        <th class="table-header-cell">Network</th>
-                                        <th class="table-header-cell">Status</th>
-                                        <th class="table-header-cell">Date</th>
+                                        <th class="table-header-cell">{{ __('messages.table_header_id') }}</th>
+                                        <th class="table-header-cell amount-header">{{ __('messages.table_header_amount') }}</th>
+                                        <th class="table-header-cell">{{ __('messages.table_header_network') }}</th>
+                                        <th class="table-header-cell">{{ __('messages.table_header_status') }}</th>
+                                        <th class="table-header-cell">{{ __('messages.table_header_date') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -263,7 +262,7 @@
                                         <tr class="transaction-row">
                                             <td class="table-cell">{{ $deposit->id }}</td>
                                             <td class="table-cell amount-cell"><span class="amount-credit">+{{ number_format($deposit->price_amount, 2) }}</span> <span class="currency-label">{{ $deposit->price_currency }}</span></td>
-                                            <td class="table-cell">{{ $deposit->network ?? 'N/A' }}</td>
+                                            <td class="table-cell">{{ $deposit->network ?? __('messages.not_applicable') }}</td>
                                             <td class="table-cell">
                                                 @php
                                                     $statusClass = 'status-default';
@@ -273,12 +272,12 @@
                                                         case 'failed': case 'expired': $statusClass = 'status-error'; break;
                                                     }
                                                 @endphp
-                                                <span class="status-badge {{ $statusClass }}">{{ ucfirst($deposit->payment_status) }}</span>
+                                                <span class="status-badge {{ $statusClass }}">{{ __('messages.status_' . strtolower($deposit->payment_status)) }}</span>
                                             </td>
                                             <td class="table-cell date-cell">{{ \Carbon\Carbon::parse($deposit->created_at)->format('M d, Y H:i') }}</td>
                                         </tr>
                                     @empty
-                                        <tr><td colspan="5" class="empty-state">No deposits found.</td></tr>
+                                        <tr><td colspan="5" class="empty-state">{{ __('messages.no_deposits_found') }}</td></tr>
                                     @endforelse
                                 </tbody>
                             </table>

@@ -1,17 +1,15 @@
 @extends('user.layouts.app')
 
-@section('title', 'Initiate Deposit - Soria10')
+@section('title', __('messages.deposit_page_title') . ' - Soria10')
 
 @push('styles')
 <style>
-
     .deposit-panel-card {
         max-width: 600px;
         margin-left: auto;
         margin-right: auto;
         margin-top: 20px;
     }
-
     .alert-error {
         color: #f6465d;
         background-color: rgba(246, 70, 93, 0.1);
@@ -28,7 +26,6 @@
     }
     .alert-error li { margin-bottom: 5px; }
     .alert-error li:last-child { margin-bottom: 0; }
-
     .alert-success {
         color: #0ecb81;
         background-color: rgba(14, 203, 129, 0.1);
@@ -38,7 +35,6 @@
         border-radius: 4px;
         font-size: 0.9em;
     }
-
     .form-group {
         margin-bottom: 20px;
         text-align: left;
@@ -74,7 +70,6 @@
         background-color: #1e2329;
         color: #eaecef;
     }
-
     .form-group small.note,
     p.form-footer-note {
         font-size: 0.8em;
@@ -86,7 +81,6 @@
         text-align: center;
         margin-top: 20px;
     }
-
     .submit-btn {
         width: 100%;
         padding: 12px 15px;
@@ -122,13 +116,13 @@
 @section('content')
 <div class="deposit-panel-card card">
     <div class="card-header">
-        <h3 class="card-title"><i class="fas fa-money-check-alt"></i> Initiate Your Deposit</h3>
+        <h3 class="card-title"><i class="fas fa-money-check-alt"></i> {{ __('messages.initiate_your_deposit') }}</h3>
     </div>
     <div class="card-body">
 
         @if ($errors->any())
             <div class="alert-error">
-                <strong>Please correct the following errors:</strong>
+                <strong>{{ __('messages.error_correct_following') }}:</strong>
                 <ul>
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
@@ -142,7 +136,8 @@
                 {{ session('error') }}
             </div>
         @endif
-         @if (session('success'))
+
+        @if (session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
             </div>
@@ -151,44 +146,39 @@
         <form method="POST" action="{{ route('payments.create') }}">
             @csrf
             <div class="form-group">
-                <label for="price_amount">Amount (USD):</label>
+                <label for="price_amount">{{ __('messages.amount_usd') }}:</label>
                 <input type="number" id="price_amount" name="price_amount" step="0.01" min="15" required>
-                <small class="note">Minimum deposit is $15.00.</small>
+                <small class="note">{{ __('messages.minimum_deposit_is_15') }}</small>
             </div>
             <input type="hidden" name="price_currency" value="usd">
             <input type="hidden" name="order_description" value="deposit">
-            <input type="hidden" name="ipn_callback_url" value="{{ url('/ipn-callback') }}"> {{-- Using url() helper for full URL --}}
+            <input type="hidden" name="ipn_callback_url" value="{{ url('/ipn-callback') }}">
 
             <div class="form-group">
-                <label for="customer_email">Your Email:</label>
+                <label for="customer_email">{{ __('messages.your_email') }}:</label>
                 <input type="email" id="customer_email" name="customer_email" value="{{ old('customer_email', auth()->user() ? auth()->user()->email : '') }}" required>
-                <small class="note">Email address for transaction communication.</small>
+                <small class="note">{{ __('messages.email_for_communication') }}</small>
             </div>
 
             <div class="form-group">
-                <label for="order_id">Order Reference:</label>
-                <input type="text"   value="{{ uniqid() }}"  placeholder="order ID (optional)" readonly>
+                <label for="order_id">{{ __('messages.order_reference') }}:</label>
+                <input type="text" value="{{ uniqid() }}" placeholder="{{ __('messages.order_id_optional') }}" readonly>
                 <input type="hidden" id="order_id" name="order_id" value="{{ Auth::user()->id }}" readonly>
-
             </div>
 
             <div class="form-group">
-                <label for="pay_currency">Pay With (Cryptocurrency):</label>
+                <label for="pay_currency">{{ __('messages.pay_with_crypto') }}:</label>
                 <select id="pay_currency" name="pay_currency" required>
-                    <option value="usdttrc20" {{ old('pay_currency', 'USDT.TRC20') == 'USDT.TRC20' ? 'selected' : '' }}>USDT (TRC20 Network)</option>
+                    <option value="usdttrc20" {{ old('pay_currency', 'USDT.TRC20') == 'USDT.TRC20' ? 'selected' : '' }}>{{ __('messages.usdt_trc20_network') }}</option>
                 </select>
-                 <small class="note"><strong>Important:</strong> Please ensure you select <strong>USDT (TRC20 Network)</strong>. Using other networks or coins may result in loss of funds.</small>
+                <small class="note"><strong>{{ __('messages.important_note') }}:</strong> {{ __('messages.ensure_usdt_trc20_network') }}</small>
             </div>
 
             <button type="submit" class="submit-btn">
-                <i class="fas fa-arrow-circle-right"></i> Proceed to Payment
+                <i class="fas fa-arrow-circle-right"></i> {{ __('messages.proceed_to_payment') }}
             </button>
         </form>
-        <p class="form-footer-note">You will be redirected to your payment gateway to complete your transaction.</p>
+        <p class="form-footer-note">{{ __('messages.redirect_to_gateway_note') }}</p>
     </div>
 </div>
 @endsection
-
-@push('scripts')
-
-@endpush
