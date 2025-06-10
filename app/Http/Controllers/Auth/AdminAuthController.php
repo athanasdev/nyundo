@@ -32,7 +32,6 @@ class AdminAuthController extends Controller
 
         }
 
-
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ])->onlyInput('email');
@@ -44,8 +43,11 @@ class AdminAuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/admin/login')->with('success', 'You have been logged out.');
+        return redirect('/pc10/login')->with('success', 'You have been logged out.');
 
     }
-    
+
 }
+
+
+

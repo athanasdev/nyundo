@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', __('messages.trading_platform') . ' - Soria10')</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -72,17 +71,6 @@
             direction: {{ $isRTL ? 'rtl' : 'ltr' }};
             /* Dynamic direction */
         }
-
-        /* Initially hide main content if you want a more controlled reveal,
-           otherwise, preloader will just overlay it.
-        .main-wrapper {
-            opacity: 0;
-            transition: opacity 0.5s ease-in;
-        }
-        .main-wrapper.loaded {
-            opacity: 1;
-        }
-        */
 
         .container-main {
             max-width: 1400px;
@@ -240,7 +228,8 @@
         .language-dropdown {
             position: absolute;
             top: 100%;
-            {{ $isRTL ? 'left: 0;' : 'right: 0;' }} background: #1e2329;
+            {{ $isRTL ? 'left: 0;' : 'right: 0;' }}
+            background: #1e2329;
             border: 1px solid #2b3139;
             border-radius: 4px;
             min-width: 180px;
@@ -448,82 +437,25 @@
             color: white;
         }
 
-        .btc {
-            background: #f7931a;
-        }
-
-        .eth {
-            background: #627eea;
-        }
-
-        .bnb {
-            background: #f0b90b;
-        }
-
-        .ada {
-            background: #0033ad;
-        }
-
-        .sol {
-            background: #9945ff;
-        }
-
-        .dot {
-            background: #e6007a;
-        }
-
-        .xrp {
-            background: #0077c8;
-        }
-
-        .doge {
-            background: #c3a634;
-        }
-
-        .avax {
-            background: #e84142;
-        }
-
-        .link {
-            background: #2a5ada;
-        }
-
-        .ltc {
-            background: #bebebe;
-        }
-
-        .trx {
-            background: #eb0029;
-        }
-
-        .shib {
-            background: #ffc107;
-        }
-
-        .uni {
-            background: #ff007a;
-        }
-
-        .bch {
-            background: #8dc351;
-        }
-
-        .icp {
-            background: #29abe2;
-        }
-
-        .xlm {
-            background: #000000;
-        }
-
-        .atom {
-            background: #5064fb;
-        }
-
-        .etc {
-            background: #328332;
-        }
-
+        .btc { background: #f7931a; }
+        .eth { background: #627eea; }
+        .bnb { background: #f0b90b; }
+        .ada { background: #0033ad; }
+        .sol { background: #9945ff; }
+        .dot { background: #e6007a; }
+        .xrp { background: #0077c8; }
+        .doge { background: #c3a634; }
+        .avax { background: #e84142; }
+        .link { background: #2a5ada; }
+        .ltc { background: #bebebe; }
+        .trx { background: #eb0029; }
+        .shib { background: #ffc107; }
+        .uni { background: #ff007a; }
+        .bch { background: #8dc351; }
+        .icp { background: #29abe2; }
+        .xlm { background: #000000; }
+        .atom { background: #5064fb; }
+        .etc { background: #328332; }
 
         .coin-details {
             flex: 1;
@@ -943,10 +875,6 @@
             flex-direction: row-reverse;
         }
 
-        [dir="rtl"] .user-profile-card {
-            /* flex-direction: row-reverse; */
-        }
-
         [dir="rtl"] .balance-item {
             text-align: left;
         }
@@ -954,14 +882,6 @@
         [dir="rtl"] .logo-text {
             margin-left: 0;
             margin-right: 8px;
-        }
-
-        [dir="rtl"] .language-btn {
-            /* flex-direction: row-reverse; */
-        }
-
-        [dir="rtl"] .language-option {
-            /* flex-direction: row-reverse; */
         }
 
         @media (max-width: 1024px) {
@@ -1044,7 +964,6 @@
         @media (max-width: 480px) {
             .container-main {
                 padding-top: 150px;
-
             }
 
             .quick-actions {
@@ -1065,10 +984,6 @@
             .coin-price {
                 text-align: left;
                 width: 100%;
-            }
-
-            [dir="rtl"] .coin-price {
-                /* text-align: right; */
             }
 
             .signal-item {
@@ -1158,10 +1073,65 @@
         }
     </style>
     @stack('styles')
-    {{-- <script src="//code.jivosite.com/widget/ohg15eo48L" async></script> --}}
 </head>
 
 <body>
+
+    {{-- ================================================================= --}}
+    {{-- =================== IMPERSONATION LEAVE BUTTON ================== --}}
+    {{-- ================================================================= --}}
+    @if (Session::has('impersonated_by'))
+        <style>
+            /* --- Styles for the 'Leave Impersonation' button --- */
+            .impersonate-leave-container {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                z-index: 9999;
+                /* Ensure it's on top of everything */
+            }
+
+            .impersonate-leave-btn {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 12px 18px;
+                background-color: #f0b90b;
+                /* Your theme's accent color */
+                color: #0b0e11;
+                /* Dark text for contrast */
+                border: none;
+                border-radius: 8px;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+                font-size: 14px;
+                font-weight: 600;
+                text-decoration: none;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+                transition: all 0.3s ease;
+                cursor: pointer;
+            }
+
+            .impersonate-leave-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+                background-color: #ffca2c;
+            }
+
+            .impersonate-leave-btn i {
+                font-size: 16px;
+            }
+        </style>
+
+        <div class="impersonate-leave-container">
+            <a href="{{ route('impersonate.leave') }}" class="impersonate-leave-btn">
+                <i class="fas fa-user-secret"></i>
+                <span>{{ __('messages.leave_impersonation', ['default' => 'Leave Impersonation']) }}</span>
+            </a>
+        </div>
+    @endif
+    {{-- ================= END IMPERSONATION LEAVE BUTTON ================ --}}
+
+
     <div class="preloader">
         <div class="spinner"></div>
     </div>
@@ -1169,8 +1139,7 @@
     <header class="header">
         <div class="header-left">
             <a href="{{ route('dashboard') }}" class="logo-link">
-                <img src="{{ asset('images/logo/logo.png') }}" alt="Soria10 Logo" class="header-logo-img"
-                    onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';">
+                <img src="{{ asset('images/logo/logo.png') }}" alt="Soria10 Logo" class="header-logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';">
                 <span class="logo-text" style="display:none;"><i class="fas fa-chart-line icon-fallback"></i>
                     Soria10</span>
             </a>
@@ -1193,8 +1162,7 @@
                 <div class="language-dropdown" id="languageDropdown">
                     @if (isset($availableLanguages) && is_array($availableLanguages))
                         @foreach ($availableLanguages as $code => $language)
-                            <a href="{{ route('language.change', $code) }}"
-                                class="language-option {{ $code == $currentLanguage ? 'active' : '' }}">
+                            <a href="{{ route('language.change', $code) }}" class="language-option {{ $code == $currentLanguage ? 'active' : '' }}">
                                 <span class="language-flag">{{ $language['flag'] }}</span>
                                 <span class="language-name">{{ $language['name'] }}</span>
                             </a>
@@ -1203,9 +1171,6 @@
                 </div>
             </div>
 
-            {{-- <a href="#" class="header-action-btn">
-                <i class="fas fa-comment"></i> {{ __('messages.support') }}
-            </a> --}}
             <a href="{{ route('deposit.form') }}" class="header-action-btn">
                 <i class="fas fa-arrow-alt-circle-down"></i> {{ __('messages.deposit') }}
             </a>
@@ -1215,8 +1180,7 @@
                 $needsSetup = $user ? is_null($user->withdrawal_address) || is_null($user->withdrawal_pin_hash) : true;
             @endphp
 
-            <a href="{{ $needsSetup ? route('withdraw.setup') : route('withdraw') }}" id="withdrawButton"
-                class="header-action-btn">
+            <a href="{{ $needsSetup ? route('withdraw.setup') : route('withdraw') }}" id="withdrawButton" class="header-action-btn">
                 <i class="fas fa-arrow-alt-circle-up"></i> {{ __('messages.withdraw') }}
             </a>
             @auth
@@ -1248,8 +1212,7 @@
 
     <nav class="bottom-nav">
         <div class="nav-container">
-            <a href="{{ route('dashboard') }}"
-                class="nav-item {{ Request::is('dashboard') || Request::is('/') ? 'active' : '' }}">
+            <a href="{{ route('dashboard') }}" class="nav-item {{ Request::is('dashboard') || Request::is('/') ? 'active' : '' }}">
                 <i class="fas fa-home"></i>
                 <span class="nav-text">{{ __('messages.home') }}</span>
             </a>
@@ -1274,11 +1237,6 @@
             const preloader = document.querySelector('.preloader');
             if (preloader) {
                 preloader.classList.add('loaded');
-                // Optional: if you added a main-wrapper for content fade-in
-                // const mainWrapper = document.querySelector('.main-wrapper');
-                // if (mainWrapper) {
-                //    mainWrapper.classList.add('loaded');
-                // }
             }
         });
 
@@ -1317,15 +1275,6 @@
                 userBalanceEl.className = `balance-amount ${Number(totalBalance) >= 0 ? 'positive' : 'negative'}`;
             }
         }
-
-        // Prevent Ctrl key combinations (already commented out by user)
-        // document.addEventListener('keydown', function(e) {
-        //     if (e.ctrlKey || e.metaKey) {
-        //         if (['c', 'v', 'x', 'a', 'z', 'u', 's', 'p'].includes(e.key.toLowerCase())) {
-        //             e.preventDefault();
-        //         }
-        //     }
-        // });
     </script>
 
     @stack('scripts')

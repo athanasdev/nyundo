@@ -39,5 +39,7 @@ class ImpersonateController extends Controller
         Session::forget('impersonated_by'); // Clear the session key
 
         return redirect()->route('admin.trader'); // Redirect back to admin dashboard
+
+        
     }
 }
