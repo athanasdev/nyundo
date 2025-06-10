@@ -159,12 +159,15 @@ Route::prefix('admin', 'history')->middleware('auth:admin')->group(function () {
     Route::post('/nowpayments/validate-address', [NowPaymentController::class, 'validateAddress']);
     Route::get('/nowpayments/balance', [NowPaymentController::class, 'checkBalance']);
 
+    Route::get('/admin/payments', [TransactionController::class, 'index'])->name('admin.payments.index');
+    Route::patch('/admin/payments/{payment}/process', [TransactionController::class, 'process'])->name('admin.payments.process');
 
 
     // This route needs to be protected by the 'auth:admin' middleware
     Route::get('/impersonate/{id}', [ImpersonateController::class, 'loginAsUser'])->name('impersonate.login');
 
     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
+
 });
 
 

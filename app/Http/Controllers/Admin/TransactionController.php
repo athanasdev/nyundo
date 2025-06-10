@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Transaction;
 use App\Models\Referral;
 use App\Models\Deposit; // Assuming Deposit model is for tracking actual deposits
+use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -90,7 +91,6 @@ class TransactionController extends Controller
                     'currency'        => $user->currency ?? 'USD',
                     'type'            => 'manual',
                 ]);
-
             } elseif ($type === 'debit') {
                 // Ensure sufficient balance for debit transactions
                 if ($balanceBefore < $amount) {
@@ -121,7 +121,6 @@ class TransactionController extends Controller
             DB::commit(); // Commit all changes if everything went well
 
             return back()->with('success', 'Transaction processed, balance updated, and 1% bonus added successfully!');
-
         } catch (\Exception $e) {
             DB::rollBack(); // Rollback all changes if any error occurred
             Log::error("Transaction processing failed: " . $e->getMessage());
@@ -180,5 +179,49 @@ class TransactionController extends Controller
             $level++;
         }
     }
+
+
+
+
+
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        // Fetch all payments, ordered by the newest, and paginate the results
+        $payments = Payment::latest()->paginate(20);
+
+        // Return the view and pass the payments data to it
+        return view('admin.dashbord.pages.payment', compact('payments'));
+    }
+
+    /**
+     * Update the specified payment to be processed.
+     *
+     * @param  \App\Models\Payment  $payment
+     * @return \Illuminate\Http\Response
+     */
+
+    public function process(Payment $payment)
+    {
+        // 1. Update the is_processed flag to 1 (true)
+        $payment->is_processed = 1;
+
+        // 2. NEW: Update the payment_status to 'finished'
+        $payment->payment_status = 'finished';
+
+        // 3. Save both changes to the database
+        $payment->save();
+
+        // 4. Redirect back to the payments list with an updated success message
+        return redirect()->route('admin.payments.index')
+            ->with('success', 'Payment ID ' . $payment->id . ' was processed and status set to Finished!');
+    }
+
+
     
 }
