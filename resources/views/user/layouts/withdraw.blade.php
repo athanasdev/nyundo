@@ -284,7 +284,7 @@
                     <label for="amount_to_withdraw">Amount to Withdraw (USD):</label>
                     <input type="number" id="amount_to_withdraw" name="amount" value="{{ old('amount') }}" step="0.01"
                         min="10" {{-- Example minimum withdrawal --}} placeholder="Enter amount" required>
-                    <small class="note">Minimum withdrawal: $20.00. A 5% fee applies.</small>
+                    <small class="note">Minimum withdrawal: $10.00. A 5% fee applies.</small>
                 </div>
 
                 <div class="withdrawal-summary" id="withdrawalSummaryBox" style="display: none;">
