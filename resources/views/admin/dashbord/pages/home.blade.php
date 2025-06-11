@@ -135,7 +135,97 @@
                     </table>
                 </div>
             </div> --}}
-            
+
+
+
+            <div class="section mt-10">
+                <h3>Mobile Emergency Butons</h3>
+
+                <ul id="accordion-menu">
+                    <li>
+                        <a href="{{ route('admin.dashboard') }}" class="dropdown-toggle no-arrow">
+                            <span class="micon dw dw-house-1"></span><span class="mtext">Home</span>
+                        </a>
+
+                    </li>
+                    <li class="dropdown">
+                        <a href="{{ route('admin.trader') }}" class="dropdown-toggle no-arrow">
+                            <span class="micon dw dw-user text-info"></span><span class="mtext">Traders</span>
+                        </a>
+
+                    </li>
+                    <li class="dropdown">
+                        <a href="{{ route('admin.depost') }}" class="dropdown-toggle no-arrow">
+                            <span class="micon dw dw-money text-success"></span><span class="mtext">Deposit</span>
+                        </a>
+
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.withdraw') }}" class="dropdown-toggle no-arrow">
+                            <span class="micon dw dw-money text-danger"></span><span class="mtext">Withdraw</span>
+                        </a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="{{ route('admin.password') }}" class="dropdown-toggle no-arrow">
+                            <span class="micon dw dw-apartment"></span><span class="mtext"> Password Resets </span>
+                        </a>
+                    </li>
+
+                    <li class="dropdown">
+                        <a href="{{ route('admin.payments.index') }}" class="dropdown-toggle no-arrow">
+                            <span class="micon dw dw-paint-brush"></span><span class="mtext">PAYMENTS</span>
+                        </a>
+                    </li>
+
+                    <li class="dropdown ">
+                        <a href="{{ route('admin.game_settings.index') }}" class="dropdown-toggle no-arrow">
+                            <span class="micon dw dw-user"></span>
+                            <span class="mtext">Siginal And Bolt</span>
+                        </a>
+
+                    </li>
+                    <li class="dropdown text-warning">
+                        <a href="{{ route('admin.user_investments.index') }}" class="dropdown-toggle no-arrow">
+                            <span class="micon dw dw-user"></span>
+                            <span class="mtext">Trader Beting Siginal</span>
+                        </a>
+
+                    </li>
+
+
+                    {{-- <li class="dropdown ">
+                        <a href="{{ route('admin.referrals.index') }}" class="dropdown-toggle no-arrow">
+                            <span class="micon dw dw-user-2"></span>
+                            <span class="mtext">Referrals</span>
+                        </a>
+
+                    </li> --}}
+
+                    {{-- <li class="dropdown ">
+                        <a href="{{ route('admin.settings') }}" class="dropdown-toggle no-arrow">
+                            <span class="micon dw dw-settings"></span>
+                            <span class="mtext">Setups</span>
+                        </a>
+
+                    </li> --}}
+                    <li>
+
+                        <a class="dropdown-toggle no-arrow text-danger" href="#"
+                            onclick="event.preventDefault(); document.getElementById('admin-logout-form2').submit();">
+                            <i class="dw dw-logout"></i> Logout
+                        </a>
+                        <form id="admin-logout-form2" action="{{ route('admin.logout') }}" method="POST"
+                            style="display: none;">
+                            @csrf
+                        </form>
+
+                    </li>
+
+
+                </ul>
+
+            </div>
+
         </div>
     </div>
 @endsection

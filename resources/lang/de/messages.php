@@ -238,4 +238,5 @@ return [
     'status_failed' => 'Fehlgeschlagen',
     'status_expired' => 'Abgelaufen',
     'status_success' => 'Erfolgreich',
+    
 ];
