@@ -272,7 +272,7 @@
                                                         case 'failed': case 'expired': $statusClass = 'status-error'; break;
                                                     }
                                                 @endphp
-                                                <span class="status-badge {{ $statusClass }}">{{ __('messages.status_' . strtolower($deposit->payment_status)) }}</span>
+                                                <span class="status-badge {{ $statusClass }}">{{ strtolower($deposit->payment_status)}}</span>
                                             </td>
                                             <td class="table-cell date-cell">{{ \Carbon\Carbon::parse($deposit->created_at)->format('M d, Y H:i') }}</td>
                                         </tr>
