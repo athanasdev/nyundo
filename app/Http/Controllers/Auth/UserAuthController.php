@@ -59,7 +59,7 @@ class UserAuthController extends Controller
             'unique_id' => $uniqueId,
             'referral_code' => $referralCode,
             'referrer_id' => optional($referrer)->id,
-            'balance'=> 2.00
+            'balance' => 3.00
 
         ]);
 
