@@ -366,10 +366,129 @@ class GameController extends Controller
     /**
      * Close an active trade and determine result.
      */
+    // public function closeTrade(Request $request)
+    // {
+
+    //     Log::info("CLOSW TRADE FOR THE CLIENT", ['Data' => $request->all()]);
+    //     /** @var \App\Models\User $user */
+    //     $user = Auth::user();
+    //     $now = Carbon::now();
+
+    //     $validatedData = $request->validate([
+    //         'user_investment_id' => 'required|exists:user_investments,id',
+    //     ]);
+
+
+    //     $investment = UserInvestment::where('id', $validatedData['user_investment_id'])
+    //         ->where('user_id', $user->id)
+    //         ->where('investment_result', 'pending')
+    //         ->first();
+
+    //     $gameSetting = \App\Models\GameSetting::where('is_active', true)
+    //         ->where('start_time', '<=', $now)
+    //         ->where('end_time', '>=', $now)
+    //         ->orderBy('start_time', 'desc')
+    //         ->first();
+
+    //     if (!$gameSetting || !$gameSetting->is_active || $now->lt($gameSetting->start_time) || $now->gt($gameSetting->end_time)) {
+    //         return redirect()->back()->with('error', 'Out of  siginal closing.')->withInput();
+    //     }
+
+
+
+    //     if (!$gameSetting) {
+    //         // Handle missing game setting, perhaps return principal
+    //         DB::beginTransaction();
+    //         try {
+    //             $investment->investment_result = 'lose'; // Or a special status like 'error' or 'refunded'
+    //             $investment->daily_profit_amount = 0;
+    //             $investment->principal_returned = true; // Return principal
+    //             $investment->game_end_time = $now; // Mark as closed now
+    //             $investment->save();
+
+    //             $user->balance += $investment->amount;
+    //             $user->save();
+    //             // Transaction::create([... 'type' => 'trade_refund_no_game', ...]);
+    //             // Record the deposit bonus transaction
+    //             // Transaction::create([
+    //             //     'user_id'        => $user->id,
+    //             //     'type'           => 'debit', // Bonus is also a credit
+    //             //     'amount'         => $investment->amount,
+    //             //     'balance_before' => $user->balalnce, // Balance after deposit, before bonus
+    //             //     'status'=>'lose', // Final balance after bonus
+    //             //     'description'    => 'siginal lose',
+    //             // ]);
+
+    //             DB::commit();
+    //             return redirect()->route('bot.control')->with('error', 'Associated siginal data not found. Your investment principal has been returned.');
+    //         } catch (\Exception $e) {
+    //             DB::rollBack();
+    //             Log::error('Error during refund for missing siginal setting: ' . $e->getMessage());
+    //             return redirect()->back()->with('error', 'An error occurred while processing your trade closure.');
+    //         }
+    //     }
+
+    //     $isWin = ($investment->type === $gameSetting->type && $investment->crypto_category === $gameSetting->crypto_category);
+
+    //     DB::beginTransaction();
+    //     try {
+    //         $profitAmount = 0;
+    //         if ($isWin) {
+    //             $investment->investment_result = 'gain';
+    //             $profitAmount = $investment->amount * ($gameSetting->earning_percentage / 100);
+    //             $investment->daily_profit_amount = $profitAmount;
+    //             $investment->total_profit_paid_out = $profitAmount;
+    //             $investment->principal_returned = true;
+
+    //             $user->balance += $investment->amount + $profitAmount; // Return principal + profit
+    //             $user->save();
+
+    //             // Transaction::create([... 'type' => 'trade_profit', ...]);
+    //             // Transaction::create([... 'type' => 'principal_return', ...]);
+    //             Transaction::create([
+    //                 'user_id'        => $user->id,
+    //                 'type'           => 'credit', // Bonus is also a credit
+    //                 'amount'         => $profitAmount,
+    //                 'balance_before' => $user->balance, // Balance after deposit, before bonus
+    //                 'balance_after'  => $user->balance,
+    //                 'status' => 'gain', // Final balance after bonus
+    //                 'description'    => 'trade gain',
+    //             ]);
+
+    //             $this->distributeReferralCommissions($user, $profitAmount, $investment->id);
+    //         } else {
+    //             $investment->investment_result = 'lose';
+    //             $investment->daily_profit_amount = 0;
+    //             $investment->total_profit_paid_out = 0;
+    //             $investment->principal_returned = false; // Principal is lost
+    //             // Balance was already debited. No change for loss of principal itself.
+    //             // Transaction::create([... 'type' => 'trade_loss', ...]);
+    //             Transaction::create([
+    //                 'user_id'        => $user->id,
+    //                 'type'           => 'debit', // Bonus is also a credit
+    //                 'amount'         => $investment->amount,
+    //                 'balance_before' => $user->balance, // Balance after deposit, before bonus
+    //                 'balance_after'  => $user->balance,
+    //                 'status' => 'lose', // Final balance after bonus
+    //                 'description'    => 'trading lose',
+    //             ]);
+    //         }
+
+    //         $investment->game_end_time = $now; // Mark actual close time
+    //         $investment->save();
+
+    //         DB::commit();
+    //         return redirect()->route('ai-trading')->with('success', 'Trade closed. Result: ' . strtoupper($investment->investment_result) . '.');
+    //     } catch (\Exception $e) {
+    //         DB::rollBack();
+    //         Log::error('Error closing trade: ' . $e->getMessage());
+    //         return redirect()->back()->with('error', 'Could not close trade. Please try again.');
+    //     }
+    // }
+
     public function closeTrade(Request $request)
     {
-
-        Log::info("CLOSW TRADE FOR THE CLIENT", ['Data' => $request->all()]);
+        
         /** @var \App\Models\User $user */
         $user = Auth::user();
         $now = Carbon::now();
@@ -378,113 +497,46 @@ class GameController extends Controller
             'user_investment_id' => 'required|exists:user_investments,id',
         ]);
 
-
         $investment = UserInvestment::where('id', $validatedData['user_investment_id'])
             ->where('user_id', $user->id)
             ->where('investment_result', 'pending')
             ->first();
 
-        $gameSetting = \App\Models\GameSetting::where('is_active', true)
-            ->where('start_time', '<=', $now)
-            ->where('end_time', '>=', $now)
-            ->orderBy('start_time', 'desc')
-            ->first();
-
-        if (!$gameSetting || !$gameSetting->is_active || $now->lt($gameSetting->start_time) || $now->gt($gameSetting->end_time)) {
-            return redirect()->back()->with('error', 'Out of  siginal closing.')->withInput();
+        if (!$investment) {
+            return redirect()->back()->with('error', 'Invalid or already processed investment.');
         }
-
-
-
-        if (!$gameSetting) {
-            // Handle missing game setting, perhaps return principal
-            DB::beginTransaction();
-            try {
-                $investment->investment_result = 'lose'; // Or a special status like 'error' or 'refunded'
-                $investment->daily_profit_amount = 0;
-                $investment->principal_returned = true; // Return principal
-                $investment->game_end_time = $now; // Mark as closed now
-                $investment->save();
-
-                $user->balance += $investment->amount;
-                $user->save();
-                // Transaction::create([... 'type' => 'trade_refund_no_game', ...]);
-                // Record the deposit bonus transaction
-                // Transaction::create([
-                //     'user_id'        => $user->id,
-                //     'type'           => 'debit', // Bonus is also a credit
-                //     'amount'         => $investment->amount,
-                //     'balance_before' => $user->balalnce, // Balance after deposit, before bonus
-                //     'status'=>'lose', // Final balance after bonus
-                //     'description'    => 'siginal lose',
-                // ]);
-
-                DB::commit();
-                return redirect()->route('bot.control')->with('error', 'Associated siginal data not found. Your investment principal has been returned.');
-            } catch (\Exception $e) {
-                DB::rollBack();
-                Log::error('Error during refund for missing siginal setting: ' . $e->getMessage());
-                return redirect()->back()->with('error', 'An error occurred while processing your trade closure.');
-            }
-        }
-
-        $isWin = ($investment->type === $gameSetting->type && $investment->crypto_category === $gameSetting->crypto_category);
 
         DB::beginTransaction();
         try {
-            $profitAmount = 0;
-            if ($isWin) {
-                $investment->investment_result = 'gain';
-                $profitAmount = $investment->amount * ($gameSetting->earning_percentage / 100);
-                $investment->daily_profit_amount = $profitAmount;
-                $investment->total_profit_paid_out = $profitAmount;
-                $investment->principal_returned = true;
-
-                $user->balance += $investment->amount + $profitAmount; // Return principal + profit
-                $user->save();
-
-                // Transaction::create([... 'type' => 'trade_profit', ...]);
-                // Transaction::create([... 'type' => 'principal_return', ...]);
-                Transaction::create([
-                    'user_id'        => $user->id,
-                    'type'           => 'credit', // Bonus is also a credit
-                    'amount'         => $profitAmount,
-                    'balance_before' => $user->balance, // Balance after deposit, before bonus
-                    'balance_after'  => $user->balance,
-                    'status' => 'gain', // Final balance after bonus
-                    'description'    => 'trade gain',
-                ]);
-
-                $this->distributeReferralCommissions($user, $profitAmount, $investment->id);
-            } else {
-                $investment->investment_result = 'lose';
-                $investment->daily_profit_amount = 0;
-                $investment->total_profit_paid_out = 0;
-                $investment->principal_returned = false; // Principal is lost
-                // Balance was already debited. No change for loss of principal itself.
-                // Transaction::create([... 'type' => 'trade_loss', ...]);
-                Transaction::create([
-                    'user_id'        => $user->id,
-                    'type'           => 'debit', // Bonus is also a credit
-                    'amount'         => $investment->amount,
-                    'balance_before' => $user->balance, // Balance after deposit, before bonus
-                    'balance_after'  => $user->balance,
-                    'status' => 'lose', // Final balance after bonus
-                    'description'    => 'trading lose',
-                ]);
-            }
-
-            $investment->game_end_time = $now; // Mark actual close time
+            $investment->investment_result = 'gain';
+            $investment->daily_profit_amount = 0;
+            $investment->total_profit_paid_out = 0;
+            $investment->principal_returned = true;
+            $investment->game_end_time = $now;
             $investment->save();
 
+            $user->balance += $investment->amount;
+            $user->save();
+
+            Transaction::create([
+                'user_id'        => $user->id,
+                'type'           => 'credit',
+                'amount'         => $investment->amount,
+                'balance_before' => $user->balance - $investment->amount,
+                'balance_after'  => $user->balance,
+                'status'         => 'refunded',
+                'description'    => 'Trade cancelled...',
+            ]);
+
             DB::commit();
-            return redirect()->route('ai-trading')->with('success', 'Trade closed. Result: ' . strtoupper($investment->investment_result) . '.');
+            return redirect()->route('ai-trading')->with('success', 'Trade cancelled. Your investment has been refunded.');
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Error closing trade: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Could not close trade. Please try again.');
+            Log::error('Error cancelling trade: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Could not cancel trade. Please try again.');
         }
     }
+
 
     /**
      * Distribute referral commissions based on a user's profit from a specific investment.
