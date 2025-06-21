@@ -1085,7 +1085,7 @@
             /* --- Styles for the 'Leave Impersonation' button --- */
             .impersonate-leave-container {
                 position: fixed;
-                bottom: 20px;
+                bottom: 65px;
                 right: 20px;
                 z-index: 9999;
                 /* Ensure it's on top of everything */

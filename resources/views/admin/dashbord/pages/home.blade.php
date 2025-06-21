@@ -75,20 +75,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-xl-8 mb-30">
-                    <div class="card-box height-100-p pd-20">
-                        <h2 class="h4 mb-20">Activity</h2>
-                        <div id="chart5"></div>
-                    </div>
-                </div>
-                <div class="col-xl-4 mb-30">
-                    <div class="card-box height-100-p pd-20">
-                        <h2 class="h4 mb-20">Lead Target</h2>
-                        <div id="chart6"></div>
-                    </div>
-                </div>
-            </div>
+
 
             {{-- <div class="card-box mb-10">
                 <div class="pd-20">

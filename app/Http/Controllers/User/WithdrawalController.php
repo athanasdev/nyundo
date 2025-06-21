@@ -318,9 +318,7 @@ class WithdrawalController extends Controller
 
     public function showChangeWithdrawalAddressForm()
     {
-        // Assuming your Blade file is in resources/views/user/profile/change-withdrawal-address.blade.php
-        // You might need to pass some data if the view expects it, but for a simple form display, this is often enough.
-        // Make sure the 'messages' for localization are available or pass them if needed.
+        
         return view('user.layouts.change-withdraw-address');
     }
 
