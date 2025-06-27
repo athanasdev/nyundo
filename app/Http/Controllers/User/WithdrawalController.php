@@ -105,19 +105,19 @@ class WithdrawalController extends Controller
 
 
 
+
+
     // public function withdrawRequest(Request $request)
     // {
-
-
     //     $request->validate([
     //         'amount' => 'required|numeric|min:10',
     //         'withdraw_password' => 'required|string',
     //     ]);
 
-
     //     /** @var \Illuminate\Auth\AuthManager $auth */
     //     $auth = auth();
     //     $user = $auth->user();
+
 
     //     if (!$user->withdrawal_pin_hash) {
     //         return redirect()->back()->withErrors(['error' => 'You have not set a withdrawal PIN.']);
@@ -131,7 +131,6 @@ class WithdrawalController extends Controller
     //         return redirect()->back()->withErrors(['error' => 'No withdrawal address set.']);
     //     }
 
-    //     // ✅ Check if user has any investments
     //     $investments = DB::table('user_investments')
     //         ->where('user_id', $user->id)
     //         ->get();
@@ -140,7 +139,6 @@ class WithdrawalController extends Controller
     //         return redirect()->back()->withErrors(['error' => 'A minimum of one trade is required prior to a withdrawal.']);
     //     }
 
-    //     // ✅ Check if user has traded (buy or sell)
     //     $trades = $investments->filter(function ($inv) {
     //         return in_array($inv->type, ['buy', 'sell']);
     //     });
@@ -149,7 +147,6 @@ class WithdrawalController extends Controller
     //         return redirect()->back()->withErrors(['error' => 'You must complete at least one trade before withdrawing.']);
     //     }
 
-    //        // Continue with withdrawal logic
     //     $setting = Setting::first();
     //     if (!$setting) {
     //         return redirect()->back()->withErrors(['error' => 'Withdrawal settings not configured.']);
@@ -160,15 +157,33 @@ class WithdrawalController extends Controller
     //     if ($amount < $setting->min_withdraw_amount) {
     //         return redirect()->back()->withErrors(['error' => 'Amount is less than the minimum withdrawal limit.']);
     //     }
+    //     // e.g., filter out trades with NULL game_end_time or use another relevant timestamp.
+    //     $lastTradeEndTime = $trades->max('game_end_time');
 
-    //     // ✅ Get last trade date
-    //     $lastTradeDate = $trades->max('investment_date');
-
-    //     if (Carbon::parse($lastTradeDate)->isToday()) {
-    //         return redirect()->back()->withErrors(['error' => 'One day before making a withdrawal ,you should not trading.']);
+    //     // If for some reason game_end_time might be null for a relevant trade
+    //     if (!$lastTradeEndTime) {
+    //         return redirect()->back()->withErrors(['error' => 'Could not determine last trade completion time.']);
     //     }
 
+    //     // Parse the last trade end time. Assume it's stored in UTC if your APP_TIMEZONE is UTC,
+    //     // or specify 'UTC' explicitly if your DB stores UTC but APP_TIMEZONE is different.
+    //     $lastTradeCarbon = Carbon::parse($lastTradeEndTime);
 
+    //     // Get current server time (which should be UTC if APP_TIMEZONE is set to UTC)
+    //     $nowUtc = Carbon::now();
+
+    //     // Calculate the difference in minutes for precision
+    //     $minutesSinceLastTrade = $nowUtc->diffInMinutes($lastTradeCarbon);
+    //     $requiredMinutes = 26 * 60; // 24 hours in minutes
+
+    //     if ($minutesSinceLastTrade < $requiredMinutes) {
+    //         $remainingSeconds = $requiredMinutes * 60 - $nowUtc->diffInSeconds($lastTradeCarbon);
+    //         $remainingHours = floor($remainingSeconds / 3600);
+    //         $remainingMinutes = floor(($remainingSeconds % 3600) / 60);
+    //         $remainingExactSeconds = $remainingSeconds % 60; // For even more precision
+
+    //        return redirect()->back()->withErrors(['error' => 'One day before making a withdrawal ,you should not trading.']);
+    //     }
 
     //     if ($user->balance < $amount) {
     //         return redirect()->back()->withErrors(['error' => 'Insufficient balance.']);
@@ -192,6 +207,8 @@ class WithdrawalController extends Controller
     // }
 
 
+
+
     public function withdrawRequest(Request $request)
     {
         $request->validate([
@@ -201,8 +218,7 @@ class WithdrawalController extends Controller
 
         /** @var \Illuminate\Auth\AuthManager $auth */
         $auth = auth();
-        $user = $auth->user();
-
+        $user = auth()->user();
 
         if (!$user->withdrawal_pin_hash) {
             return redirect()->back()->withErrors(['error' => 'You have not set a withdrawal PIN.']);
@@ -224,12 +240,13 @@ class WithdrawalController extends Controller
             return redirect()->back()->withErrors(['error' => 'A minimum of one trade is required prior to a withdrawal.']);
         }
 
+        // Filter only real trades with non-null end time
         $trades = $investments->filter(function ($inv) {
-            return in_array($inv->type, ['buy', 'sell']);
+            return in_array($inv->type, ['buy', 'sell']) && !is_null($inv->game_end_time);
         });
 
         if ($trades->isEmpty()) {
-            return redirect()->back()->withErrors(['error' => 'You must complete at least one trade before withdrawing.']);
+            return redirect()->back()->withErrors(['error' => 'You must complete at least one valid trade before withdrawing.']);
         }
 
         $setting = Setting::first();
@@ -242,41 +259,39 @@ class WithdrawalController extends Controller
         if ($amount < $setting->min_withdraw_amount) {
             return redirect()->back()->withErrors(['error' => 'Amount is less than the minimum withdrawal limit.']);
         }
-        // e.g., filter out trades with NULL game_end_time or use another relevant timestamp.
+
         $lastTradeEndTime = $trades->max('game_end_time');
 
-        // If for some reason game_end_time might be null for a relevant trade
         if (!$lastTradeEndTime) {
             return redirect()->back()->withErrors(['error' => 'Could not determine last trade completion time.']);
         }
 
-        // Parse the last trade end time. Assume it's stored in UTC if your APP_TIMEZONE is UTC,
-        // or specify 'UTC' explicitly if your DB stores UTC but APP_TIMEZONE is different.
         $lastTradeCarbon = Carbon::parse($lastTradeEndTime);
-
-        // Get current server time (which should be UTC if APP_TIMEZONE is set to UTC)
         $nowUtc = Carbon::now();
 
-        // Calculate the difference in minutes for precision
-        $minutesSinceLastTrade = $nowUtc->diffInMinutes($lastTradeCarbon);
-        $requiredMinutes = 26 * 60; // 24 hours in minutes
+        // Require 24 full hours between last trade and withdrawal
+        $eligibleTime = $lastTradeCarbon->copy()->addHours(24);
 
-        if ($minutesSinceLastTrade < $requiredMinutes) {
-            $remainingSeconds = $requiredMinutes * 60 - $nowUtc->diffInSeconds($lastTradeCarbon);
-            $remainingHours = floor($remainingSeconds / 3600);
-            $remainingMinutes = floor(($remainingSeconds % 3600) / 60);
-            $remainingExactSeconds = $remainingSeconds % 60; // For even more precision
+        if ($nowUtc->lessThan($eligibleTime)) {
+            $remaining = $eligibleTime->diff($nowUtc);
+            $remainingHours = $remaining->h;
+            $remainingMinutes = $remaining->i;
+            $remainingSeconds = $remaining->s;
 
-           return redirect()->back()->withErrors(['error' => 'One day before making a withdrawal ,you should not trading.']);
+            return redirect()->back()->withErrors([
+                'error' => "One day before making a withdrawal ,you should not trading."
+            ]);
         }
 
         if ($user->balance < $amount) {
             return redirect()->back()->withErrors(['error' => 'Insufficient balance.']);
         }
 
+        // Calculate fee and net amount
         $fee = ($amount * $setting->withdraw_fee_percentage) / 100;
         $netAmount = $amount - $fee;
 
+        // Save withdrawal
         $withdrawal = new Withdrawal();
         $withdrawal->user_id = $user->id;
         $withdrawal->payment_address = $user->withdrawal_address;
@@ -285,11 +300,13 @@ class WithdrawalController extends Controller
         $withdrawal->amount = $netAmount;
         $withdrawal->save();
 
+        // Deduct from balance
         $user->balance -= $amount;
         $user->save();
 
-        return redirect()->back()->with('success', 'Withdraw request submitted successfully. Amount: ' . $amount . ', Fee: ' . $fee . ', Net: ' . $netAmount);
+        return redirect()->back()->with('success', "Withdraw request submitted. Amount: $amount, Fee: $fee, Net: $netAmount");
     }
+
 
 
     public function setup()
@@ -318,7 +335,7 @@ class WithdrawalController extends Controller
 
     public function showChangeWithdrawalAddressForm()
     {
-        
+
         return view('user.layouts.change-withdraw-address');
     }
 
